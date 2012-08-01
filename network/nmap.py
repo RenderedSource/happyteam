@@ -1,9 +1,10 @@
+from website.settings import NETWORK_IP_ADDRESS
 from subprocess import Popen, PIPE
 import re
 
 class nmap:
     def get_ip_list(self):
-        (stdout, stderr) = Popen(["nmap", "-sP", "192.168.73.*"], stdout=PIPE).communicate()
+        (stdout, stderr) = Popen(["nmap", "-sP", NETWORK_IP_ADDRESS], stdout=PIPE).communicate()
 
         if stderr is not None:
             raise Exception(stderr)
