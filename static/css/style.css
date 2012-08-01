@@ -33,19 +33,11 @@ body {
 .step.step-online-list .header {
     margin-bottom: 25px;
 }
-.step.step-online-list .message {
-    text-align: center;
-    height: 68px;
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
-    line-height: 70px;
-    font-size: 30px;
-}
 .step.step-online-list .list {
     width: 49%;
     float: left;
     text-align: center;
+    cursor: pointer;
 }
 .step.step-online-list .list .item {
     font-size: 28px;
@@ -56,6 +48,7 @@ body {
     color: #AAA;
 }
 .step.step-online-list .btn-gambling {
+    margin-top: 30px;
     margin-left: auto;
     margin-right: auto;
     display: block;
