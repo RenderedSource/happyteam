@@ -95,4 +95,10 @@ body {
     font-size: 30px;
     position: absolute;
     line-height: 35px;
+    display: table;
+    
+}
+.step.step-gambling .roulette .item p {
+    display: table-cell;
+    vertical-align: middle;
 }
