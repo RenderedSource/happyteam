@@ -18,7 +18,7 @@ MANAGERS = ADMINS
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
+        'ENGINE': 'django.db.backends.sqlite3', 
         'NAME': os.path.join(SITE_ROOT, 'db/db.sqlite3'),
         'USER': '',
         'PASSWORD': '',
@@ -56,6 +56,7 @@ USE_TZ = True
 # Absolute filesystem path to the directory that will hold user-uploaded files.
 # Example: "/home/media/media.lawrence.com/media/"
 MEDIA_ROOT = ''
+
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash.
 # Examples: "http://media.lawrence.com/media/", "http://example.com/media/"
@@ -139,7 +140,11 @@ INSTALLED_APPS = (
 )
 AUTH_PROFILE_MODULE = 'profile.UserProfile'
 
-
+# A sample logging configuration. The only tangible logging
+# performed by this configuration is to send an email to
+# the site admins on every HTTP 500 error when DEBUG=False.
+# See http://docs.djangoproject.com/en/dev/topics/logging for
+# more details on how to customize your logging configuration.
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
@@ -163,11 +168,13 @@ LOGGING = {
         },
     }
 }
+
+NETWORK_IP_ADDRESS = '192.168.0.*'
 ## google auth
 AUTHENTICATION_BACKENDS = (
-  ('profile.auth.GoogleBackend'),
-  ('django.contrib.auth.backends.ModelBackend'),
-  )
+    ('profile.auth.GoogleBackend'),
+    ('django.contrib.auth.backends.ModelBackend'),
+    )
 LOGIN_URL = '/login/'
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_URL = '/logout/'

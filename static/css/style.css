@@ -33,19 +33,11 @@ body {
 .step.step-online-list .header {
     margin-bottom: 25px;
 }
-.step.step-online-list .message {
-    text-align: center;
-    height: 68px;
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
-    line-height: 70px;
-    font-size: 30px;
-}
 .step.step-online-list .list {
     width: 49%;
     float: left;
     text-align: center;
+    cursor: pointer;
 }
 .step.step-online-list .list .item {
     font-size: 28px;
@@ -56,6 +48,7 @@ body {
     color: #AAA;
 }
 .step.step-online-list .btn-gambling {
+    margin-top: 30px;
     margin-left: auto;
     margin-right: auto;
     display: block;
@@ -102,58 +95,63 @@ body {
     font-size: 30px;
     position: absolute;
     line-height: 35px;
+    display: table;
+    
 }
-
+.step.step-gambling .roulette .item p {
+    display: table-cell;
+    vertical-align: middle;
+}
 
 /*merge master request*/
 
 #chat{
-  width: 100%;
-  height: 200px;
-  overflow: auto;
+    width: 100%;
+    height: 200px;
+    overflow: auto;
 }
 #chat .text{
-  margin-left: 30px;
+    margin-left: 30px;
 }
 #chat .user{
-  font-weight: bold;
-  text-decoration: underline;
+    font-weight: bold;
+    text-decoration: underline;
 }
 .chat #id_message{
-  width: 100%;
+    width: 100%;
 }
 .panel{
     margin-bottom: 30px;
 }
 
 .angel, .devil{
-  background: url('/static/img/angel-devil.jpg');
-background-size: 250px;
-  width: 125px;
-  height: 250px;
-  float: left;
+    background: url('/static/img/angel-devil.jpg');
+    background-size: 250px;
+    width: 125px;
+    height: 250px;
+    float: left;
 }
 .angel{
-  background-position: 125px 0;
+    background-position: 125px 0;
 }
 .dev {
-  float: left;
-  width: 300px;
-  height: 20px;
-  border-radius: 10px;
-  margin-top: 120px;
-  text-align: center;
+    float: left;
+    width: 300px;
+    height: 20px;
+    border-radius: 10px;
+    margin-top: 120px;
+    text-align: center;
 }
 .dev .blue{
-  background: #9ce3f5;
-  height: 20px;
-  float: left;
-  border-radius: 10px 0 0 10px;
+    background: #9ce3f5;
+    height: 20px;
+    float: left;
+    border-radius: 10px 0 0 10px;
 }
 .dev .red{
-  height: 20px;
-  float: left;
-  background: #a10c07;
-  border-radius: 0 10px 10px 0;
-  color: #ffffff;
+    height: 20px;
+    float: left;
+    background: #a10c07;
+    border-radius: 0 10px 10px 0;
+    color: #ffffff;
 }

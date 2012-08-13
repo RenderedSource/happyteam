@@ -15,9 +15,7 @@ def get_online(request):
     online_ids = online_users.values_list('id', flat=True)
     offline_users = User.objects.exclude(id__in = online_ids)
 
-    data = {
-        'online': map(lambda x: {'first_name': x.first_name, 'last_name': x.last_name}, online_users),
-        'offline': map(lambda x: {'first_name': x.first_name, 'last_name': x.last_name}, offline_users)
-    }
+    data = map(lambda x: {'id': x.id, 'first_name': x.first_name, 'last_name': x.last_name, 'online': True}, online_users)
+    data = data + map(lambda x: {'id': x.id, 'first_name': x.first_name, 'last_name': x.last_name, 'online': False}, offline_users)
 
     return HttpResponse(json.dumps(data), mimetype='application/json')

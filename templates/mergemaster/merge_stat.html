@@ -28,7 +28,7 @@
         var reject = {{ reject }};
         var all = approve + reject;
 
-        var devil = reject / all * 100;
+        var devil = Math.round(reject / all * 100);
         if (devil == 0){
             $('.dev').html('<h1>100% Angel</h1>')
         }

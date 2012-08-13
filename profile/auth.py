@@ -2,7 +2,6 @@
 import re
 from django.contrib.auth.models import User
 from openid.consumer.consumer import SUCCESS
-from website import settings
 
 class GoogleBackend:
   def authenticate(self, openid_response):
@@ -17,10 +16,6 @@ class GoogleBackend:
     try:
       user = User.objects.get(username=google_email)
     except User.DoesNotExist:
-      if settings.EMAIL_VALIDATE and re.search(settings.EMAIL_VALIDATE, google_email):
-        user = User.objects.create(username=google_email, email=google_email, password='test', first_name=google_firstname
-        , last_name=google_lastname).save()
-      else:
         user = User.objects.create(username=google_email, email=google_email, password='test', first_name=google_firstname
           , last_name=google_lastname).save()
     return user

@@ -171,7 +171,6 @@ def AjaxMergeNotification(request):
   return render_to_response('mergemaster/notification_list.html', {'notification_list': notification_list},
     context_instance=RequestContext(request))
 
-import demjson
 
 @login_required(login_url='/login/')
 @csrf_exempt

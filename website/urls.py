@@ -10,9 +10,9 @@ urlpatterns = patterns('',
   url(r'^login-complete/$', 'django_openid_auth.views.login_complete', name='openid-complete'),
   url(r'^logout/$', 'django.contrib.auth.views.logout', {'next_page': '/',}, name='logout'),
 
-  url(r'^$', 'garbagecollector.views.index'),
-    url(r'^get-online/', 'garbagecollector.views.get_online'),
+
     url(r'^merge/', include('mergemaster.urls')),
+    url(r'^gc/', include('garbagecollector.urls')),
 
   # url(r'^happyteam/', include('happyteam.foo.urls')),
 
