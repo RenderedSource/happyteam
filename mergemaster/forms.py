@@ -5,11 +5,11 @@ from mergemaster.models import MergeRequest, MergeComment
 __author__ = 'lehabaev'
 
 
-class MergeRequestForm(forms.ModelForm):
+class MergeRequestFormApi(forms.ModelForm):
   class Meta:
     model = MergeRequest
   def __init__(self, *args, **kwargs):
-    super(MergeRequestForm, self).__init__(*args, **kwargs)
+    super(MergeRequestFormApi, self).__init__(*args, **kwargs)
 
     for key in self.fields:
       self.fields[key].required = False
@@ -22,3 +22,12 @@ class MergeCommentForm(forms.ModelForm):
       'user':forms.HiddenInput(),
       'merge_request':forms.HiddenInput()
     }
+
+class MergeRequestForm(forms.ModelForm):
+  class Meta:
+    model = MergeRequest
+    widgets = {
+      'developer':forms.HiddenInput(),
+      'status':forms.HiddenInput()
+    }
+    exclude = ['merge_master',]

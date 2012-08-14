@@ -12,7 +12,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.defaults import server_error
 import simplejson
 from simplejson.encoder import JSONEncoder
-from mergemaster.forms import MergeRequestForm, MergeCommentForm
+from mergemaster.forms import MergeRequestForm, MergeCommentForm, MergeRequestFormApi
 from mergemaster.models import MergeRequest, MergeMasters, MergeComment, MergeNotification, MergeStats
 from website import settings
 
@@ -24,7 +24,7 @@ def ApiAddRequest(request):
   curl -X POST -d 'email=rizmailov@renderedsource.com&branch=new_branch2&status=1' 127.0.0.1:8000/merge/api/ > page.html
   """
   #  todo add api key
-  form = MergeRequestForm(request.POST)
+  form = MergeRequestFormApi(request.POST)
 
   if form.is_valid():
     form = form.save(commit=False)
@@ -35,9 +35,10 @@ def ApiAddRequest(request):
       'type': 'info'
     }
     for user in MergeMasters.objects.all():
-      MergeNotification.objects.create(message=message.get('text'), type=message.get('type'), user=user.user,
-        request=form.id).save()
       JabberNotificate(message.get('text'), user.user.email)
+    for user in User.objects.all():
+      MergeNotification.objects.create(message=message.get('text'), type=message.get('type'), user=user,
+        request=form.id).save()
 
   else:
     message = 'Error %s' % form.errors
@@ -52,13 +53,31 @@ def MergeList(request):
         Developer change owned branch.
         Add filter (owned, status, date, and ...)
   """
+
   try:
     merge_master = MergeMasters.objects.get(user=request.user, status=True)
   except MergeMasters.DoesNotExist:
     merge_master = False
+  if request.method == 'POST':
+      form = MergeRequestForm(request.POST)
+      if form.is_valid():
+        form = form.save(commit=False)
+        form.save()
+        message = {
+          'text': 'Please merge new branch %s Developer: %s' % (form.branch, form.developer),
+          'type': 'info'
+        }
+        for user in MergeMasters.objects.all():
+          JabberNotificate(message.get('text'), user.user.email)
+        for user in Users.objects.all():
+          MergeNotification.objects.create(message=message.get('text'), type=message.get('type'), user=user,
+            request=form.id).save()
+        form = False
+  else:
+    form = MergeRequestForm(initial={'status':'open','developer':request.user.id})
   merge_list = MergeRequest.objects.all().exclude(status='approve').order_by('-id')
 
-  return render_to_response('mergemaster/list.html', {'merge_list': merge_list, 'merge_master': merge_master},
+  return render_to_response('mergemaster/list.html', {'merge_list': merge_list,'form':form, 'merge_master': merge_master},
     context_instance=RequestContext(request))
 
 
