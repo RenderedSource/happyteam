@@ -16,8 +16,10 @@ class GoogleBackend:
     try:
       user = User.objects.get(username=google_email)
     except User.DoesNotExist:
-        user = User.objects.create(username=google_email, email=google_email, password='test', first_name=google_firstname
+      user = User.objects.create(username=google_email, email=google_email, password='test', first_name=google_firstname
           , last_name=google_lastname).save()
+      user = User.objects.get(username=google_email)
+
     return user
 
   def get_user(self, user_id):
