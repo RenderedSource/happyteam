@@ -127,6 +127,7 @@ INSTALLED_APPS = (
     'mergemaster',
 #    other app
     'mailer',
+    'scrum',
 )
 AUTH_PROFILE_MODULE = 'profile.UserProfile'
 
