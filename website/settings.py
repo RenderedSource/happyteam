@@ -16,16 +16,6 @@ ADMINS = (
 
 MANAGERS = ADMINS
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3', 
-        'NAME': os.path.join(SITE_ROOT, 'db/db.sqlite3'),
-        'USER': '',
-        'PASSWORD': '',
-        'HOST': '',
-        'PORT': '',
-    }
-}
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
@@ -168,7 +158,6 @@ LOGGING = {
         },
     }
 }
-
 NETWORK_IP_ADDRESS = '192.168.0.*'
 ## google auth
 AUTHENTICATION_BACKENDS = (
@@ -180,9 +169,8 @@ LOGIN_REDIRECT_URL = '/'
 LOGOUT_URL = '/logout/'
 OPENID_SSO_SERVER_URL = 'https://www.google.com/accounts/o8/id'
 
-#auto create new user if your firm email owner
-EMAIL_VALIDATE  = 'renderedsource.com'
-EMAIL_VALIDATE  = False
+try:
+    from local_settings import *
+except:
+    pass
 
-JABBER_ID = ''
-JABBER_PASSWORD = ''
