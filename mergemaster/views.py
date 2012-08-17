@@ -69,7 +69,7 @@ def MergeList(request):
         }
         for user in MergeMasters.objects.all():
           JabberNotificate(message.get('text'), user.user.email)
-        for user in Users.objects.all():
+        for user in User.objects.all():
           MergeNotification.objects.create(message=message.get('text'), type=message.get('type'), user=user,
             request=form.id).save()
         form = False
