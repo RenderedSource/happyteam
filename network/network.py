@@ -1,18 +1,24 @@
-from nmap import nmap
-from arp import arp
+from xml.etree import ElementTree
+import urllib2
+from website.settings import NMAP_XML_URL
 
 class network:
     def __init__(self):
-        self.nmap = nmap()
-        self.arp = arp()
+        pass
 
     def get_online_mac_addesses(self):
-        ip_list = self.nmap.get_ip_list()
-        dictionary = self.arp.get_dictionary()
+        response = urllib2.urlopen(NMAP_XML_URL)
+        xml = response.read()
+        tree = ElementTree.fromstring(xml)
 
-        mac = []
-        for ip in ip_list:
-            if ip in dictionary:
-                mac.append(dictionary[ip])
+        mac_addresses = []
 
-        return mac
+        for host in tree.iter('host'):
+            state = host.find('status').attrib.get('state')
+            if state == 'up':
+                for address in host.findall('address'):
+                    if address.attrib.get('addrtype') == 'mac':
+                        mac = address.attrib.get('addr')
+                        mac_addresses.append(mac)
+
+        return mac_addresses
