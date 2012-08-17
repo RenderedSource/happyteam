@@ -4,6 +4,7 @@ from django.db import models
 class MergeMasters(models.Model):
   user = models.ForeignKey(User)
   status = models.BooleanField(default=True)
+  jabber = models.CharField(blank=True, max_length=60)
   def __unicode__(self):
     return self.user.username
 
