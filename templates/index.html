@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+
+{% block title %}
+RenderedSource HappyTeam
+{% endblock %}
+{% block content %}
+    <h1 class="white">{{ last_sprint.title }} end after GO WORK!!!</h1>
+    <div id="countdown_dashboard" class="clearfix">
+        <div class="dash weeks_dash">
+            <span class="dash_title">weeks</span>
+            <div class="digit">0</div>
+            <div class="digit">0</div>
+        </div>
+
+        <div class="dash days_dash">
+            <span class="dash_title">days</span>
+            <div class="digit">0</div>
+            <div class="digit">0</div>
+        </div>
+
+        <div class="dash hours_dash">
+            <span class="dash_title">hours</span>
+            <div class="digit">0</div>
+            <div class="digit">0</div>
+        </div>
+
+        <div class="dash minutes_dash">
+            <span class="dash_title">minutes</span>
+            <div class="digit">0</div>
+            <div class="digit">0</div>
+        </div>
+
+        <div class="dash seconds_dash">
+            <span class="dash_title">seconds</span>
+            <div class="digit">0</div>
+            <div class="digit">0</div>
+        </div>
+
+    </div>
+{% endblock %}
+{% block head %}
+    <link href="/static/timer/style/dark.css" rel="stylesheet">
+
+{% endblock %}
+{% block script %}
+    <script src="/static/timer/js/jquery.lwtCountdown-1.0.js" type="text/javascript" charset="utf-8"></script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('#countdown_dashboard').countDown({
+                targetDate: {
+                    'day': 		'{{ last_sprint.date_finish|date:'d' }}',
+                    'month': 	'{{ last_sprint.date_finish|date:'m' }}',
+                    'year': 	'{{ last_sprint.date_finish|date:'Y' }}',
+                    'hour': 	'{{ last_sprint.date_finish|date:'h' }}',
+                    'min': 		'{{ last_sprint.date_finish|date:'m' }}',
+                    'sec': 		'{{ last_sprint.date_finish|date:'s' }}'
+                }
+            });
+        })
+    </script>
+{% endblock %}
