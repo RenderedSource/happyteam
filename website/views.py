@@ -6,6 +6,9 @@ from scrum.models import Sprint
 __author__ = 'lehabaev'
 #todo delete this after create normal code
 def Index(request):
-    sprint = Sprint.objects.all().order_by('-date_start')[0]
+    try:
+        sprint = Sprint.objects.all().order_by('-date_start')[0]
+    except :
+        sprint = False
     return render_to_response('index.html', {'last_sprint': sprint}
         , RequestContext(request))
