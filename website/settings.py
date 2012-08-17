@@ -162,7 +162,7 @@ LOGGING = {
 NETWORK_IP_ADDRESS = '192.168.0.*'
 ## google auth
 AUTHENTICATION_BACKENDS = (
-    ('profile.auth.GoogleBackend'),
+    ('auth.GoogleBackend'),
     ('django.contrib.auth.backends.ModelBackend'),
     )
 LOGIN_URL = '/login/'
