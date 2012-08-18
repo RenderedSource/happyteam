@@ -1,9 +1,9 @@
 from xml.etree import ElementTree
-import urllib2
+import urllib
 from website.settings import NMAP_XML_URL
 
 def get_online_mac_addesses():
-    response = urllib2.urlopen(NMAP_XML_URL)
+    response = urllib.urlopen(NMAP_XML_URL)
     xml = response.read()
     tree = ElementTree.fromstring(xml)
 
