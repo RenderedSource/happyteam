@@ -17,3 +17,5 @@ EMAIL_VALIDATE  = False
 
 JABBER_ID = 'example@jabber.ru'
 JABBER_PASSWORD = 'password'
+
+NMAP_XML_URL = 'http://example.com/nmap.xml'
