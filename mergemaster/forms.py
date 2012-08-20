@@ -1,6 +1,6 @@
 #-*- coding: utf-8 -*-
 from django import forms
-from mergemaster.models import MergeRequest, MergeComment
+from mergemaster.models import MergeRequest, MergeComment, MergeMasters
 
 __author__ = 'lehabaev'
 
@@ -31,3 +31,8 @@ class MergeRequestForm(forms.ModelForm):
       'status':forms.HiddenInput()
     }
     exclude = ['merge_master',]
+
+class MergeMastersForm(forms.ModelForm):
+  class Meta:
+    model = MergeMasters
+    exclude=['user','status',]

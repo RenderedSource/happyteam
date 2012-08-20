@@ -8,6 +8,7 @@ urlpatterns = patterns('',
 #  cron send
   url(r'sendjabber/$', 'mergemaster.views.SendJabber'),
   url(r'message/$', 'mergemaster.views.AjaxMergeNotification'),
+  url(r'settings/$', 'mergemaster.views.MergeMastersCabinet', name='cabinet'),
   url(r'table/(?P<pid>(\d+))/$', 'mergemaster.views.MergeTableRow', name='table_row_update'),
   url(r'user/(?P<pid>(\d+))/$', 'mergemaster.views.MergeMasterStats'),
   url(r'^$', 'mergemaster.views.MergeList'),
