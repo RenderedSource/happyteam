@@ -82,3 +82,8 @@ class MergeStats(models.Model):
     return '%s %s'%(self.merge_master.user.username, self.action)
 
 
+class JabberMessage(models.Model):
+  jabber = models.CharField(max_length=60)
+  text = models.TextField()
+  date = models.DateTimeField(auto_now_add=True)
+  def __unicode__(self):return self.jabber

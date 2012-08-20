@@ -1,6 +1,6 @@
 # coding: utf-8
-import json
-import re
+import xmpp
+import datetime
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.db.models import Q
@@ -9,14 +9,32 @@ from django.shortcuts import render_to_response
 from django.template.context import RequestContext
 from django.template.loader import render_to_string
 from django.views.decorators.csrf import csrf_exempt
-from django.views.defaults import server_error
 import simplejson
-from simplejson.encoder import JSONEncoder
 from mergemaster.forms import MergeRequestForm, MergeCommentForm, MergeRequestFormApi
-from mergemaster.models import MergeRequest, MergeMasters, MergeComment, MergeNotification, MergeStats
+from mergemaster.models import MergeRequest, MergeMasters, MergeComment, MergeNotification, MergeStats, JabberMessage
 from website import settings
 
+def SendJabber(request):
+  try:
+    jid = xmpp.protocol.JID(settings.JABBER_ID)
+    cl = xmpp.Client(jid.getDomain(), debug=[])
+    conn = cl.connect()
+    sended_messages = 0
+    for item in JabberMessage.objects.filter(date__gte = datetime.datetime.now() - datetime.timedelta(1)):
+      if conn:
+        auth = cl.auth(jid.getNode(), settings.JABBER_PASSWORD,
+          resource=jid.getResource())
+        if auth:
+          cl.send(xmpp.protocol.Message(item.jabber, item.text))
+          item.delete()
+          sended_messages = sended_messages + 1
+    return HttpResponse('%s'%sended_messages)
 
+  except JabberMessage.DoesNotExist:
+      return HttpResponse('All sended')
+
+def JabberNotificate(message, recipient):
+  JabberMessage.objects.create(jabber = recipient, text = message).save()
 @csrf_exempt
 def ApiAddRequest(request):
   """
@@ -84,10 +102,8 @@ def MergeList(request):
 @login_required(login_url='/login/')
 def MergeAction(request, action, pid):
   message = ''
-
   try:
   #    only merge_master
-
     merge_master = MergeMasters.objects.get(user=request.user, status=True)
     if action == 'review' or action == 'approve' or action == 'reject' or action == 'open':
       try:
@@ -229,20 +245,5 @@ def MergeMasterStats(request, pid):
   except MergeMasters.DoesNotExist:
     raise Http404
 
-import xmpp, time
 
-def JabberNotificate(message, recipient):
-  jid = xmpp.protocol.JID(settings.JABBER_ID)
-  cl = xmpp.Client(jid.getDomain(), debug=[])
-  conn = cl.connect()
-#  todo test stable
-  if conn:
-    auth = cl.auth(jid.getNode(), settings.JABBER_PASSWORD,
-      resource=jid.getResource())
-    if auth:
-      cl.send(xmpp.protocol.Message(recipient,
-        message))
-      # Некоторые старые сервера не отправляют сообщения,
-      # если вы немедленно отсоединяетесь после отправки
-      time.sleep(1)
 
