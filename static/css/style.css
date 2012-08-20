@@ -155,3 +155,7 @@ body {
     border-radius: 0 10px 10px 0;
     color: #ffffff;
 }
+.messagebox{
+  overflow: hidden;
+  text-overflow:ellipsis;
+}

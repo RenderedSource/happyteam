@@ -10,7 +10,7 @@ from django.template.context import RequestContext
 from django.template.loader import render_to_string
 from django.views.decorators.csrf import csrf_exempt
 import simplejson
-from mergemaster.forms import MergeRequestForm, MergeCommentForm, MergeRequestFormApi
+from mergemaster.forms import MergeRequestForm, MergeCommentForm, MergeRequestFormApi, MergeMastersForm
 from mergemaster.models import MergeRequest, MergeMasters, MergeComment, MergeNotification, MergeStats, JabberMessage
 from website import settings
 
@@ -52,7 +52,7 @@ def ApiAddRequest(request):
       'text': 'Please merge new branch %s Developer: %s' % (form.branch, form.developer),
       'type': 'info'
     }
-    for user in MergeMasters.objects.all():
+    for user in MergeMasters.objects.filter(status = True):
       JabberNotificate(message.get('text'), user.user.email)
     for user in User.objects.all():
       MergeNotification.objects.create(message=message.get('text'), type=message.get('type'), user=user,
@@ -85,7 +85,7 @@ def MergeList(request):
           'text': 'Please merge new branch %s Developer: %s' % (form.branch, form.developer),
           'type': 'info'
         }
-        for user in MergeMasters.objects.all():
+        for user in MergeMasters.objects.filter(status = True):
           JabberNotificate(message.get('text'), user.jabber)
         for user in User.objects.all():
           MergeNotification.objects.create(message=message.get('text'), type=message.get('type'), user=user,
@@ -246,4 +246,15 @@ def MergeMasterStats(request, pid):
     raise Http404
 
 
-
+@login_required(login_url='/login/')
+def MergeMastersCabinet(request):
+  try:
+    master = MergeMasters.objects.get(user = request.user)
+    if request.method == 'POST':
+      form = MergeMastersForm(request.POST, instance = master)
+      if form.is_valid():
+        form.save()
+    form = MergeMastersForm(instance=master)
+    return render_to_response('mergemaster/cabinet.html',{'form':form}, RequestContext(request))
+  except MergeMasters.DoesNotExist:
+    return HttpResponse('You are not merge master')
