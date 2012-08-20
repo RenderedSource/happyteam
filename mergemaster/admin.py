@@ -22,3 +22,7 @@ admin.site.register(MergeNotification, MergeNotificationAdmin)
 class MergeStatsAdmin(admin.ModelAdmin):
   pass
 admin.site.register(MergeStats, MergeStatsAdmin)
+
+class JabberMessageAdmin(admin.ModelAdmin):
+  pass
+admin.site.register(JabberMessage, JabberMessageAdmin)
