@@ -1,4 +1,4 @@
-# Django settings for garbagecollector project.
+# Django settings for happyteam project.
 
 import os
 import django
@@ -94,6 +94,7 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
+    'website.middleware.RequireLoginMiddleware'
     # Uncomment the next line for simple clickjacking protection:
     # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
@@ -159,6 +160,15 @@ LOGGING = {
         },
     }
 }
+
+LOGIN_REQUIRED_URLS = (
+    r'(.*)$',
+    )
+LOGIN_REQUIRED_URLS_EXCEPTIONS = (
+    r'/login(.*)$',
+    r'/logout(.*)$',
+    )
+
 ## google auth
 AUTHENTICATION_BACKENDS = (
     ('auth.GoogleBackend'),
