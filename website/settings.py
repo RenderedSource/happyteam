@@ -161,7 +161,7 @@ LOGGING = {
 }
 ## google auth
 AUTHENTICATION_BACKENDS = (
-    ('profile.auth.GoogleBackend'),
+    ('auth.GoogleBackend'),
     ('django.contrib.auth.backends.ModelBackend'),
     )
 LOGIN_URL = '/login/'

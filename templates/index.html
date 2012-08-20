@@ -4,6 +4,8 @@
 RenderedSource HappyTeam
 {% endblock %}
 {% block content %}
+    {% if last_sprint %}
+
     <h1 class="white">{{ last_sprint.title }} end after GO WORK!!!</h1>
     <div id="countdown_dashboard" class="clearfix">
         <div class="dash weeks_dash">
@@ -37,12 +39,16 @@ RenderedSource HappyTeam
         </div>
 
     </div>
+    {% endif %}
+
 {% endblock %}
 {% block head %}
     <link href="/static/timer/style/dark.css" rel="stylesheet">
 
 {% endblock %}
 {% block script %}
+    {% if last_sprint %}
+
     <script src="/static/timer/js/jquery.lwtCountdown-1.0.js" type="text/javascript" charset="utf-8"></script>
     <script type="text/javascript">
         $(document).ready(function() {
@@ -58,4 +64,5 @@ RenderedSource HappyTeam
             });
         })
     </script>
+    {% endif %}
 {% endblock %}
