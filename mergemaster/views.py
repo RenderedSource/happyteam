@@ -1,4 +1,5 @@
 # coding: utf-8
+from django.core.urlresolvers import reverse
 import xmpp
 import datetime
 from django.contrib.auth.decorators import login_required
@@ -87,10 +88,11 @@ def MergeList(request):
         }
         for user in MergeMasters.objects.filter(status = True):
           JabberNotificate(message.get('text'), user.jabber)
-        for user in User.objects.all():
-          MergeNotification.objects.create(message=message.get('text'), type=message.get('type'), user=user,
+          MergeNotification.objects.create(message=message.get('text'), type=message.get('type'), user=user.user,
             request=form.id).save()
-        form = False
+        return HttpResponseRedirect('/merge/')
+
+      form = False
   else:
     form = MergeRequestForm(initial={'status':'open','developer':request.user.id})
   merge_list = MergeRequest.objects.all().exclude(status='approve').order_by('-id')
@@ -104,10 +106,10 @@ def MergeAction(request, action, pid):
   message = ''
   try:
   #    only merge_master
-    merge_master = MergeMasters.objects.get(user=request.user, status=True)
+    merge_master = MergeMasters.objects.get(user = request.user, status=True)
     if action == 'review' or action == 'approve' or action == 'reject' or action == 'open':
       try:
-        mod_merge = MergeRequest.objects.get(Q(merge_master=request.user) | Q(merge_master=None), id=pid)
+        mod_merge = MergeRequest.objects.get(Q(merge_master__user=request.user) | Q(merge_master=None), id=pid)
         mod_merge.status = action
         mod_merge.merge_master = merge_master
         if  action == 'open':
@@ -119,9 +121,22 @@ def MergeAction(request, action, pid):
           action,
           mod_merge.branch
           ), 'type': 'success'}
+
+#        message to user
         if action == 'reject':
+#            add merge master stat reject because after save redirect to discuss page
           MergeStats.objects.create(merge_master=merge_master, action=action).save()
-          return HttpResponseRedirect('/merge/discus/%s/' % pid)
+          message ='Your branch reject please got to chat http://%s%s'%(request.META['HTTP_HOST'], reverse('discuss',args=[mod_merge.id]))
+          JabberNotificate(message, mod_merge.developer.email)
+          return HttpResponseRedirect(reverse('discuss',args=[mod_merge.id]))
+
+        if action == 'review':
+            message_jabber ='Your branch %s start review %s'%(mod_merge.branch, mod_merge.merge_master)
+        if action == 'approve':
+            message_jabber ='Your branch %s approved and merged'%(mod_merge.branch)
+        if message:
+            JabberNotificate(message_jabber, mod_merge.developer.email)
+
 
       except MergeRequest.DoesNotExist:
         message = {'text': 'No find request or another merge master', 'type': 'error'}
@@ -145,7 +160,7 @@ def MergeAction(request, action, pid):
       try:
         MergeRequest.objects.get(id=pid, developer=request.user).delete()
       except MergeRequest.DoesNotExist:
-        message = {'text': 'No find request or another merge master', 'type': 'error'}
+        message = {'text': 'No find request', 'type': 'error'}
   for user in User.objects.all():
     MergeNotification.objects.create(message=message.get('text'), type=message.get('type'), user=user,
       request=pid).save()
