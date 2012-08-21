@@ -20,11 +20,11 @@ def SendJabber(request):
     cl = xmpp.Client(jid.getDomain(), debug=[])
     conn = cl.connect()
     sended_messages = 0
-    for item in JabberMessage.objects.filter(date__gte = datetime.datetime.now() - datetime.timedelta(1)):
-      if conn:
-        auth = cl.auth(jid.getNode(), settings.JABBER_PASSWORD,
+    if conn:
+      auth = cl.auth(jid.getNode(), settings.JABBER_PASSWORD,
           resource=jid.getResource())
-        if auth:
+      if auth:
+        for item in JabberMessage.objects.filter(date__gte = datetime.datetime.now() - datetime.timedelta(1)):
           cl.send(xmpp.protocol.Message(item.jabber, item.text))
           item.delete()
           sended_messages = sended_messages + 1
