@@ -4,7 +4,11 @@
 Discus about {{ merge_request.title }}
 {% endblock %}
 {% block content %}
-    <h1>{{ merge_request.branch }} <a href="{{ merge_request.get_approve_url }}" class="btn ">Approve</a></h1>
+    <h1>{{ merge_request.branch }}
+        {% if merge_request.merge_master.user == user %}
+        <a href="{{ merge_request.get_approve_url }}" class="btn ">Approve</a>
+    {% endif %}
+        </h1>
     <p><b>developer:</b> {{ merge_request.developer }}</p>
     <p><b>Merge Master:</b> {{ merge_request.merge_master }}</p>
     <div class="well" id="chat">
