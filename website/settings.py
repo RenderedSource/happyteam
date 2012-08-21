@@ -167,6 +167,8 @@ LOGIN_REQUIRED_URLS = (
 LOGIN_REQUIRED_URLS_EXCEPTIONS = (
     r'/login(.*)$',
     r'/logout(.*)$',
+    r'/merge/sendjabber/$',
+
     )
 
 ## google auth
