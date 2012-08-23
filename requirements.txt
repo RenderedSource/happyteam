@@ -1,1 +1,2 @@
 django-markdown
+django-bootstrap-form

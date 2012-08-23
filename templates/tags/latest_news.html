@@ -6,9 +6,6 @@
         <h5>{% if news.required %}<span class="label label-important">Important</span>{% endif %} {{ news.title }}</h5>
         <div class="author">
             <small>{{ news.date|date:'d.m.Y H:i' }}</small><br><strong><i class="icon-user"></i> Author:</strong> {{ news.author }} </div>
-        <div class="text">
-            {{ news.text|truncatechars:50|markdown:"safe" }}
-        </div>
         <a class="readnews"  href="{{ news.get_absolute_url }}">Read more</a>
     </div>
 {% empty %}

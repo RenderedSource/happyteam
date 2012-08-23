@@ -127,6 +127,7 @@ INSTALLED_APPS = (
     'easy_thumbnails',
     'profileuser',
     'mergemaster',
+    'bootstrapform',
 #    other app
     'mailer',
     'scrum',
@@ -134,7 +135,7 @@ INSTALLED_APPS = (
     'django_markdown',
 )
 AUTH_PROFILE_MODULE = 'profileuser.UserProfile'
-
+MARKDOWN_EDITOR_SKIN = 'simple'
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to
 # the site admins on every HTTP 500 error when DEBUG=False.
