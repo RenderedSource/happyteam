@@ -67,7 +67,7 @@ def editNews(request, pid):
     except News.DoesNotExist:
         raise Http404
     if request.method == "POST":
-        form = AddNewsForm(request.POST, news)
+        form = AddNewsForm(request.POST, instance=news)
         if  form.is_valid():
             temp_news = form.save()
             return HttpResponseRedirect(reverse('read_news', args=[temp_news.id]))
