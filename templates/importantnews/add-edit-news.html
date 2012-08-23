@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% load bootstrap %}
+{% block title %}
+News editor
+{% endblock %}
+{% block content %}
+    <form action="" method="post">
+    {{ form.as_p }}
+    {% csrf_token %}
+        <input type="submit" value="Add news">
+    </form>
+{% endblock %}
+{% block head %}
+    <link href="/static/django_markdown/skins/simple/style.css" type="text/css" media="screen" rel="stylesheet" />
+    <link href="/static/django_markdown/markdown.css" type="text/css" media="screen" rel="stylesheet" />
+{% endblock %}
+
+{% block script %}
+    <script type="text/javascript" src="/static/django_markdown/jquery.markitup.js"></script>
+    <script type="text/javascript" src="/static/django_markdown/markdown.js"></script>
+    <script type="text/javascript">
+        miu.init('id_text', {"previewParserPath": "/markdown/preview/"})
+    </script>
+{% endblock %}
