@@ -116,6 +116,7 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.markup',
     # Uncomment the next line to enable the admin:
     'django.contrib.admin',
     # Uncomment the next line to enable admin documentation:
@@ -129,6 +130,8 @@ INSTALLED_APPS = (
 #    other app
     'mailer',
     'scrum',
+    'importantnews',
+    'django_markdown',
 )
 AUTH_PROFILE_MODULE = 'profile.UserProfile'
 
@@ -165,6 +168,7 @@ LOGIN_REQUIRED_URLS = (
     r'(.*)$',
     )
 LOGIN_REQUIRED_URLS_EXCEPTIONS = (
+    r'/admin(.*)$',
     r'/login(.*)$',
     r'/logout(.*)$',
     r'/merge/sendjabber/$',
