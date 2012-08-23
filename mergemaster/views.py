@@ -11,8 +11,8 @@ from django.template.context import RequestContext
 from django.template.loader import render_to_string
 from django.views.decorators.csrf import csrf_exempt
 import simplejson
-from mergemaster.forms import MergeRequestForm, MergeCommentForm, MergeRequestFormApi, MergeMastersForm
-from mergemaster.models import MergeRequest, MergeMasters, MergeComment, MergeNotification, MergeStats, JabberMessage
+from mergemaster.forms import MergeRequestForm, MergeRequestFormApi, MergeMasterForm
+from mergemaster.models import MergeRequest, MergeMaster, MergeNotification, JabberMessage
 from website import settings
 
 def SendJabber(request):
@@ -56,7 +56,7 @@ def ApiAddRequest(request):
             'text': 'Please merge new branch %s Developer: %s' % (form.branch, form.developer),
             'type': 'info'
         }
-        for user in MergeMasters.objects.filter(status=True):
+        for user in MergeMaster.objects.filter(enabled = True):
             JabberNotificate(message.get('text'), user.user.email)
         for user in User.objects.all():
             MergeNotification.objects.create(message=message.get('text'), type=message.get('type'), user=user,
@@ -67,7 +67,6 @@ def ApiAddRequest(request):
     return HttpResponse('%s' % message)
 
 
-@login_required(login_url='/login/')
 def MergeList(request):
     """
     Show branch and status.
@@ -77,8 +76,8 @@ def MergeList(request):
     """
 
     try:
-        merge_master = MergeMasters.objects.get(user=request.user, status=True)
-    except MergeMasters.DoesNotExist:
+        merge_master = MergeMaster.objects.get(user = request.user, enabled = True)
+    except MergeMaster.DoesNotExist:
         merge_master = False
     if request.method == 'POST':
         form = MergeRequestForm(request.POST)
@@ -89,7 +88,7 @@ def MergeList(request):
                 'text': 'Please merge new branch %s Developer: %s' % (form.branch, form.developer),
                 'type': 'info'
             }
-            for user in MergeMasters.objects.filter(status=True):
+            for user in MergeMaster.objects.filter(enabled = True):
                 JabberNotificate(message.get('text'), user.jabber)
                 MergeNotification.objects.create(message=message.get('text'), type=message.get('type'), user=user.user,
                     request=form.id).save()
@@ -98,19 +97,19 @@ def MergeList(request):
         form = False
     else:
         form = MergeRequestForm(initial={'status': 'open', 'developer': request.user.id})
-    merge_list = MergeRequest.objects.all().exclude(status='approve').order_by('-id')
+    #merge_list = MergeRequest.objects.all().exclude(status='approve').order_by('-id')
+    merge_list = MergeRequest.objects.all().order_by('-id')
 
     return render_to_response('mergemaster/list.html',
             {'merge_list': merge_list, 'form': form, 'merge_master': merge_master},
         context_instance=RequestContext(request))
 
 
-@login_required(login_url='/login/')
 def MergeAction(request, action, pid):
     message = ''
     try:
     #    only merge_master
-        merge_master = MergeMasters.objects.get(user=request.user, status=True)
+        merge_master = MergeMaster.objects.get(user = request.user, enabled = True)
         if action == 'review' or action == 'approve' or action == 'reject' or action == 'open':
             try:
                 mod_merge = MergeRequest.objects.get(Q(merge_master__user=request.user) | Q(merge_master=None), id=pid)
@@ -158,8 +157,8 @@ def MergeAction(request, action, pid):
             except MergeRequest.DoesNotExist:
                 message = {'text': 'No find request or another merge master', 'type': 'error'}
                 #  add merge stat
-        MergeStats.objects.create(merge_master=merge_master, action=action).save()
-    except MergeMasters.DoesNotExist:
+        #MergeStats.objects.create(merge_master=merge_master, action=action).save()
+    except MergeMaster.DoesNotExist:
     #  if your owner
         if action == 'delete':
             try:
@@ -175,7 +174,6 @@ def MergeAction(request, action, pid):
 #При reject создается страница с комментами и при следующих пушах либо делает
 # уже без создания нового объекта либо как то продолжается тот.. Дописывается в него и т.д...
 @csrf_exempt
-@login_required(login_url='/login/')
 def MergeDiscusLoad(request, pid):
     try:
         if request.is_ajax():
@@ -187,7 +185,6 @@ def MergeDiscusLoad(request, pid):
         raise Http404
 
 
-@login_required(login_url='/login/')
 def MergeDiscus(request, pid):
     try:
         merge_request = MergeRequest.objects.get(id=pid)
@@ -213,7 +210,6 @@ def MergeDiscus(request, pid):
         raise Http404
 
 
-@login_required(login_url='/login/')
 @csrf_exempt
 def AjaxMergeNotification(request):
     try:
@@ -227,7 +223,6 @@ def AjaxMergeNotification(request):
         context_instance=RequestContext(request))
 
 
-@login_required(login_url='/login/')
 @csrf_exempt
 def MergeTableRow(request, pid):
 #  if request.is_ajax:
@@ -267,7 +262,6 @@ def MergeMasterStats(request, pid):
         raise Http404
 
 
-@login_required(login_url='/login/')
 def MergeMastersCabinet(request):
     try:
         master = MergeMasters.objects.get(user=request.user)
