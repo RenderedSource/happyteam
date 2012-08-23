@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% load markup %}
+{% block title %}
+Unread news
+{% endblock %}
+{% block content %}
+    <div class="btn-group">
+        <a href="#add-news" class="btn btn-primary"><i class="icon-text-height icon-white"></i> Add news</a>
+        <a href="{% url archive_news %}" class="btn"><i class="icon-folder-open"></i> News archive</a>
+        <a href="{% url unread_news %}" class="btn"><i class="icon-inbox"></i> Unread archive</a>
+    </div>
+    <ul class="breadcrumb">
+        <li><a href="/">Home</a> <span class="divider">/</span></li>
+        <li class="active">Data</li>
+    </ul>
+    {% for news in news_list %}
+        <div class="news">
+            <h1>{% if news.required %}<span class="label label-important">Important</span>{% endif %} {{ news.title }}</h1>
+            <div class="author">
+                <small>{{ news.date|date:'d.m.Y H:i' }}</small><br><strong><i class="icon-user"></i> Author:</strong> {{ news.author }} </div>
+            <div class="text">
+                {{ news.text|truncatechars:300|markdown:"safe" }}
+            </div>
+            <a class="readnews btn"  href="{{ news.get_absolute_url }}">Read more</a>
+        </div>
+      {% empty %}
+        <h2>You all read now..</h2>
+        <a href="{% url archive_news %}" class="btn">See news archive</a>
+    {% endfor %}
+
+{% endblock %}

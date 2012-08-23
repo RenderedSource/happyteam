@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% load markup %}
+{% block title %}
+{{ news.title }}
+{% endblock %}
+{% block content %}
+    <ul class="breadcrumb">
+        <li><a href="/">Home</a> <span class="divider">/</span></li>
+        <li><a href="{% url unread_news %}">Unread News</a> <span class="divider">/</span></li>
+        <li class="active">{{ news.title }}</li>
+    </ul>
+    <div class="news">
+        <h1>{% if news.required %}<span class="label label-important">Important</span>{% endif %} {{ news.title }}</h1>
+        <div class="author">
+            <small>{{ news.date|date:'d.m.Y H:i' }}</small><br><strong><i class="icon-user"></i> Author:</strong> {{ news.author }} </div>
+        <div class="text">
+            {{ news.text|markdown:"safe" }}
+        </div>
+        {% if news.required %}
+            <form action="" method="post">
+                {% csrf_token %}
+            {{ form }}
+            <input  type="submit" class="readnews btn btn-success" value="I Read it"><i class="icon-ok icon-white"></i>
+            </form>
+        {% endif %}
+    </div>
+{% endblock %}
