@@ -24,7 +24,7 @@ MERGE_REQUEST_STATUS = (
 class MergeRequest(models.Model):
     developer = models.ForeignKey(User, blank = True, null = True)
     branch = models.CharField(max_length = 60)
-    #status = models.CharField(max_length = 60, choices = MERGE_REQUEST_STATUS)
+    task_id = models.IntegerField()
     date_created = models.DateTimeField(auto_now = True, verbose_name = 'Created Date')
 
     def __unicode__(self):
@@ -52,13 +52,11 @@ class MergeRequest(models.Model):
     def get_cancel_url(self):
         return '/merge/open/%s' % self.id
 
-class MergeRequestStatus(models.Model):
-    text =  models.CharField(max_length = 60)
-
 class MergeRequestAction(models.Model):
     merge_request = models.ForeignKey(MergeRequest)
     merge_master = models.ForeignKey(MergeMaster)
-    status = models.ForeignKey(MergeRequestStatus)
+    status = models.CharField(max_length=60, choices = MERGE_REQUEST_STATUS)
+    reason = models.CharField(max_length=60)
     date = models.DateTimeField(auto_now = True)
 
 #class MergeComment(models.Model):

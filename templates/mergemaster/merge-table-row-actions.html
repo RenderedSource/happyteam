@@ -1,5 +1,23 @@
 {% spaceless %}
 {% if merge %}
+
+    <table class="table table-bordered">
+        <tr>
+            <th>Merge Master</th>
+            <th>Status</th>
+            <th>Date</th>
+        </tr>
+        {% for action in merge.mergerequestaction_set.all %}
+        <tr>
+            <td>{{ action.merge_master }}</td>
+            <td>{{ action.status }} {{ action.reason }}</td>
+            <td>Date</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+{% comment %}
+
 <div class="btn-group">
     {% if merge_master and merge.status == 'open' and merge.developer.id != user.id %}
         <a href="{{ merge.get_apply_url }}" class="btn btn-success">Start Review</a>
@@ -19,5 +37,8 @@
         <a href="{{ merge.get_delete_url }}" class="btn btn-danger">Delete</a>
     {% endif %}
 </div>
+
+{% endcomment %}
+
 {% endif %}
 {% endspaceless %}

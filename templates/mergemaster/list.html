@@ -12,52 +12,32 @@
 {% block content %}
     <div class="container-fluid">
         <div class="row-fluid">
-            <div class="span10">
-                <div class="btn-group panel">
-                    <a href="#" id="merg" class="btn"><i class="icon-wrench"></i> I merged</a>
-                    <a href="#" id="develop" class="btn">I developer</a>
-                    <a href="#" id="clear" class="btn btn-info">Show all</a>
-                </div>
-
+            <div class="span12">
                 <div class="add-request">
-                    {% if form %}
-                        <h2>Add new merge request</h2>
-                        <form action="" method="post" class="well form-inline">
-                            {{ form }}
+                    {% if request_form %}
+                        <form action="" method="post" class="form-inline well">
+                            <legend>Add new merge request</legend>
+                            {{ request_form }}
                             {% csrf_token %}
-                            <input type="submit" class="btn btn-primary" value="Please merge">
+                            <input type="submit" class="btn btn-primary" value="Add" />
                         </form>
-                        {% else %}
+                    {% else %}
                         <h2>Success add new branch</h2>
                     {% endif %}
 
                 </div>
-                <table class="table" id="mergelist">
-                    <thead>
-                    <tr>
-                        <th></th>
-                        <th>Developer</th>
-                        <th>Merge Master</th>
-                        <th>Branch</th>
-                        <th>Status</th>
-                        <th>Action</th>
-                        {#                        <th>Pivotal</th>#}
-                        <th>Change date</th>
-                    </tr>
-                    </thead>
+                <table class="table table-bordered table-condensed" id="mergelist">
                     {% for merge in merge_list %}
                         {% include 'mergemaster/merge-table-row.html' %}
                     {% endfor %}
                 </table>
-            </div>
-            <div class="span2" id="activityfeed">
-                <!--Sidebar content-->
             </div>
         </div>
     </div>
 
 {% endblock %}
 {% block script %}
+{% comment %}
     <script src="/static/dataTables/js/jquery.dataTables.min.js"></script>
     <script type="text/javascript">
         $.fn.dataTableExt.oApi.fnResetAllFilters = function (oSettings, bDraw/*default true*/) {
@@ -123,4 +103,5 @@
         })
         ;
     </script>
+{% endcomment %}
 {% endblock %}

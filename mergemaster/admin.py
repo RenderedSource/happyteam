@@ -11,6 +11,10 @@ class MergeRequestAdmin(admin.ModelAdmin):
   list_display = ['branch','date_created']
 admin.site.register(MergeRequest, MergeRequestAdmin)
 
+class MergeRequestActionAdmin(admin.ModelAdmin):
+    pass
+admin.site.register(MergeRequestAction, MergeRequestActionAdmin)
+
 #class MergeCommentAdmin(admin.ModelAdmin):
 #  pass
 #admin.site.register(MergeComment, MergeCommentAdmin)

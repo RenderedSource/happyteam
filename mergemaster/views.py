@@ -11,7 +11,7 @@ from django.template.context import RequestContext
 from django.template.loader import render_to_string
 from django.views.decorators.csrf import csrf_exempt
 import simplejson
-from mergemaster.forms import MergeRequestForm, MergeRequestFormApi, MergeMasterForm
+from mergemaster.forms import MergeRequestForm, MergeRequestFormApi, MergeReqestActionForm
 from mergemaster.models import MergeRequest, MergeMaster, MergeNotification, JabberMessage
 from website import settings
 
@@ -80,9 +80,9 @@ def MergeList(request):
     except MergeMaster.DoesNotExist:
         merge_master = False
     if request.method == 'POST':
-        form = MergeRequestForm(request.POST)
-        if form.is_valid():
-            form = form.save(commit=False)
+        merge_request_form = MergeRequestForm(request.POST)
+        if merge_request_form.is_valid():
+            form = merge_request_form.save(commit=False)
             form.save()
             message = {
                 'text': 'Please merge new branch %s Developer: %s' % (form.branch, form.developer),
@@ -91,17 +91,22 @@ def MergeList(request):
             for user in MergeMaster.objects.filter(enabled = True):
                 JabberNotificate(message.get('text'), user.jabber)
                 MergeNotification.objects.create(message=message.get('text'), type=message.get('type'), user=user.user,
-                    request=form.id).save()
+                    request=merge_request_form.id).save()
             return HttpResponseRedirect('/merge/')
 
-        form = False
+        merge_request_form = False
     else:
-        form = MergeRequestForm(initial={'status': 'open', 'developer': request.user.id})
+        merge_request_form = MergeRequestForm(initial={'status': 'open', 'developer': request.user.id})
     #merge_list = MergeRequest.objects.all().exclude(status='approve').order_by('-id')
-    merge_list = MergeRequest.objects.all().order_by('-id')
+    merge_list = MergeRequest.objects.all().order_by('id')
+
+    merge_action_form = MergeReqestActionForm()
 
     return render_to_response('mergemaster/list.html',
-            {'merge_list': merge_list, 'form': form, 'merge_master': merge_master},
+            {'merge_list': merge_list,
+             'request_form': merge_request_form,
+             'action_form': merge_action_form,
+             'merge_master': merge_master},
         context_instance=RequestContext(request))
 
 

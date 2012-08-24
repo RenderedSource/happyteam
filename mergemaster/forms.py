@@ -1,6 +1,6 @@
 #-*- coding: utf-8 -*-
 from django import forms
-from mergemaster.models import MergeRequest, MergeMaster
+from mergemaster.models import MergeRequest, MergeMaster, MergeRequestAction
 
 class MergeRequestFormApi(forms.ModelForm):
   class Meta:
@@ -25,10 +25,13 @@ class MergeRequestForm(forms.ModelForm):
     model = MergeRequest
     #widgets = {
     #'developer':forms.HiddenInput(),
-    #}
-    exclude = ['merge_master',]
+    #}]
 
-class MergeMasterForm(forms.ModelForm):
+class MergeReqestActionForm(forms.ModelForm):
   class Meta:
-    model = MergeMaster
-    exclude=['user','enabled',]
+    model = MergeRequestAction
+
+#class MergeMasterForm(forms.ModelForm):
+#  class Meta:
+#    model = MergeMaster
+#    exclude=['user','enabled',]
