@@ -29,4 +29,21 @@
             </form>
         {% endif %}
     </div>
+    <blockquote class="pull-right">
+        <div class="readuser">
+            <strong>Who read:</strong>
+            {% for user in news.get_read_user %}
+                {% if user.user.first_name == '' and user.user.last_name == '' %}
+                    {{ user.user.username }}
+                {% else %}
+                    {{ user.user.first_name }} {{ user.user.last_name }}
+                {% endif %}
+                {% if not forloop.last %}
+                    ,
+                {% endif %}
+            {% endfor %}
+
+        </div>
+    </blockquote>
+
 {% endblock %}

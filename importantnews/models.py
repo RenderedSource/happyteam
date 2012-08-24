@@ -15,6 +15,8 @@ class News(models.Model):
         return '/news/%d/'%(self.id)
     def get_edit_url(self):
         return '/news/edit/%s/'%self.id
+    def get_read_user(self):
+        return UserRead.objects.filter(news = self)
 class UserRead(models.Model):
     news = models.ForeignKey(News)
     user = models.ForeignKey(User)
