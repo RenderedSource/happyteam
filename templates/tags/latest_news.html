@@ -3,7 +3,7 @@
 
 {% for news in news_list %}
     <div class="news">
-        <h5>{% if news.required %}<span class="label label-important">Important</span>{% endif %} {{ news.title }}</h5>
+        <h5>{% if news.required %}<span class="label label-important">Important</span>{% endif %} <a href="{{ news.get_absolute_url }}">{{ news.title }}</a></h5>
         <div class="author">
             <small>{{ news.date|date:'d.m.Y H:i' }}</small><br><strong><i class="icon-user"></i> Author:</strong> {{ news.author }} </div>
         <a class="readnews"  href="{{ news.get_absolute_url }}">Read more</a>

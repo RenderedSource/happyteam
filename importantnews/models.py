@@ -1,6 +1,9 @@
 from audioop import reverse
 from django.contrib.auth.models import User
 from django.db import models
+from django.template.loader import render_to_string
+from mailer import send_mail, send_html_mail
+from website import settings
 
 class News(models.Model):
     author = models.ForeignKey(User)
@@ -15,6 +18,19 @@ class News(models.Model):
         return '/news/%d/'%(self.id)
     def get_edit_url(self):
         return '/news/edit/%s/'%self.id
+    def get_read_user(self):
+        return UserRead.objects.filter(news = self)
+
+#    send required new news
+    def save(self):
+        if self.required:
+            try:
+                News.objects.get(id = self.id)
+            except News.DoesNotExist:
+                send_html_mail(self.title,render_to_string('importantnews/mail.html',{'news':self}) ,render_to_string('importantnews/mail.html',{'news':self}), settings.EMAIL_HOST_USER,
+                    User.objects.all().values_list('email', flat = True))
+        super(News, self).save()
+
 class UserRead(models.Model):
     news = models.ForeignKey(News)
     user = models.ForeignKey(User)

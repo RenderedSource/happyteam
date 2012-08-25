@@ -30,7 +30,10 @@ def readNews(request, pid):
     if request.method == 'POST':
         form = ReadNewsForm(request.POST)
         if form.is_valid():
-            form.save()
+            try:
+                UserRead.objects.get(news=news, user=request.user)
+            except UserRead.DoesNotExist:
+                form.save()
             return HttpResponseRedirect(reverse('unread_news'))
     else:
         form = ReadNewsForm(initial={'user': request.user, 'news': news})

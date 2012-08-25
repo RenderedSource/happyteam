@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load markup %}
 {% block title %}
-{{ news.title }}
+    {{ news.title }}
 {% endblock %}
 {% block content %}
     <ul class="breadcrumb">
@@ -11,10 +11,13 @@
     </ul>
     <div class="news">
         <h1>{% if news.required %}<span class="label label-important">Important</span>{% endif %} {{ news.title }}</h1>
+
         <div class="author">
-            <small>{{ news.date|date:'d.m.Y H:i' }}</small><br><strong><i class="icon-user"></i> Author:</strong> {{ news.author }}
+            <small>{{ news.date|date:'d.m.Y H:i' }}</small>
+            <br><strong><i class="icon-user"></i> Author:</strong> {{ news.author }}
             {% if news.author == user %}
-                <a href="{{ news.get_edit_url }}" class="btn btn-primary btn-small"><i class="icon-pencil icon-white"></i></a>
+                <a href="{{ news.get_edit_url }}" class="btn btn-primary btn-small"><i
+                        class="icon-pencil icon-white"></i></a>
             {% endif %}
         </div>
 
@@ -24,9 +27,31 @@
         {% if news.required %}
             <form action="" method="post">
                 {% csrf_token %}
-            {{ form }}
-            <input  type="submit" class="readnews btn btn-success" value="I Read it"><i class="icon-ok icon-white"></i>
+                {{ form }}
+                <input type="submit" class="readnews btn btn-success" value="I Read it"><i
+                    class="icon-ok icon-white"></i>
             </form>
         {% endif %}
     </div>
+    <blockquote class="pull-right">
+        <div class="readuser">
+            {% for user in news.get_read_user %}
+                {% if forloop.first %}
+                    <strong>Who read:</strong>
+                {% endif %}
+                {% if user.user.first_name == '' and user.user.last_name == '' %}
+                    {{ user.user.username }}
+                {% else %}
+                    {{ user.user.first_name }} {{ user.user.last_name }}
+                {% endif %}
+                {% if not forloop.last %}
+                    ,
+                {% endif %}
+            {% empty %}
+
+            {% endfor %}
+
+        </div>
+    </blockquote>
+
 {% endblock %}

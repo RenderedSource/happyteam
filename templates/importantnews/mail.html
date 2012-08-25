@@ -1,0 +1,6 @@
+{% load markup %}
+<h2>{{ news.title }}</h2>
+<div class="text">
+    {{ news.text|truncatechars:300|markdown:"safe" }}
+</div>
+<a href="http://team.renderedsource.com/news/{{ news.id }}">Read more</a>

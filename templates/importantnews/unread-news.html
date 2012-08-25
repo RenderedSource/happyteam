@@ -15,7 +15,7 @@ Unread news
     </ul>
     {% for news in news_list %}
         <div class="news">
-            <h1>{% if news.required %}<span class="label label-important">Important</span>{% endif %} {{ news.title }}</h1>
+            <h1>{% if news.required %}<span class="label label-important">Important</span>{% endif %} <a href="{{ news.get_absolute_url }}">{{ news.title }}</a></h1>
             <div class="author">
                 <small>{{ news.date|date:'d.m.Y H:i' }}</small><br><strong><i class="icon-user"></i> Author:</strong> {{ news.author }}
                 {% if news.author == user %}
