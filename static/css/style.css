@@ -13,6 +13,8 @@ body {
     margin-top: 100px;
 }
 
+/* Garbage Collector */
+
 .step {
     height: 100%;
     display: none;
@@ -119,6 +121,13 @@ body {
 .step.step-gambling .roulette .item p {
     display: table-cell;
     vertical-align: middle;
+}
+
+/* Merge Master */
+
+#merge td.action-list {
+    padding: 0;
+    border-top: none;
 }
 
 /*merge master request*/

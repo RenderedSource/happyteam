@@ -1,17 +1,31 @@
 {% spaceless %}
 {% if merge %}
 
-    <table class="table table-bordered">
-        <tr>
-            <th>Merge Master</th>
-            <th>Status</th>
-            <th>Date</th>
-        </tr>
+    <div style="text-align: center">
+        <a href="#" data-toggle="collapse" data-target="#action-list-add-{{ merge.id }}">Update request status</a>
+    </div>
+    <div id="action-list-add-{{ merge.id }}" class="collapse">
+        <div class="well well-small">
+            <form class="form-horizontal" method="post" action="add_merge_action/">
+                {% load bootstrap %}
+                {{ action_form|bootstrap }}
+                {% csrf_token %}
+                <input type="hidden" name="merge_request" value="{{ merge.id }}" />
+                <input type="submit" class="btn" title="Add" />
+            </form>
+        </div>
+    </div>
+
+    <table class="table table-striped table-condensed">
         {% for action in merge.mergerequestaction_set.all %}
-        <tr>
+        <tr class="error">
             <td>{{ action.merge_master }}</td>
             <td>{{ action.status }} {{ action.reason }}</td>
             <td>Date</td>
+        </tr>
+        {% empty %}
+        <tr class="info">
+            <td colspan="3">No actions yet</td>
         </tr>
         {% endfor %}
     </table>

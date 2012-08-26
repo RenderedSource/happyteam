@@ -9,9 +9,6 @@ class MergeMaster(models.Model):
     def __unicode__(self):
         return self.user.username
 
-    def get_merge_master_url(self):
-        return '/merge/user/%s' % self.user.id
-
 MERGE_REQUEST_STATUS = (
     ('open', 'open'),
     ('apply', 'apply'),
@@ -29,28 +26,6 @@ class MergeRequest(models.Model):
 
     def __unicode__(self):
         return '%s - %s' % (self.developer, self.branch)
-
-    #todo it is GAVNOCODE
-    def get_edit_url(self):
-        return '/merge/edit/%s' % self.id
-
-    def get_apply_url(self):
-        return '/merge/review/%s' % self.id
-
-    def get_delete_url(self):
-        return '/merge/delete/%s' % self.id
-
-    def get_approve_url(self):
-        return '/merge/approve/%s' % self.id
-
-    def get_reject_url(self):
-        return '/merge/reject/%s' % self.id
-
-    def get_discus_url(self):
-        return '/merge/discus/%s' % self.id
-
-    def get_cancel_url(self):
-        return '/merge/open/%s' % self.id
 
 class MergeRequestAction(models.Model):
     merge_request = models.ForeignKey(MergeRequest)
