@@ -133,6 +133,8 @@ INSTALLED_APPS = (
     'scrum',
     'importantnews',
     'django_markdown',
+    'django_socketio',
+    'teamchat'
 )
 AUTH_PROFILE_MODULE = 'profileuser.UserProfile'
 MARKDOWN_EDITOR_SKIN = 'simple'
@@ -165,6 +167,7 @@ LOGGING = {
     }
 }
 
+
 LOGIN_REQUIRED_URLS = (
     r'(.*)$',
     )
@@ -186,6 +189,20 @@ LOGIN_REDIRECT_URL = '/'
 LOGOUT_URL = '/logout/'
 OPENID_SSO_SERVER_URL = 'https://www.google.com/accounts/o8/id'
 
+## socketio
+SOCKETIO_HOST = '127.0.0.1'
+SOCKETIO_PORT = 8000
+
+TEMPLATE_CONTEXT_PROCESSORS = (
+    "django.contrib.auth.context_processors.auth",
+    "django.core.context_processors.debug",
+    "django.core.context_processors.i18n",
+    "django.core.context_processors.media",
+    "django.core.context_processors.static",
+    "django.core.context_processors.request",
+    "django.core.context_processors.tz",
+    "django.contrib.messages.context_processors.messages"
+    )
 try:
     from local_settings import *
 except:

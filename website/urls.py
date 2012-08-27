@@ -4,6 +4,7 @@ from django.contrib import admin
 admin.autodiscover()
 
 urlpatterns = patterns('',
+    url("", include('django_socketio.urls')),
     url(r'^$', 'website.views.Index'),
     url('^markdown/', include( 'django_markdown.urls')),
     url('^news/', include( 'importantnews.urls')),
