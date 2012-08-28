@@ -13,7 +13,7 @@ register = template.Library()
 """
 
 @register.inclusion_tag('tags/online_users.html', takes_context=True)
-def online_users(context, num):
+def online_users(context):
     return {
         'user':context['user']
         }

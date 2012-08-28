@@ -66,7 +66,24 @@
      <footer>
         <p>&copy; Company 2012</p>
     </footer>
+    <div class="navbar navbar-fixed-bottom  navbar-inverse">
+        <div class="navbar-inner">
+            <div class="container">
+                <ul class="nav pull-right">
+                    <li><a href="#">User settings</a></li>
+                    <li class="divider-vertical"></li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Chat <b class="caret"></b></a>
+                        <ul class="dropdown-menu user-list">
+                            <li><a href="{% url group_chat %}">Group chat</a></li>
+                              <li class="divider"></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
 
+    </div>
 </div> <!-- /container -->
 
 <!-- Le javascript
@@ -75,6 +92,7 @@
 <script src="/static/js/jquery-1.7.2.min.js"></script>
 <script src="/static/bootstrap/js/bootstrap.min.js"></script>
 <script src="/static/jqueryui/js/jquery-ui-1.8.22.custom.min.js"></script>
+<script type="text/javascript" src="/static/js/teamchat.js"></script>
 {% block script %}
     
 {% endblock %}

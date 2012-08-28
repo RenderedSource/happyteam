@@ -8,6 +8,7 @@ urlpatterns = patterns('',
     url(r'^$', 'website.views.Index'),
     url('^markdown/', include( 'django_markdown.urls')),
     url('^news/', include( 'importantnews.urls')),
+    url('^chat/', include( 'teamchat.urls')),
 
     url(r'^login/$', 'website.views.login', name='login'),
     url(r'^login-begin/$', 'django_openid_auth.views.login_begin', name='openid-login'),
@@ -20,6 +21,5 @@ urlpatterns = patterns('',
     url(r'^merge/', include('mergemaster.urls')),
     url(r'^gc/', include('garbagecollector.urls')),
 
-    url(r'^admin/', include(admin.site.urls)),
     url(r'^admin/', include(admin.site.urls)),
 )
