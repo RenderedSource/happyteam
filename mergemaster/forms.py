@@ -23,6 +23,7 @@ class MergeRequestFormApi(forms.ModelForm):
 class MergeRequestForm(forms.ModelForm):
     class Meta:
         model = MergeRequest
+        exclude=['status','qa_required','code_review_required']
         #widgets = {
         #'developer':forms.HiddenInput(),
         #}]

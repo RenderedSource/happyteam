@@ -9,29 +9,82 @@ class MergeMaster(models.Model):
     def __unicode__(self):
         return self.user.username
 
-MERGE_REQUEST_STATUS = (
-    ('open', 'open'),
-    ('apply', 'apply'),
-    ('approve', 'approve'),
-    ('reject', 'reject'),
-    ('review', 'review')
+class MergeRequest(models.Model):
+    PENDING = 'pending'
+    REJECTED = 'rejected'
+    APPROVED = 'approved'
+    MERGED = 'merged'
+    CANCELED = 'canceled'
+
+    STATUSES = (
+        (PENDING, 'Pending'),
+        (REJECTED, 'Rejected'),
+        (APPROVED, 'Approved'),
+        (MERGED, 'Merged'),
+        (CANCELED, 'Canceled')
     )
 
-
-class MergeRequest(models.Model):
-    developer = models.ForeignKey(User, blank = True, null = True)
+    developer = models.ForeignKey(User)
     branch = models.CharField(max_length = 60)
     task_id = models.IntegerField()
-    date_created = models.DateTimeField(auto_now = True, verbose_name = 'Created Date')
+
+    status = models.CharField(choices = STATUSES, max_length = 20)
+    qa_required = models.BooleanField()
+    code_review_required = models.BooleanField()
+    date_created = models.DateTimeField(auto_now = True, verbose_name = 'Date Created ')
+    date_modified = models.DateTimeField(auto_now = True, verbose_name = 'Date Modified ')
+
+    def update_status_by_action(self, action):
+        """
+        @type action: MergeRequestAction
+        """
+        if action.status == action.MERGE_REQUEST:
+            self.status = self.PENDING
+            self.code_review_required = True
+            self.qa_required = True
+        elif action.status == action.CODE_REVIEW_APPROVED:
+            self.code_review_required = False
+            self.status = self.PENDING
+        elif action.status == action.QA_APPROVED:
+            self.qa_required = False
+            self.status = self.PENDING
+        elif action.status == action.REJECTED:
+            self.status = self.REJECTED
+            self.code_review_required = False
+            self.qa_required = False
+        elif action.status == action.MERGED:
+            self.status = self.MERGED
+            self.code_review_required = False
+            self.qa_required = False
+        elif action.status == action.CANCELED:
+            self.status = self.CANCELED
+            self.code_review_required = False
+            self.qa_required = False
 
     def __unicode__(self):
         return '%s - %s' % (self.developer, self.branch)
 
 class MergeRequestAction(models.Model):
+    MERGE_REQUEST = 'merge_request'
+    REJECTED = 'rejected'
+    CODE_REVIEW_APPROVED = 'cr_approved'
+    QA_APPROVED = 'qa_approved'
+    MERGED = 'merged'
+    CANCELED = 'canceled'
+
+    ACTIONS =(
+        (MERGE_REQUEST, 'Merge request'),
+        (REJECTED, 'Rejected'),
+        (CODE_REVIEW_APPROVED, 'Code review approved'),
+        (QA_APPROVED, 'QA approved'),
+        (MERGED, 'Merge'),
+        (CANCELED, 'Canceled')
+    )
+
     merge_request = models.ForeignKey(MergeRequest)
     merge_master = models.ForeignKey(MergeMaster)
-    status = models.CharField(max_length=60, choices = MERGE_REQUEST_STATUS)
-    reason = models.CharField(max_length=60)
+    status = models.CharField(choices = ACTIONS, max_length = 20)
+    reason = models.CharField(max_length=100)
     date = models.DateTimeField(auto_now = True)
 
 #class MergeComment(models.Model):
