@@ -57,7 +57,21 @@ $(function() {
             alert("error");
         })
     });
-
+    var looser = function(user_id){
+        $.ajax({
+            url:'{% url add_looser %}',
+            type: 'post',
+            dataType: 'json',
+            data:{
+                'user':user_id
+            },
+            success: function(data){
+                // todo status.true / false
+                console.log(data)
+            }
+        })
+    }
+    // todo add looser id in $('#looserId').val()
     $('.btn-gambling').click(function() {
         if (!$(this).hasClass('disabled')) {
             $('.step').hide();
@@ -76,14 +90,15 @@ $(function() {
             for (var i = 0; i < looser; i++) {
                 onlineUsers.push(onlineUsers.shift());
             }
-
+            console.log(looser)
             var delta = 360 / userCount;
             for (var i in onlineUsers) {
                 var user = onlineUsers[i];
-                var item = $('<div class="item"><p>' + user.first_name + ' ' + user.last_name + '</p></div>');
+                var item = $('<div class="item" data-user="'+user.id+'"><p>' + user.first_name + ' ' + user.last_name + '</p></div>');
                 item.css('-webkit-transform', 'rotateY(' + i * delta + 'deg) translateZ(700px)');
                 $('.step.step-gambling .roulette').append(item);
             }
+
         }
     });
 })

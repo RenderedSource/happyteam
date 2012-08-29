@@ -15,3 +15,8 @@ class MacAddress(models.Model):
 
     def __unicode__(self):
         return self.address
+
+
+class GcLoosers(models.Model):
+    user = models.ForeignKey(User)
+    date = models.DateTimeField(auto_now_add=True)
