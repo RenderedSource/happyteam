@@ -1,0 +1,8 @@
+<div class="loosers-list">
+    <h3>Последние герои:</h3>
+    <ol>
+        {% for looser in latest_looser_list %}
+            <li>{{ looser.date|date:'d.m.Y' }} - <i class="icon-trash"></i> {{ looser.user.first_name }} {{ looser.user.last_name }}</li>
+        {% endfor %}
+    </ol>
+</div>

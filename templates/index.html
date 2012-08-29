@@ -13,7 +13,10 @@ RenderedSource HappyTeam
             {% load usertags %}
             {% online_users %}
         </div>
-
+        <div class="span6 well">
+            {% load lastloosers %}
+            {% last_loosers %}
+        </div>
     </div>
 {% endblock %}
 

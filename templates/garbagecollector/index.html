@@ -35,6 +35,12 @@
                 <div class="roulette"></div>
             </div>
         </div>
+        {% load lastloosers %}
+        {% last_loosers %}
+        <form action="{% url add_looser %}" method="post">
+            <input type="hidden" name="user" id="looserId" value="{{ user.id }}">
+            {% csrf_token %}
+        </form>
     </div>
 {% endblock %}
 
