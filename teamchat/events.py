@@ -20,6 +20,15 @@ def message(request, socket, context, message):
             context["user"] = user
             users = [{'name':u.user.username, 'id':u.id} for u in UserRoom.objects.all().exclude(id = user.id)]
             socket.send({"action": "started", "users": users})
+        else:
+            try:
+                user = context["user"]
+            except KeyError:
+                return
+            if message["action"] == "message":
+                message["message"] = strip_tags(message["message"])
+                message["name"] = user.user.username
+                socket.send_and_broadcast_channel(message)
 
 @events.on_finish(channel="team-chat")
 def finish(request, socket, context):
