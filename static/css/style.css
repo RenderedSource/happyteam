@@ -9,6 +9,10 @@ body {
     background: white;
 }
 
+a {
+    cursor: pointer;
+}
+
 .vertical-middle {
     margin-top: 100px;
 }
