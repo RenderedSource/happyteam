@@ -15,11 +15,11 @@
             <div class="span12">
                 <div class="add-request">
                     {% if request_form %}
-                        <form action="" method="post" class="form-inline well">
+                        <form action="add_merge_request/" method="post" class="form-inline well">
                             <legend>Add new merge request</legend>
                             {{ request_form }}
                             {% csrf_token %}
-                            <input type="submit" class="btn btn-primary" value="Add" />
+                            <button class="btn btn-primary btn-merge-request">Add</button>
                         </form>
                     {% else %}
                         <h2>Success add new branch</h2>
@@ -37,71 +37,5 @@
 
 {% endblock %}
 {% block script %}
-{% comment %}
-    <script src="/static/dataTables/js/jquery.dataTables.min.js"></script>
-    <script type="text/javascript">
-        $.fn.dataTableExt.oApi.fnResetAllFilters = function (oSettings, bDraw/*default true*/) {
-            for (iCol = 0; iCol < oSettings.aoPreSearchCols.length; iCol++) {
-                oSettings.aoPreSearchCols[ iCol ].sSearch = '';
-            }
-            oSettings.oPreviousSearch.sSearch = '';
-            if (typeof bDraw === 'undefined') bDraw = true;
-            if (bDraw) this.fnDraw();
-        };
-        {#        Update table row after new notification #}
-        function rowUpdate(id) {
-
-            $.ajax({
-                url:'/merge/table/' + id + '/',
-                dataType:'json',
-                success:function (data) {
-                    data_value = [
-                        data.id,
-                        data.developer,
-                        data.merge_master,
-                        data.branch,
-                        data.status,
-                        data.actions,
-                        data.date
-                    ];
-//                    $table.fnAddData(data_value);
-//                    $table.fnUpdate( data_value, 1, 0 ); // Row
-                }
-            })
-        }
-        //        todo ajax add new request or changed action
-        $().ready(function () {
-            $table = $('#mergelist').dataTable();
-        $('#clear').click(function () {
-            $table.fnFilter('', 2);
-            $table.fnFilter('', 1);
-            return false;
-        });
-        $('#merg').click(function () {
-            $table.fnResetAllFilters(false);
-            $table.fnFilter('{{ user.username }}', 2);
-            return false;
-        });
-        $('#develop').click(function () {
-            $table.fnResetAllFilters(false);
-            $table.fnFilter('{{ user.username }}', 1);
-            return false;
-        });
-        $activitifeed = $('#activityfeed');
-        function getMessage() {
-            $.ajax({
-                url:'/merge/message/',
-                success:function (data) {
-                    $activitifeed.html($activitifeed.html() + data)
-                }
-            })
-        }
-
-        setInterval(getMessage, 5000);
-        getMessage();
-
-        })
-        ;
-    </script>
-{% endcomment %}
+    <script src="/static/js/merge.js"></script>
 {% endblock %}

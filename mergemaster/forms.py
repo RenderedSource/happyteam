@@ -11,31 +11,18 @@ class MergeRequestFormApi(forms.ModelForm):
         for key in self.fields:
             self.fields[key].required = False
 
-#class MergeCommentForm(forms.ModelForm):
-#  last_message = forms.IntegerField(required=False, widget=forms.HiddenInput())
-#  class Meta:
-#    model = MergeComment
-#    widgets={
-#     'user':forms.HiddenInput(),
-#      'merge_request':forms.HiddenInput()
-#    }
-
 class MergeRequestForm(forms.ModelForm):
     class Meta:
         model = MergeRequest
-        fields = ['developer', 'branch', 'task_id']
-        #widgets = {
-        #'developer':forms.HiddenInput(),
-        #}]
+        fields = ['branch', 'task_id']
 
 class MergeReqestActionForm(forms.ModelForm):
     class Meta:
         model = MergeRequestAction
         widgets = {
-            'merge_request':forms.HiddenInput(),
+            'merge_request': forms.HiddenInput(),
+            'merge_master': forms.HiddenInput(),
+            'status': forms.HiddenInput(),
         }
+        exclude = ['merge_master']
 
-#class MergeMasterForm(forms.ModelForm):
-#  class Meta:
-#    model = MergeMaster
-#    exclude=['user','enabled',]

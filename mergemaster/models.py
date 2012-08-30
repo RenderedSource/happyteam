@@ -93,17 +93,17 @@ class MergeRequestAction(models.Model):
 
     ACTIONS =(
         (MERGE_REQUEST, 'Merge request'),
-        (REJECTED, 'Rejected'),
-        (CODE_REVIEW_APPROVED, 'Code review approved'),
-        (QA_APPROVED, 'QA approved'),
+        (REJECTED, 'Reject'),
+        (CODE_REVIEW_APPROVED, 'Approve code review'),
+        (QA_APPROVED, 'Approve QA'),
         (MERGED, 'Merge'),
-        (CANCELED, 'Canceled')
+        (CANCELED, 'Cancel')
     )
 
     merge_request = models.ForeignKey(MergeRequest)
     merge_master = models.ForeignKey(MergeMaster)
     status = models.CharField(choices = ACTIONS, max_length = 20)
-    reason = models.CharField(max_length=100)
+    reason = models.CharField(blank = True, max_length = 100)
     date = models.DateTimeField(auto_now = True)
 
     @transaction.commit_manually

@@ -7,11 +7,16 @@
     <div id="action-list-add-{{ merge.id }}" class="collapse">
         <div class="well well-small">
             <form class="form-horizontal" method="post" action="add_merge_action/">
-                {% load bootstrap %}
-                {{ action_form|bootstrap }}
+                <div class="btn-group">
+                {% for merge_action in merge_action_list %}
+                    <button class="btn btn-merge-action" data-action="{{ merge_action.0 }}">
+                        {{ merge_action.1 }}
+                    </button>
+                {% endfor %}
+                </div>
+                {{ action_form.as_p }}
                 {% csrf_token %}
                 <input type="hidden" name="merge_request" value="{{ merge.id }}" />
-                <input type="submit" class="btn" title="Add" />
             </form>
         </div>
     </div>
@@ -21,7 +26,7 @@
         <tr class="error">
             <td>{{ action.merge_master }}</td>
             <td>{{ action.status }} {{ action.reason }}</td>
-            <td>Date</td>
+            <td>{{ action.date|date:"M d, h:i A" }}</td>
         </tr>
         {% empty %}
         <tr class="info">

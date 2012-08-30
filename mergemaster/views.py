@@ -12,58 +12,45 @@ from django.template.loader import render_to_string
 from django.views.decorators.csrf import csrf_exempt
 import simplejson
 from mergemaster.forms import MergeRequestForm, MergeRequestFormApi, MergeReqestActionForm
-from mergemaster.models import MergeRequest, MergeMaster, MergeNotification, JabberMessage
+from mergemaster.models import MergeRequest, MergeMaster, MergeNotification, JabberMessage, MergeRequestAction
 from website import settings
 
 def merge_list(request):
-    """
-    Show branch and status.
-    Todo: For merge master apply button.
-          Developer change owned branch.
-          Add filter (owned, status, date, and ...)
-    """
-
-    try:
-        merge_master = MergeMaster.objects.get(user = request.user, enabled = True)
-    except MergeMaster.DoesNotExist:
-        merge_master = False
-    if request.method == 'POST':
-        merge_request_form = MergeRequestForm(request.POST)
-        if merge_request_form.is_valid():
-            form = merge_request_form.save(commit=False)
-            form.save()
-            message = {
-                'text': 'Please merge new branch %s Developer: %s' % (form.branch, form.developer),
-                'type': 'info'
-            }
-            for user in MergeMaster.objects.filter(enabled = True):
-                JabberNotificate(message.get('text'), user.jabber)
-                MergeNotification.objects.create(message=message.get('text'), type=message.get('type'), user=user.user,
-                    request=merge_request_form.id).save()
-            return HttpResponseRedirect('/merge/')
-
-        merge_request_form = False
-    else:
-        merge_request_form = MergeRequestForm(initial={'status': 'open', 'developer': request.user.id})
-        #merge_list = MergeRequest.objects.all().exclude(status='approve').order_by('-id')
     merge_list = MergeRequest.objects.all().order_by('-id')
 
+    merge_request_form = MergeRequestForm()
     merge_action_form = MergeReqestActionForm()
 
     return render_to_response('mergemaster/list.html',
-            {'merge_list': merge_list,
-             'request_form': merge_request_form,
-             'action_form': merge_action_form,
-             'merge_master': merge_master},
+        {
+            'merge_list': merge_list,
+            'request_form': merge_request_form,
+            'action_form': merge_action_form,
+            'merge_action_list': MergeRequestAction.ACTIONS
+        },
         context_instance=RequestContext(request))
+
+@require_http_methods(["POST"])
+def add_merge_request(request):
+    request_form = MergeRequestForm(request.POST)
+    valid = False
+    if request_form.is_valid():
+        merge_request = request_form.save(commit=False)
+        merge_request.developer = request.user
+        merge_request.save()
+        valid = True
+    return HttpResponse(simplejson.dumps({ 'success': valid }), mimetype='application/javascript')
 
 @require_http_methods(["POST"])
 def add_merge_action(request):
     action_form = MergeReqestActionForm(request.POST)
+    valid = False
     if action_form.is_valid():
-        form = action_form.save(commit=False)
-        form.save()
-    return HttpResponseRedirect('/merge/')
+        action = action_form.save(commit=False)
+        action.merge_master = MergeMaster.objects.get(user=request.user, enabled=True)
+        action.save()
+        valid = True
+    return HttpResponse(simplejson.dumps({ 'success': valid }), mimetype='application/javascript')
 
 
 def SendJabber(request):
