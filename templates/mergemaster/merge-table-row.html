@@ -1,13 +1,27 @@
 {% if merge %}
 <tr data-id="{{ merge.id }}">
     <td>{{ merge.id }}</td>
+    <td>
+        {% if merge.status %}
+        <span class="label {{ merge.status_label_class }}">{{ merge.status }}</span>
+        {% endif %}
+        {% if merge.qa_required %}
+        <span class="label label-warning">QA Required</span>
+        {% endif %}
+        {% if merge.code_review_required %}
+        <span class="label label-warning">Code Review Required</span>
+        {% endif %}
+    </td>
     <td>{{ merge.developer }}</td>
     <td>{{ merge.branch }}</td>
     <td><a href="https://www.pivotaltracker.com/story/show/{{ merge.task_id }}">{{ merge.task_id }}</a></td>
-    <td><a data-toggle="collapse" data-target="#action-list-{{ merge.id }}">Expand/collapse</a></td>
+    <td><span class="badge">{{ merge.mergerequestaction_set.count }}</span></td>
+    <td>
+        <a data-toggle="collapse" data-target="#action-list-{{ merge.id }}">Expand/Collapse</a>
+    </td>
 </tr>
 <tr>
-    <td class="action-list" colspan="5">
+    <td class="action-list" colspan="7">
         <div id="action-list-{{ merge.id }}" class="collapse">
             {% include 'mergemaster/merge-table-row-actions.html' %}
         </div>

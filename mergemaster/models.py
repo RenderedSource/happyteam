@@ -1,5 +1,5 @@
 from django.contrib.auth.models import User
-from django.db import models
+from django.db import models, transaction
 
 class MergeMaster(models.Model):
     user = models.ForeignKey(User)
@@ -24,11 +24,24 @@ class MergeRequest(models.Model):
         (CANCELED, 'Canceled')
     )
 
+    LABEL_CLASS_DEFAULT = ''
+    LABEL_CLASS_SUCCESS = 'label-success'
+    LABEL_CLASS_ERROR = 'label-important'
+    LABEL_CLASS_INVERSE = 'label-inverse'
+
+    LABEL_CLASSES = (
+        (LABEL_CLASS_DEFAULT,LABEL_CLASS_DEFAULT),
+        (LABEL_CLASS_SUCCESS,LABEL_CLASS_SUCCESS),
+        (LABEL_CLASS_ERROR,LABEL_CLASS_INVERSE),
+        (LABEL_CLASS_INVERSE,LABEL_CLASS_INVERSE)
+    )
+
     developer = models.ForeignKey(User)
     branch = models.CharField(max_length = 60)
     task_id = models.IntegerField()
 
     status = models.CharField(choices = STATUSES, max_length = 20)
+    status_label_class = models.CharField(choices = LABEL_CLASSES, max_length = 20)
     qa_required = models.BooleanField()
     code_review_required = models.BooleanField()
     date_created = models.DateTimeField(auto_now = True, verbose_name = 'Date Created ')
@@ -40,24 +53,30 @@ class MergeRequest(models.Model):
         """
         if action.status == action.MERGE_REQUEST:
             self.status = self.PENDING
+            self.status_label_class = self.LABEL_CLASS_DEFAULT
             self.code_review_required = True
             self.qa_required = True
         elif action.status == action.CODE_REVIEW_APPROVED:
             self.code_review_required = False
             self.status = self.PENDING
+            self.status_label_class = self.LABEL_CLASS_DEFAULT
         elif action.status == action.QA_APPROVED:
             self.qa_required = False
             self.status = self.PENDING
+            self.status_label_class = self.LABEL_CLASS_DEFAULT
         elif action.status == action.REJECTED:
             self.status = self.REJECTED
+            self.status_label_class = self.LABEL_CLASS_ERROR
             self.code_review_required = False
             self.qa_required = False
         elif action.status == action.MERGED:
             self.status = self.MERGED
+            self.status_label_class = self.LABEL_CLASS_SUCCESS
             self.code_review_required = False
             self.qa_required = False
         elif action.status == action.CANCELED:
             self.status = self.CANCELED
+            self.status_label_class = self.LABEL_CLASS_INVERSE
             self.code_review_required = False
             self.qa_required = False
 
@@ -86,6 +105,22 @@ class MergeRequestAction(models.Model):
     status = models.CharField(choices = ACTIONS, max_length = 20)
     reason = models.CharField(max_length=100)
     date = models.DateTimeField(auto_now = True)
+
+    @transaction.commit_manually
+    def save(self, *args, **kwargs):
+        try:
+            if self.id is None:
+                # update merge request if action is new
+                self.merge_request.update_status_by_action(self)
+                self.merge_request.save()
+
+            super(self.__class__, self).save(*args, **kwargs)
+        except:
+            transaction.rollback()
+            raise
+        else:
+            transaction.commit()
+
 
 #class MergeComment(models.Model):
 #    merge_request = models.ForeignKey(MergeRequest)
