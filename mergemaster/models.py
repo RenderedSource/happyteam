@@ -43,8 +43,8 @@ class MergeRequest(models.Model):
     status = models.CharField(choices = STATUSES, max_length = 20)
     qa_required = models.BooleanField()
     code_review_required = models.BooleanField()
-    date_created = models.DateTimeField(auto_now = True, verbose_name = 'Date Created ')
-    date_modified = models.DateTimeField(auto_now = True, verbose_name = 'Date Modified ')
+    date_created = models.DateTimeField(auto_now = True, verbose_name = 'Date Created')
+    date_modified = models.DateTimeField(auto_now = True, verbose_name = 'Date Modified')
 
     @property
     def status_label_class(self):
@@ -118,7 +118,12 @@ class MergeRequestAction(models.Model):
 
     @property
     def row_css_class(self):
-        return self.ROW_CLASSES.get(self.status, self.ROW_CLASS_INFO);
+        return self.ROW_CLASSES.get(self.status, self.ROW_CLASS_INFO)
+
+    @property
+    def user_friendly_status(self):
+        status = [v[1] for i, v in enumerate(self.ACTIONS) if v[0] == self.status]
+        return status[0] if status else ''
 
     @transaction.commit_manually
     def save(self, *args, **kwargs):
