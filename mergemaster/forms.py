@@ -16,7 +16,7 @@ class MergeRequestForm(forms.ModelForm):
         model = MergeRequest
         fields = ['branch', 'task_id']
 
-class MergeReqestActionForm(forms.ModelForm):
+class MergeRequestActionForm(forms.ModelForm):
     class Meta:
         model = MergeRequestAction
         widgets = {
@@ -24,7 +24,7 @@ class MergeReqestActionForm(forms.ModelForm):
             'merge_master': forms.HiddenInput(),
             'status': forms.HiddenInput(),
         }
-        exclude = ['merge_master']
+        exclude = ['merge_master', 'reason']
 
 class FilterListForm(forms.Form):
     filters = forms.MultipleChoiceField(

@@ -11,23 +11,19 @@ from django.template.context import RequestContext
 from django.template.loader import render_to_string
 from django.views.decorators.csrf import csrf_exempt
 import simplejson
-from mergemaster.forms import MergeRequestForm, MergeRequestFormApi, MergeReqestActionForm, FilterListForm
+from mergemaster.forms import MergeRequestForm, MergeRequestFormApi, MergeRequestActionForm, FilterListForm
 from mergemaster.models import MergeRequest, MergeMaster, MergeNotification, JabberMessage, MergeRequestAction
 from website import settings
 
 def merge_list(request):
     merge_list = MergeRequest.objects.all().order_by('-id')
 
-    merge_request_form = MergeRequestForm()
-    merge_action_form = MergeReqestActionForm()
-    filter_form = FilterListForm()
-
-    return render_to_response('mergemaster/list.html',
-        {
+    return render_to_response(
+        'mergemaster/list.html', {
             'merge_list': merge_list,
-            'request_form': merge_request_form,
-            'action_form': merge_action_form,
-            'filter_form': filter_form,
+            'request_form': MergeRequestForm(),
+            'action_form': MergeRequestActionForm(),
+            'filter_form': FilterListForm(),
             'merge_action_list': MergeRequestAction.ACTIONS
         },
         context_instance=RequestContext(request))
@@ -35,24 +31,53 @@ def merge_list(request):
 @require_http_methods(["POST"])
 def add_merge_request(request):
     request_form = MergeRequestForm(request.POST)
-    valid = False
+    response_data = {}
     if request_form.is_valid():
         merge_request = request_form.save(commit=False)
         merge_request.developer = request.user
         merge_request.save()
-        valid = True
-    return HttpResponse(simplejson.dumps({ 'success': valid }), mimetype='application/javascript')
+
+        response_data['success'] = True
+        response_data['html'] = render_to_string(
+            'mergemaster/merge-table-row.html', {
+                'merge': merge_request,
+                'action_form': MergeRequestActionForm(),
+                'merge_action_list': MergeRequestAction.ACTIONS
+            },
+            context_instance=RequestContext(request)
+        )
+    else:
+        response_data['success'] = False
+    return HttpResponse(simplejson.dumps(response_data), mimetype='application/javascript')
 
 @require_http_methods(["POST"])
 def add_merge_action(request):
-    action_form = MergeReqestActionForm(request.POST)
-    valid = False
+    action_form = MergeRequestActionForm(request.POST)
+    response_data = {}
     if action_form.is_valid():
         action = action_form.save(commit=False)
         action.merge_master = MergeMaster.objects.get(user=request.user, enabled=True)
         action.save()
-        valid = True
-    return HttpResponse(simplejson.dumps({ 'success': valid }), mimetype='application/javascript')
+
+        response_data['success'] = True
+        response_data['merge_id'] = action.merge_request.id
+        response_data['actions_html'] = render_to_string(
+            'mergemaster/merge-table-row-actions.html', {
+                'merge': action.merge_request,
+                'action_form': MergeRequestActionForm(),
+                'merge_action_list': MergeRequestAction.ACTIONS
+            },
+            context_instance=RequestContext(request)
+        )
+        response_data['head_html'] = render_to_string(
+            'mergemaster/merge-table-row-head.html', {
+                'merge': action.merge_request
+            },
+            context_instance=RequestContext(request)
+        )
+    else:
+        response_data['success'] = False
+    return HttpResponse(simplejson.dumps(response_data), mimetype='application/javascript')
 
 
 def SendJabber(request):

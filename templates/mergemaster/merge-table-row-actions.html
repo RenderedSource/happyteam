@@ -1,39 +1,18 @@
 {% spaceless %}
 {% if merge %}
 
-    <div style="text-align: center">
-        <a data-toggle="collapse" data-target="#action-list-add-{{ merge.id }}">Update request status</a>
-    </div>
-    <div id="action-list-add-{{ merge.id }}" class="collapse">
-        <div class="well well-small">
-            <form class="form-horizontal" method="post" action="add_merge_action/">
-                <div class="btn-group">
-                {% for merge_action in merge_action_list %}
-                    <button class="btn btn-merge-action" data-action="{{ merge_action.0 }}">
-                        {{ merge_action.1 }}
-                    </button>
-                {% endfor %}
-                </div>
-                {{ action_form.as_p }}
-                {% csrf_token %}
-                <input type="hidden" name="merge_request" value="{{ merge.id }}" />
-            </form>
-        </div>
-    </div>
+    {% for action in merge.mergerequestaction_set.all|dictsortreversed:"date" %}
+    <tr class="{{ action.row_css_class }}">
+        <td class="span1">{{ forloop.revcounter }}</td>
+        <td class="span3">{{ action.merge_master }}</td>
+        <td class="span6">{{ action.user_friendly_status }} {{ action.reason }}</td>
+        <td class="span2">{{ action.date|date:"M d, h:i A" }}</td>
+    </tr>
+    {% empty %}
+    <tr class="info">
+        <td colspan="4">No actions yet</td>
+    </tr>
+    {% endfor %}
 
-    <table class="table table-striped table-condensed">
-        {% for action in merge.mergerequestaction_set.all|dictsortreversed:"date" %}
-        <tr class="{{ action.row_css_class }}">
-            <td>{{ forloop.revcounter }}</td>
-            <td>{{ action.merge_master }}</td>
-            <td>{{ action.user_friendly_status }} {{ action.reason }}</td>
-            <td>{{ action.date|date:"M d, h:i A" }}</td>
-        </tr>
-        {% empty %}
-        <tr class="info">
-            <td colspan="4">No actions yet</td>
-        </tr>
-        {% endfor %}
-    </table>
 {% endif %}
 {% endspaceless %}

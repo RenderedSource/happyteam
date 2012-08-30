@@ -10,13 +10,14 @@
 
             $.post(url, data, function(response) {
                 if (response.success) {
-                    window.location.reload();
+                    $('#mergelist').prepend(response.html);
                 } else {
                     console.log(response);
                 }
-            }, 'json').fail(function() {
-                    alert('Error');
-                });
+            }, 'json')
+            .fail(function() {
+                alert('Error');
+            });
         });
 
         $('.btn-merge-action').click(function(event) {
@@ -32,7 +33,8 @@
 
             $.post(url, data, function(response) {
                 if (response.success) {
-                    window.location.reload();
+                    $('#action-list-' + response.merge_id).html(response.actions_html);
+                    $('#merge-head-' + response.merge_id).html(response.head_html);
                 } else {
                     console.log(response);
                 }

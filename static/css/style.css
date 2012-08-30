@@ -146,6 +146,11 @@ a {
     margin-top: 0;
 }
 
+#merge .add-action-form {
+    margin: 0 auto;
+    width: 55%;
+}
+
 /*merge master request*/
 
 #chat {
