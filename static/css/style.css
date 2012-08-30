@@ -134,6 +134,18 @@ a {
     border-top: none;
 }
 
+#merge form ul {
+    margin: 0;
+}
+
+#merge form ul li {
+    list-style: none;
+}
+
+#merge form ul li input {
+    margin-top: 0;
+}
+
 /*merge master request*/
 
 #chat {

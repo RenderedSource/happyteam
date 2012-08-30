@@ -11,7 +11,7 @@ from django.template.context import RequestContext
 from django.template.loader import render_to_string
 from django.views.decorators.csrf import csrf_exempt
 import simplejson
-from mergemaster.forms import MergeRequestForm, MergeRequestFormApi, MergeReqestActionForm
+from mergemaster.forms import MergeRequestForm, MergeRequestFormApi, MergeReqestActionForm, FilterListForm
 from mergemaster.models import MergeRequest, MergeMaster, MergeNotification, JabberMessage, MergeRequestAction
 from website import settings
 
@@ -20,12 +20,14 @@ def merge_list(request):
 
     merge_request_form = MergeRequestForm()
     merge_action_form = MergeReqestActionForm()
+    filter_form = FilterListForm()
 
     return render_to_response('mergemaster/list.html',
         {
             'merge_list': merge_list,
             'request_form': merge_request_form,
             'action_form': merge_action_form,
+            'filter_form': filter_form,
             'merge_action_list': MergeRequestAction.ACTIONS
         },
         context_instance=RequestContext(request))
