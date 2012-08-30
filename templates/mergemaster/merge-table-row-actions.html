@@ -23,7 +23,7 @@
 
     <table class="table table-striped table-condensed">
         {% for action in merge.mergerequestaction_set.all %}
-        <tr class="error">
+        <tr class="{{ action.row_css_class }}">
             <td>{{ action.merge_master }}</td>
             <td>{{ action.status }} {{ action.reason }}</td>
             <td>{{ action.date|date:"M d, h:i A" }}</td>
@@ -34,30 +34,5 @@
         </tr>
         {% endfor %}
     </table>
-
-{% comment %}
-
-<div class="btn-group">
-    {% if merge_master and merge.status == 'open' and merge.developer.id != user.id %}
-        <a href="{{ merge.get_apply_url }}" class="btn btn-success">Start Review</a>
-    {% endif %}
-    {% if merge_master and merge.status == 'review' and merge.merge_master.user.id == user.id %}
-        <a href="{{ merge.get_cancel_url }}" class="btn">Cancel</a>
-        <a href="{{ merge.get_approve_url }}" class="btn btn-primary">Approve</a>
-        <a href="{{ merge.get_reject_url }}" class="btn btn-warning">Reject</a>
-    {% endif %}
-    {% if  merge.status == 'reject'%}
-        <a href="{{ merge.get_discus_url }}" class="btn btn-info">Discussion</a>
-    {% endif %}
-    {% if merge_master == merge.merge_master and merge.status == 'reject'%}
-        <a href="{{ merge.get_approve_url }}" class="btn btn-primary">Approve</a>
-    {% endif %}
-    {% if merge.developer.username == user.username or merge_master %}
-        <a href="{{ merge.get_delete_url }}" class="btn btn-danger">Delete</a>
-    {% endif %}
-</div>
-
-{% endcomment %}
-
 {% endif %}
 {% endspaceless %}

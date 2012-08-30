@@ -29,23 +29,26 @@ class MergeRequest(models.Model):
     LABEL_CLASS_ERROR = 'label-important'
     LABEL_CLASS_INVERSE = 'label-inverse'
 
-    LABEL_CLASSES = (
-        (LABEL_CLASS_DEFAULT,LABEL_CLASS_DEFAULT),
-        (LABEL_CLASS_SUCCESS,LABEL_CLASS_SUCCESS),
-        (LABEL_CLASS_ERROR,LABEL_CLASS_INVERSE),
-        (LABEL_CLASS_INVERSE,LABEL_CLASS_INVERSE)
-    )
+    STATUS_LABEL_CLASSES = {
+        PENDING: LABEL_CLASS_DEFAULT,
+        REJECTED: LABEL_CLASS_ERROR,
+        MERGED: LABEL_CLASS_SUCCESS,
+        CANCELED: LABEL_CLASS_INVERSE
+    }
 
     developer = models.ForeignKey(User)
     branch = models.CharField(max_length = 60)
     task_id = models.IntegerField()
 
     status = models.CharField(choices = STATUSES, max_length = 20)
-    status_label_class = models.CharField(choices = LABEL_CLASSES, max_length = 20)
     qa_required = models.BooleanField()
     code_review_required = models.BooleanField()
     date_created = models.DateTimeField(auto_now = True, verbose_name = 'Date Created ')
     date_modified = models.DateTimeField(auto_now = True, verbose_name = 'Date Modified ')
+
+    @property
+    def status_label_class(self):
+        return self.STATUS_LABEL_CLASSES.get(self.status, self.LABEL_CLASS_DEFAULT)
 
     def update_status_by_action(self, action):
         """
@@ -53,30 +56,24 @@ class MergeRequest(models.Model):
         """
         if action.status == action.MERGE_REQUEST:
             self.status = self.PENDING
-            self.status_label_class = self.LABEL_CLASS_DEFAULT
             self.code_review_required = True
             self.qa_required = True
         elif action.status == action.CODE_REVIEW_APPROVED:
             self.code_review_required = False
             self.status = self.PENDING
-            self.status_label_class = self.LABEL_CLASS_DEFAULT
         elif action.status == action.QA_APPROVED:
             self.qa_required = False
             self.status = self.PENDING
-            self.status_label_class = self.LABEL_CLASS_DEFAULT
         elif action.status == action.REJECTED:
             self.status = self.REJECTED
-            self.status_label_class = self.LABEL_CLASS_ERROR
             self.code_review_required = False
             self.qa_required = False
         elif action.status == action.MERGED:
             self.status = self.MERGED
-            self.status_label_class = self.LABEL_CLASS_SUCCESS
             self.code_review_required = False
             self.qa_required = False
         elif action.status == action.CANCELED:
             self.status = self.CANCELED
-            self.status_label_class = self.LABEL_CLASS_INVERSE
             self.code_review_required = False
             self.qa_required = False
 
@@ -100,11 +97,28 @@ class MergeRequestAction(models.Model):
         (CANCELED, 'Cancel')
     )
 
+    ROW_CLASS_SUCCESS = 'success'
+    ROW_CLASS_ERROR = 'error'
+    ROW_CLASS_INFO = 'info'
+
+    ROW_CLASSES = {
+        MERGE_REQUEST: ROW_CLASS_INFO,
+        REJECTED: ROW_CLASS_ERROR,
+        CODE_REVIEW_APPROVED: ROW_CLASS_SUCCESS,
+        QA_APPROVED: ROW_CLASS_SUCCESS,
+        MERGED: ROW_CLASS_SUCCESS,
+        CANCELED: ROW_CLASS_ERROR
+    }
+
     merge_request = models.ForeignKey(MergeRequest)
     merge_master = models.ForeignKey(MergeMaster)
     status = models.CharField(choices = ACTIONS, max_length = 20)
     reason = models.CharField(blank = True, max_length = 100)
     date = models.DateTimeField(auto_now = True)
+
+    @property
+    def row_css_class(self):
+        return self.ROW_CLASSES.get(self.status, self.ROW_CLASS_INFO);
 
     @transaction.commit_manually
     def save(self, *args, **kwargs):
