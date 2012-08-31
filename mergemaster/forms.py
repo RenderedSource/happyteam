@@ -29,7 +29,7 @@ class MergeRequestActionForm(forms.ModelForm):
 class FilterListForm(forms.Form):
     filters = forms.MultipleChoiceField(
         label = "",
-        choices = MergeRequest.STATUSES,
+        choices = MergeRequest.STATUS_CHOICES,
         widget = forms.CheckboxSelectMultiple
     )
 

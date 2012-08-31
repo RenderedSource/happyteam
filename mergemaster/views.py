@@ -24,7 +24,7 @@ def merge_list(request):
             'request_form': MergeRequestForm(),
             'action_form': MergeRequestActionForm(),
             'filter_form': FilterListForm(),
-            'merge_action_list': MergeRequestAction.ACTIONS
+            'merge_action_list': MergeRequestAction.ACTION_CHOICES
         },
         context_instance=RequestContext(request))
 
@@ -42,7 +42,7 @@ def add_merge_request(request):
             'mergemaster/merge-table-row.html', {
                 'merge': merge_request,
                 'action_form': MergeRequestActionForm(),
-                'merge_action_list': MergeRequestAction.ACTIONS
+                'merge_action_list': MergeRequestAction.ACTION_CHOICES
             },
             context_instance=RequestContext(request)
         )
@@ -59,19 +59,28 @@ def add_merge_action(request):
         action.merge_master = MergeMaster.objects.get(user=request.user, enabled=True)
         action.save()
 
+        action_form = MergeRequestActionForm()
+
         response_data['success'] = True
         response_data['merge_id'] = action.merge_request.id
         response_data['actions_html'] = render_to_string(
             'mergemaster/merge-table-row-actions.html', {
                 'merge': action.merge_request,
-                'action_form': MergeRequestActionForm(),
-                'merge_action_list': MergeRequestAction.ACTIONS
+                'action_form': action_form,
+                'merge_action_list': MergeRequestAction.ACTION_CHOICES
             },
             context_instance=RequestContext(request)
         )
         response_data['head_html'] = render_to_string(
             'mergemaster/merge-table-row-head.html', {
                 'merge': action.merge_request
+            },
+            context_instance=RequestContext(request)
+        )
+        response_data['buttons_html'] = render_to_string(
+            'mergemaster/merge-table-row-buttons.html', {
+                'merge': action.merge_request,
+                'action_form': action_form,
             },
             context_instance=RequestContext(request)
         )

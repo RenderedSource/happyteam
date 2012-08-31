@@ -3,7 +3,7 @@
 <td class="span1">{{ merge.id }}</td>
 <td class="span4 merge-status">
     {% if merge.status %}
-    <span class="label {{ merge.status_label_class }}">{{ merge.status }}</span>
+    <span class="label {{ merge.label_css_class }}">{{ merge.status }}</span>
     {% endif %}
     {% if merge.qa_required %}
     <span class="label label-warning">QA Required</span>

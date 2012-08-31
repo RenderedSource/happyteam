@@ -1,5 +1,6 @@
 from django.contrib.auth.models import User
 from django.db import models, transaction
+from statuses import STATUSES, ACTIONS
 
 class MergeMaster(models.Model):
     user = models.ForeignKey(User)
@@ -10,45 +11,33 @@ class MergeMaster(models.Model):
         return self.user.username
 
 class MergeRequest(models.Model):
-    PENDING = 'pending'
+    STATUS_CHOICES = [(s.code(), str(s)) for s in STATUSES]
+    STATUS_DICT = dict((s.code(), s) for s in STATUSES)
+
+    MERGE_REQUEST = 'merge_request'
     REJECTED = 'rejected'
-    APPROVED = 'approved'
+    CODE_REVIEW_STARTED = 'cr_started'
+    CODE_REVIEW_APPROVED = 'cr_approved'
+    QA_STARTED = 'qa_started'
+    QA_APPROVED = 'qa_approved'
     MERGED = 'merged'
     CANCELED = 'canceled'
-
-    STATUSES = (
-        (PENDING, 'Pending'),
-        (REJECTED, 'Rejected'),
-        (APPROVED, 'Approved'),
-        (MERGED, 'Merged'),
-        (CANCELED, 'Canceled')
-    )
-
-    LABEL_CLASS_DEFAULT = ''
-    LABEL_CLASS_SUCCESS = 'label-success'
-    LABEL_CLASS_ERROR = 'label-important'
-    LABEL_CLASS_INVERSE = 'label-inverse'
-
-    STATUS_LABEL_CLASSES = {
-        PENDING: LABEL_CLASS_DEFAULT,
-        REJECTED: LABEL_CLASS_ERROR,
-        MERGED: LABEL_CLASS_SUCCESS,
-        CANCELED: LABEL_CLASS_INVERSE
-    }
 
     developer = models.ForeignKey(User)
     branch = models.CharField(max_length = 60)
     task_id = models.IntegerField()
 
-    status = models.CharField(choices = STATUSES, max_length = 20)
+    status = models.CharField(choices = STATUS_CHOICES, max_length = 20)
     qa_required = models.BooleanField()
     code_review_required = models.BooleanField()
     date_created = models.DateTimeField(auto_now = True, verbose_name = 'Date Created')
     date_modified = models.DateTimeField(auto_now = True, verbose_name = 'Date Modified')
 
-    @property
-    def status_label_class(self):
-        return self.STATUS_LABEL_CLASSES.get(self.status, self.LABEL_CLASS_DEFAULT)
+    def label_css_class(self):
+        return self.STATUS_DICT[self.status].label_css_class()
+
+    def next_actions(self):
+        return self.STATUS_DICT[self.status].next_actions()
 
     def update_status_by_action(self, action):
         """
@@ -81,49 +70,20 @@ class MergeRequest(models.Model):
         return '%s - %s' % (self.developer, self.branch)
 
 class MergeRequestAction(models.Model):
-    MERGE_REQUEST = 'merge_request'
-    REJECTED = 'rejected'
-    CODE_REVIEW_APPROVED = 'cr_approved'
-    QA_APPROVED = 'qa_approved'
-    MERGED = 'merged'
-    CANCELED = 'canceled'
-
-    ACTIONS =(
-        (MERGE_REQUEST, 'Merge request'),
-        (REJECTED, 'Reject'),
-        (CODE_REVIEW_APPROVED, 'Approve code review'),
-        (QA_APPROVED, 'Approve QA'),
-        (MERGED, 'Merge'),
-        (CANCELED, 'Cancel')
-    )
-
-    ROW_CLASS_SUCCESS = 'success'
-    ROW_CLASS_ERROR = 'error'
-    ROW_CLASS_INFO = 'info'
-
-    ROW_CLASSES = {
-        MERGE_REQUEST: ROW_CLASS_INFO,
-        REJECTED: ROW_CLASS_ERROR,
-        CODE_REVIEW_APPROVED: ROW_CLASS_SUCCESS,
-        QA_APPROVED: ROW_CLASS_SUCCESS,
-        MERGED: ROW_CLASS_SUCCESS,
-        CANCELED: ROW_CLASS_ERROR
-    }
+    ACTION_CHOICES = [(a.code(), str(a)) for a in ACTIONS]
+    ACTION_DICT = dict((a.code(), a) for a in ACTIONS)
 
     merge_request = models.ForeignKey(MergeRequest)
     merge_master = models.ForeignKey(MergeMaster)
-    status = models.CharField(choices = ACTIONS, max_length = 20)
+    status = models.CharField(choices = ACTION_CHOICES, max_length = 20)
     reason = models.CharField(blank = True, max_length = 100)
     date = models.DateTimeField(auto_now = True)
 
-    @property
     def row_css_class(self):
-        return self.ROW_CLASSES.get(self.status, self.ROW_CLASS_INFO)
+        return self.ACTION_DICT[self.status].row_css_class()
 
-    @property
     def user_friendly_status(self):
-        status = [v[1] for i, v in enumerate(self.ACTIONS) if v[0] == self.status]
-        return status[0] if status else ''
+        return str(self.ACTION_DICT[self.status])
 
     @transaction.commit_manually
     def save(self, *args, **kwargs):

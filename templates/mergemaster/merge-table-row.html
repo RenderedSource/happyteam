@@ -6,14 +6,10 @@
 <tr>
     <td class="action-list" colspan="7">
         <div id="merge-actions-{{ merge.id }}" class="collapse">
-            <div class="well well-small">
+            <div class="well well-small add-action">
                 <form class="add-action-form" method="post" action="add_merge_action/">
-                    <div class="btn-group">
-                        {% for merge_action in merge_action_list %}
-                            <button class="btn btn-merge-action" data-action="{{ merge_action.0 }}">
-                                {{ merge_action.1 }}
-                            </button>
-                        {% endfor %}
+                    <div id="action-buttons-{{ merge.id }}" class="btn-group">
+                        {% include 'mergemaster/merge-table-row-buttons.html' %}
                     </div>
                     {{ action_form.as_p }}
                     {% csrf_token %}

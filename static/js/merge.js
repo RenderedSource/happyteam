@@ -35,6 +35,7 @@
                 if (response.success) {
                     $('#action-list-' + response.merge_id).html(response.actions_html);
                     $('#merge-head-' + response.merge_id).html(response.head_html);
+                    $('#action-buttons-' + response.merge_id).html(response.buttons_html);
                 } else {
                     console.log(response);
                 }

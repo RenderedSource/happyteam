@@ -147,8 +147,12 @@ a {
 }
 
 #merge .add-action-form {
-    margin: 0 auto;
-    width: 55%;
+    margin: 0;
+}
+
+#merge .add-action {
+    margin-left: auto;
+    margin-right: auto;
 }
 
 /*merge master request*/
