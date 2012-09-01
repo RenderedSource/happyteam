@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User
 from django.db import models, transaction
-from statuses import STATUSES, ACTIONS
+from state_machine import STATUSES, ACTIONS, DEFAULT_STATUS, DEFAULT_ACTION
 
 class MergeMaster(models.Model):
     user = models.ForeignKey(User)
@@ -18,17 +18,39 @@ class MergeRequest(models.Model):
     branch = models.CharField(max_length = 60)
     task_id = models.IntegerField()
 
-    status = models.CharField(choices = STATUS_CHOICES, max_length = 20)
+    status_code = models.CharField(choices = STATUS_CHOICES, max_length = 20, default = DEFAULT_STATUS.code())
     qa_required = models.BooleanField()
     code_review_required = models.BooleanField()
     date_created = models.DateTimeField(auto_now = True, verbose_name = 'Date Created')
     date_modified = models.DateTimeField(auto_now = True, verbose_name = 'Date Modified')
 
     def label_css_class(self):
-        return self.STATUS_DICT[self.status].label_css_class()
+        status = self.status()
+        return status.label_css_class() if status else ''
 
     def next_actions(self):
-        return self.STATUS_DICT[self.status].next_actions()
+        status = self.status()
+        return status.next_actions() if status else ()
+
+    def status(self):
+        return self.STATUS_DICT.get(self.status_code, None)
+
+    @transaction.commit_manually
+    def save(self, *args, **kwargs):
+        try:
+            is_new = True if self.id is None else False
+            super(self.__class__, self).save(*args, **kwargs)
+            if is_new:
+                merge_action = MergeRequestAction()
+                merge_action.merge_request = self
+                merge_action.merge_master_id = self.developer_id
+                merge_action.action_code = DEFAULT_ACTION.code()
+                merge_action.save(update_merge_request=False)
+        except:
+            transaction.rollback()
+            raise
+        else:
+            transaction.commit()
 
     def __unicode__(self):
         return '%s - %s' % (self.developer, self.branch)
@@ -39,23 +61,25 @@ class MergeRequestAction(models.Model):
 
     merge_request = models.ForeignKey(MergeRequest)
     merge_master = models.ForeignKey(MergeMaster)
-    status = models.CharField(choices = ACTION_CHOICES, max_length = 20)
+    action_code = models.CharField(choices = ACTION_CHOICES, max_length = 20)
     reason = models.CharField(blank = True, max_length = 100)
     date = models.DateTimeField(auto_now = True)
 
     def row_css_class(self):
-        return self.action().row_css_class()
+        action = self.action()
+        return action.row_css_class() if action else ''
 
     def past_form_name(self):
-        return str(self.action().past_form_name())
+        action = self.action()
+        return str(action.past_form_name()) if action else ''
 
     def action(self):
-        return self.ACTION_DICT[self.status]
+        return self.ACTION_DICT.get(self.action_code, None)
 
     @transaction.commit_manually
-    def save(self, *args, **kwargs):
+    def save(self, update_merge_request=True, *args, **kwargs):
         try:
-            if self.id is None:
+            if self.id is None and update_merge_request:
                 # update merge request if action is new
                 self.action().update_merge_request(self.merge_request)
                 self.merge_request.save()

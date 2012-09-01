@@ -29,7 +29,7 @@
             var url = $form.attr('action');
             var action = $button.data('action');
 
-            data += '&status=' + action;
+            data += '&action_code=' + action;
 
             $.post(url, data, function(response) {
                 if (response.success) {

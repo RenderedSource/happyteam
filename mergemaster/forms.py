@@ -22,7 +22,7 @@ class MergeRequestActionForm(forms.ModelForm):
         widgets = {
             'merge_request': forms.HiddenInput(),
             'merge_master': forms.HiddenInput(),
-            'status': forms.HiddenInput(),
+            'action_code': forms.HiddenInput(),
         }
         exclude = ['merge_master', 'reason']
 

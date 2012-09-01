@@ -154,6 +154,8 @@ STATUSES = (
     StatusCanceled(),
 )
 
+DEFAULT_STATUS = StatusPending()
+
 class Action(object):
     __metaclass__ = Singleton
 
@@ -180,7 +182,7 @@ class ActionRequestMerge(Action):
         return 'Merge requested'
 
     def update_merge_request(self, merge_request):
-        merge_request.status = StatusPending().code()
+        merge_request.status_code = StatusPending().code()
         merge_request.code_review_required = True
         merge_request.qa_required = True
 
@@ -198,7 +200,7 @@ class ActionReject(Action):
         return 'Rejected'
 
     def update_merge_request(self, merge_request):
-        merge_request.status = StatusRejected().code()
+        merge_request.status_code = StatusRejected().code()
         merge_request.code_review_required = False
         merge_request.qa_required = False
 
@@ -216,7 +218,7 @@ class ActionStartCodeReview(Action):
         return 'Code review started'
 
     def update_merge_request(self, merge_request):
-        merge_request.status = StatusCodeReviewInProgress().code()
+        merge_request.status_code = StatusCodeReviewInProgress().code()
         merge_request.code_review_required = False
 
     def __str__(self):
@@ -233,7 +235,7 @@ class ActionApproveCodeReview(Action):
         return 'Code review approved'
 
     def update_merge_request(self, merge_request):
-        merge_request.status = StatusPending().code()
+        merge_request.status_code = StatusPending().code()
         merge_request.code_review_required = False
 
     def __str__(self):
@@ -250,7 +252,7 @@ class ActionStartQa(Action):
         return 'QA started'
 
     def update_merge_request(self, merge_request):
-        merge_request.status = StatusQaInProgress().code()
+        merge_request.status_code = StatusQaInProgress().code()
         merge_request.qa_required = False
 
     def __str__(self):
@@ -267,7 +269,7 @@ class ActionApproveQa(Action):
         return 'QA approved'
 
     def update_merge_request(self, merge_request):
-        merge_request.status = StatusPending().code()
+        merge_request.status_code = StatusPending().code()
         merge_request.qa_required = False
 
     def __str__(self):
@@ -284,7 +286,7 @@ class ActionMerge(Action):
         return 'Merged'
 
     def update_merge_request(self, merge_request):
-        merge_request.status = StatusMerged().code()
+        merge_request.status_code = StatusMerged().code()
         merge_request.code_review_required = False
         merge_request.qa_required = False
 
@@ -302,7 +304,7 @@ class ActionCancel(Action):
         return 'Canceled'
 
     def update_merge_request(self, merge_request):
-        merge_request.status = StatusCanceled().code()
+        merge_request.status_code = StatusCanceled().code()
         merge_request.code_review_required = False
         merge_request.qa_required = False
 
@@ -319,3 +321,5 @@ ACTIONS = (
     ActionMerge(),
     ActionCancel(),
 )
+
+DEFAULT_ACTION = ActionRequestMerge()
