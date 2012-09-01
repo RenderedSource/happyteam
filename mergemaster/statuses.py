@@ -166,6 +166,9 @@ class Action(object):
     def past_form_name(self):
         raise NotImplementedError()
 
+    def update_merge_request(self, merge_request):
+        raise NotImplementedError()
+
 class ActionRequestMerge(Action):
     def code(self):
         return 'merge_request'
@@ -175,6 +178,11 @@ class ActionRequestMerge(Action):
 
     def past_form_name(self):
         return 'Merge requested'
+
+    def update_merge_request(self, merge_request):
+        merge_request.status = StatusPending().code()
+        merge_request.code_review_required = True
+        merge_request.qa_required = True
 
     def __str__(self):
         return 'Request merge'
@@ -189,6 +197,11 @@ class ActionReject(Action):
     def past_form_name(self):
         return 'Rejected'
 
+    def update_merge_request(self, merge_request):
+        merge_request.status = StatusRejected().code()
+        merge_request.code_review_required = False
+        merge_request.qa_required = False
+
     def __str__(self):
         return 'Reject'
 
@@ -201,6 +214,10 @@ class ActionStartCodeReview(Action):
 
     def past_form_name(self):
         return 'Code review started'
+
+    def update_merge_request(self, merge_request):
+        merge_request.status = StatusCodeReviewInProgress().code()
+        merge_request.code_review_required = False
 
     def __str__(self):
         return 'Start code review'
@@ -215,6 +232,10 @@ class ActionApproveCodeReview(Action):
     def past_form_name(self):
         return 'Code review approved'
 
+    def update_merge_request(self, merge_request):
+        merge_request.status = StatusPending().code()
+        merge_request.code_review_required = False
+
     def __str__(self):
         return 'Approve code review'
 
@@ -227,6 +248,10 @@ class ActionStartQa(Action):
 
     def past_form_name(self):
         return 'QA started'
+
+    def update_merge_request(self, merge_request):
+        merge_request.status = StatusQaInProgress().code()
+        merge_request.qa_required = False
 
     def __str__(self):
         return 'Start QA'
@@ -241,6 +266,10 @@ class ActionApproveQa(Action):
     def past_form_name(self):
         return 'QA approved'
 
+    def update_merge_request(self, merge_request):
+        merge_request.status = StatusPending().code()
+        merge_request.qa_required = False
+
     def __str__(self):
         return 'Approve QA'
 
@@ -254,6 +283,11 @@ class ActionMerge(Action):
     def past_form_name(self):
         return 'Merged'
 
+    def update_merge_request(self, merge_request):
+        merge_request.status = StatusMerged().code()
+        merge_request.code_review_required = False
+        merge_request.qa_required = False
+
     def __str__(self):
         return 'Merge'
 
@@ -266,6 +300,11 @@ class ActionCancel(Action):
 
     def past_form_name(self):
         return 'Canceled'
+
+    def update_merge_request(self, merge_request):
+        merge_request.status = StatusCanceled().code()
+        merge_request.code_review_required = False
+        merge_request.qa_required = False
 
     def __str__(self):
         return 'Cancel'

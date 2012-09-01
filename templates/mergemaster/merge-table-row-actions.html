@@ -5,7 +5,7 @@
     <tr class="{{ action.row_css_class }}">
         <td class="span1">{{ forloop.revcounter }}</td>
         <td class="span3">{{ action.merge_master }}</td>
-        <td class="span6">{{ action.user_friendly_status }} {{ action.reason }}</td>
+        <td class="span6">{{ action.past_form_name }} {{ action.reason }}</td>
         <td class="span2">{{ action.date|date:"M d, h:i A" }}</td>
     </tr>
     {% empty %}

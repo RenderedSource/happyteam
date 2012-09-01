@@ -1,6 +1,6 @@
 (function($) {
     $(function() {
-        $('.btn-merge-request').click(function(event) {
+        $('.btn-merge-request').live('click', function(event) {
             event.preventDefault();
 
             var $button = $(this);
@@ -20,7 +20,7 @@
             });
         });
 
-        $('.btn-merge-action').click(function(event) {
+        $('.btn-merge-action').live('click', function(event) {
             event.preventDefault();
 
             var $button = $(this);

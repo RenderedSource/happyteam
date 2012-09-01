@@ -14,15 +14,6 @@ class MergeRequest(models.Model):
     STATUS_CHOICES = [(s.code(), str(s)) for s in STATUSES]
     STATUS_DICT = dict((s.code(), s) for s in STATUSES)
 
-    MERGE_REQUEST = 'merge_request'
-    REJECTED = 'rejected'
-    CODE_REVIEW_STARTED = 'cr_started'
-    CODE_REVIEW_APPROVED = 'cr_approved'
-    QA_STARTED = 'qa_started'
-    QA_APPROVED = 'qa_approved'
-    MERGED = 'merged'
-    CANCELED = 'canceled'
-
     developer = models.ForeignKey(User)
     branch = models.CharField(max_length = 60)
     task_id = models.IntegerField()
@@ -39,33 +30,6 @@ class MergeRequest(models.Model):
     def next_actions(self):
         return self.STATUS_DICT[self.status].next_actions()
 
-    def update_status_by_action(self, action):
-        """
-        @type action: MergeRequestAction
-        """
-        if action.status == action.MERGE_REQUEST:
-            self.status = self.PENDING
-            self.code_review_required = True
-            self.qa_required = True
-        elif action.status == action.CODE_REVIEW_APPROVED:
-            self.code_review_required = False
-            self.status = self.PENDING
-        elif action.status == action.QA_APPROVED:
-            self.qa_required = False
-            self.status = self.PENDING
-        elif action.status == action.REJECTED:
-            self.status = self.REJECTED
-            self.code_review_required = False
-            self.qa_required = False
-        elif action.status == action.MERGED:
-            self.status = self.MERGED
-            self.code_review_required = False
-            self.qa_required = False
-        elif action.status == action.CANCELED:
-            self.status = self.CANCELED
-            self.code_review_required = False
-            self.qa_required = False
-
     def __unicode__(self):
         return '%s - %s' % (self.developer, self.branch)
 
@@ -80,17 +44,20 @@ class MergeRequestAction(models.Model):
     date = models.DateTimeField(auto_now = True)
 
     def row_css_class(self):
-        return self.ACTION_DICT[self.status].row_css_class()
+        return self.action().row_css_class()
 
-    def user_friendly_status(self):
-        return str(self.ACTION_DICT[self.status])
+    def past_form_name(self):
+        return str(self.action().past_form_name())
+
+    def action(self):
+        return self.ACTION_DICT[self.status]
 
     @transaction.commit_manually
     def save(self, *args, **kwargs):
         try:
             if self.id is None:
                 # update merge request if action is new
-                self.merge_request.update_status_by_action(self)
+                self.action().update_merge_request(self.merge_request)
                 self.merge_request.save()
 
             super(self.__class__, self).save(*args, **kwargs)
