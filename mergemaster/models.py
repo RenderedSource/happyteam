@@ -19,8 +19,8 @@ class MergeRequest(models.Model):
     task_id = models.IntegerField()
 
     status_code = models.CharField(choices = STATUS_CHOICES, max_length = 20, default = DEFAULT_STATUS.code())
-    qa_required = models.BooleanField()
-    code_review_required = models.BooleanField()
+    cr_required = models.BooleanField(verbose_name = 'Code review required')
+    qa_required = models.BooleanField(verbose_name = 'QA required')
     date_created = models.DateTimeField(auto_now = True, verbose_name = 'Date Created')
     date_modified = models.DateTimeField(auto_now = True, verbose_name = 'Date Modified')
 
@@ -39,7 +39,11 @@ class MergeRequest(models.Model):
     def save(self, *args, **kwargs):
         try:
             is_new = True if self.id is None else False
+            if is_new:
+                DEFAULT_ACTION.update_merge_request(self)
+
             super(self.__class__, self).save(*args, **kwargs)
+
             if is_new:
                 merge_action = MergeRequestAction()
                 merge_action.merge_request = self
@@ -68,6 +72,10 @@ class MergeRequestAction(models.Model):
     def row_css_class(self):
         action = self.action()
         return action.row_css_class() if action else ''
+
+    def button_css_class(self):
+        action = self.action()
+        return action.button_css_class() if action else ''
 
     def past_form_name(self):
         action = self.action()

@@ -10,7 +10,9 @@
 
             $.post(url, data, function(response) {
                 if (response.success) {
-                    $('#mergelist').prepend(response.html);
+                    var $mergelist = $('#mergelist');
+                    $mergelist.find('.row-no-data').remove();
+                    $mergelist.prepend(response.html);
                 } else {
                     console.log(response);
                 }

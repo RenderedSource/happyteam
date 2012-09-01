@@ -8,6 +8,11 @@ ROW_CLASS_SUCCESS = 'success'
 ROW_CLASS_ERROR = 'error'
 ROW_CLASS_INFO = 'info'
 
+BUTTON_CLASS_PRIMARY = 'btn-primary'
+BUTTON_CLASS_SUCCESS = 'btn-success'
+BUTTON_CLASS_DANGER = 'btn-danger'
+BUTTON_CLASS_INVERSE = 'btn-inverse'
+
 class Singleton(type):
     def __init__(cls, name, bases, dict):
         super(Singleton, cls).__init__(name, bases, dict)
@@ -104,7 +109,6 @@ class StatusApproved(Status):
 
     def next_actions(self):
         return (
-            ActionRequestMerge(),
             ActionMerge(),
             ActionReject(),
             ActionCancel(),
@@ -122,6 +126,7 @@ class StatusMerged(Status):
 
     def next_actions(self):
         return (
+            ActionRequestMerge(),
             ActionReject(),
             ActionCancel(),
         )
@@ -163,7 +168,10 @@ class Action(object):
         raise NotImplementedError()
 
     def row_css_class(self):
-        raise NotImplementedError()
+        return ''
+
+    def button_css_class(self):
+        return ''
 
     def past_form_name(self):
         raise NotImplementedError()
@@ -173,17 +181,20 @@ class Action(object):
 
 class ActionRequestMerge(Action):
     def code(self):
-        return 'merge_request'
+        return 'request_merge'
 
     def row_css_class(self):
         return ROW_CLASS_INFO
+
+    def button_css_class(self):
+        return ''
 
     def past_form_name(self):
         return 'Merge requested'
 
     def update_merge_request(self, merge_request):
         merge_request.status_code = StatusPending().code()
-        merge_request.code_review_required = True
+        merge_request.cr_required = True
         merge_request.qa_required = True
 
     def __str__(self):
@@ -191,17 +202,20 @@ class ActionRequestMerge(Action):
 
 class ActionReject(Action):
     def code(self):
-        return 'rejected'
+        return 'reject'
 
     def row_css_class(self):
         return ROW_CLASS_ERROR
+
+    def button_css_class(self):
+        return BUTTON_CLASS_DANGER
 
     def past_form_name(self):
         return 'Rejected'
 
     def update_merge_request(self, merge_request):
         merge_request.status_code = StatusRejected().code()
-        merge_request.code_review_required = False
+        merge_request.cr_required = False
         merge_request.qa_required = False
 
     def __str__(self):
@@ -209,44 +223,56 @@ class ActionReject(Action):
 
 class ActionStartCodeReview(Action):
     def code(self):
-        return 'cr_started'
+        return 'start_cr'
 
     def row_css_class(self):
         return ROW_CLASS_INFO
+
+    def button_css_class(self):
+        return ''
 
     def past_form_name(self):
         return 'Code review started'
 
     def update_merge_request(self, merge_request):
         merge_request.status_code = StatusCodeReviewInProgress().code()
-        merge_request.code_review_required = False
+        merge_request.cr_required = False
 
     def __str__(self):
         return 'Start code review'
 
 class ActionApproveCodeReview(Action):
     def code(self):
-        return 'cr_approved'
+        return 'approve_cr'
 
     def row_css_class(self):
         return ROW_CLASS_SUCCESS
+
+    def button_css_class(self):
+        return BUTTON_CLASS_SUCCESS
 
     def past_form_name(self):
         return 'Code review approved'
 
     def update_merge_request(self, merge_request):
-        merge_request.status_code = StatusPending().code()
-        merge_request.code_review_required = False
+        merge_request.cr_required = False
+        if merge_request.qa_required:
+            merge_request.status_code = StatusPending().code()
+        else:
+            merge_request.status_code = StatusApproved().code()
 
     def __str__(self):
         return 'Approve code review'
 
 class ActionStartQa(Action):
     def code(self):
-        return 'qa_started'
+        return 'start_qa'
 
     def row_css_class(self):
         return ROW_CLASS_INFO
+
+    def button_css_class(self):
+        return ''
 
     def past_form_name(self):
         return 'QA started'
@@ -260,34 +286,43 @@ class ActionStartQa(Action):
 
 class ActionApproveQa(Action):
     def code(self):
-        return 'qa_approved'
+        return 'approve_qa'
 
     def row_css_class(self):
         return ROW_CLASS_SUCCESS
+
+    def button_css_class(self):
+        return BUTTON_CLASS_SUCCESS
 
     def past_form_name(self):
         return 'QA approved'
 
     def update_merge_request(self, merge_request):
-        merge_request.status_code = StatusPending().code()
         merge_request.qa_required = False
+        if merge_request.cr_required:
+            merge_request.status_code = StatusPending().code()
+        else:
+            merge_request.status_code = StatusApproved().code()
 
     def __str__(self):
         return 'Approve QA'
 
 class ActionMerge(Action):
     def code(self):
-        return 'merged'
+        return 'merge'
 
     def row_css_class(self):
         return ROW_CLASS_SUCCESS
+
+    def button_css_class(self):
+        return BUTTON_CLASS_PRIMARY
 
     def past_form_name(self):
         return 'Merged'
 
     def update_merge_request(self, merge_request):
         merge_request.status_code = StatusMerged().code()
-        merge_request.code_review_required = False
+        merge_request.cr_required = False
         merge_request.qa_required = False
 
     def __str__(self):
@@ -295,17 +330,20 @@ class ActionMerge(Action):
 
 class ActionCancel(Action):
     def code(self):
-        return 'canceled'
+        return 'cancel'
 
     def row_css_class(self):
         return ROW_CLASS_ERROR
+
+    def button_css_class(self):
+        return BUTTON_CLASS_INVERSE
 
     def past_form_name(self):
         return 'Canceled'
 
     def update_merge_request(self, merge_request):
         merge_request.status_code = StatusCanceled().code()
-        merge_request.code_review_required = False
+        merge_request.cr_required = False
         merge_request.qa_required = False
 
     def __str__(self):

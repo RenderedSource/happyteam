@@ -40,6 +40,8 @@
                 <table class="table table-condensed" id="mergelist">
                     {% for merge in merge_list %}
                         {% include 'mergemaster/merge-table-row.html' %}
+                    {% empty %}
+                        <tr class="info row-no-data"><td>No merge requests</td></tr>
                     {% endfor %}
                 </table>
             </div>
