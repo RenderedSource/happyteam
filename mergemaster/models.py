@@ -47,7 +47,7 @@ class MergeRequest(models.Model):
             if is_new:
                 merge_action = MergeRequestAction()
                 merge_action.merge_request = self
-                merge_action.merge_master_id = self.developer_id
+                merge_action.user = self.developer
                 merge_action.action_code = DEFAULT_ACTION.code()
                 merge_action.save(update_merge_request=False)
         except:
@@ -64,7 +64,7 @@ class MergeRequestAction(models.Model):
     ACTION_DICT = dict((a.code(), a) for a in ACTIONS)
 
     merge_request = models.ForeignKey(MergeRequest)
-    merge_master = models.ForeignKey(MergeMaster)
+    user = models.ForeignKey(User)
     action_code = models.CharField(choices = ACTION_CHOICES, max_length = 20)
     reason = models.CharField(blank = True, max_length = 100)
     date = models.DateTimeField(auto_now = True)

@@ -21,10 +21,9 @@ class MergeRequestActionForm(forms.ModelForm):
         model = MergeRequestAction
         widgets = {
             'merge_request': forms.HiddenInput(),
-            'merge_master': forms.HiddenInput(),
             'action_code': forms.HiddenInput(),
         }
-        exclude = ['merge_master', 'reason']
+        exclude = ['user', 'reason']
 
 class FilterListForm(forms.Form):
     filters = forms.MultipleChoiceField(
