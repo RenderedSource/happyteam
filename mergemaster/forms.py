@@ -23,7 +23,7 @@ class MergeRequestActionForm(forms.ModelForm):
             'merge_request': forms.HiddenInput(),
             'action_code': forms.HiddenInput(),
         }
-        exclude = ['user', 'reason']
+        exclude = ['user',]
 
 class FilterListForm(forms.Form):
     filters = forms.MultipleChoiceField(
