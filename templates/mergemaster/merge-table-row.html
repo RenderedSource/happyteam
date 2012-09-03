@@ -1,14 +1,26 @@
 {% if merge %}
-<tr class="pid-{{ merge.id }}">
-    <td>{{ merge.id }}</td>
-    <td>{{ merge.developer }}</td>
-    <td><a href="{{ merge.merge_master.get_merge_master_url }}">{{ merge.merge_master }}</a></td>
-    <td><a href="{{ merge.get_edit_url }}">{{ merge.branch }}</a></td>
-    <td>{{ merge.status }}</td>
-    <td>
-       {% include 'mergemaster/merge-table-row-actions.html' %}
-    </td>
-    {#                            <td><a href="#" class="btn">Pivotal</a></td>#}
-    <td>{{ merge.date }}</td>
+
+<tr id="merge-head-{{ merge.id }}" data-id="{{ merge.id }}">
+    {% include 'mergemaster/merge-table-row-head.html' %}
 </tr>
+<tr>
+    <td class="action-list" colspan="7">
+        <div id="merge-actions-{{ merge.id }}" class="collapse">
+            <div class="well well-small add-action">
+                <form class="add-action-form" method="post" action="add_merge_action/">
+                    <div id="action-buttons-{{ merge.id }}" class="btn-group">
+                        {% include 'mergemaster/merge-table-row-buttons.html' %}
+                    </div>
+                    {{ action_form.as_p }}
+                    {% csrf_token %}
+                    <input type="hidden" name="merge_request" value="{{ merge.id }}" />
+                </form>
+            </div>
+            <table id="action-list-{{ merge.id }}" class="table table-striped table-condensed">
+                {% include 'mergemaster/merge-table-row-actions.html' %}
+            </table>
+        </div>
+    </td>
+</tr>
+
 {% endif %}

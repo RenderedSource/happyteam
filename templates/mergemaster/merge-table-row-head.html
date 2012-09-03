@@ -1,0 +1,23 @@
+{% if merge %}
+
+<td class="span1">{{ merge.id }}</td>
+<td class="span4 merge-status">
+    {% if merge.status_code %}
+    <span class="label {{ merge.label_css_class }}">{{ merge.status }}</span>
+    {% endif %}
+    {% if merge.qa_required %}
+    <span class="label label-warning">QA Required</span>
+    {% endif %}
+    {% if merge.cr_required %}
+    <span class="label label-warning">Code Review Required</span>
+    {% endif %}
+</td>
+<td class="span2">{{ merge.developer }}</td>
+<td class="span2">{{ merge.branch }}</td>
+<td class="span1"><a href="https://www.pivotaltracker.com/story/show/{{ merge.task_id }}">{{ merge.task_id }}</a></td>
+<td class="span1"><span class="badge">{{ merge.mergerequestaction_set.count }}</span></td>
+<td class="span1">
+    <a data-toggle="collapse" data-target="#merge-actions-{{ merge.id }}">Expand/Collapse</a>
+</td>
+
+{% endif %}

@@ -1,0 +1,9 @@
+{% if merge %}
+
+{% for merge_action in merge.next_actions %}
+    <button class="btn {{ merge_action.button_css_class }} btn-merge-action" data-action="{{ merge_action.code }}">
+        {{ merge_action }}
+    </button>
+{% endfor %}
+
+{% endif %}
