@@ -3,11 +3,14 @@ from django.shortcuts import render_to_response
 from django.http import HttpResponse
 import json
 from django.template.context import RequestContext
+from django.views.decorators.csrf import csrf_exempt
 from garbagecollector.forms import LooserForm
+from garbagecollector.models import Seat
 import network
 
 def index(request):
-    return render_to_response('garbagecollector/index.html',{},
+    seat_list = Seat.objects.all().order_by('room')
+    return render_to_response('garbagecollector/index.html',{'seat_list':seat_list},
         context_instance=RequestContext(request))
 
 def get_online(request):
@@ -35,3 +38,12 @@ def add_looser(request):
     else:
         data = {'status':1, 'error':'No POST'}
     return HttpResponse(data,'application/javascript')
+
+@csrf_exempt
+def save_seat(request):
+    if request.method == 'POST':
+        for seat in request.POST:
+            print seat
+        return HttpResponse('pk')
+    else:
+        return HttpResponse('No post')

@@ -70,7 +70,7 @@ $(function() {
                 console.log(data)
             }
         })
-    }
+    };
     // todo add looser id in $('#looserId').val()
     $('.btn-gambling').click(function() {
         if (!$(this).hasClass('disabled')) {
@@ -101,4 +101,29 @@ $(function() {
 
         }
     });
-})
+    // drang and drop save seat position
+    $( ".seat" ).draggable({
+        containment: 'parent',
+        snapMode: "outer",
+        cursor:'move'
+    });
+
+    $('#save_seat').click(function(){
+        var seat_list = {};
+        $('.seat').each(function(i, data){
+           var seat = $(data);
+            seat_list = seat_list + ({'id':seat.data('id'), 'x_pos':seat.css('left'), 'y_pos':seat.css('top')})
+        });
+        $.ajax({
+            url: '/gc/save_seat/',
+            type:'post',
+            data:{
+                'seat_list':seat_list
+            },
+            success: function(data){
+                alert(data);
+            }
+        })
+    });
+
+});

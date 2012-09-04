@@ -4,11 +4,30 @@
 {% endblock %}
 
 {% block script %}
+    <script type="text/javascript" src="/static/jqueryui/js/jquery-ui-1.8.22.custom.min.js"></script>
     <script type="text/javascript" src="/static/js/script.js"></script>
 {% endblock %}
 
 {% block content %}
     <div class="clearfix">
+        <div class="rooms">
+            {% regroup seat_list by room as sorted_list %}
+            {% for seat in sorted_list %}
+                <h4>{{ seat.grouper }}</h4>
+                <div class="room {{ seat.grouper.css_class }} clearfix" style="width: {{ seat.grouper.width }}px; height: {{ seat.grouper.height }}px;" data-id="{{ seat.grouper.id }}">
+                    {% for s in seat.list %}
+                        <div data-id="{{ s.id }}" class="seat {{ s.css_class }}" style="top: {{ s.y_pos }}px; left: {{ s.x_pos }}px;">
+                            {% if s.user %}
+                                <a href="#chat_with" rel="tooltip" title="{{ s.user.username }}"><i class="icon-user"></i></a>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endfor %}
+            <p>
+                <input type="button" class="btn btn-primary" value="Save position" id="save_seat">
+            </p>
+        </div>
         <div class="step step-hello">
             <button class="btn vertical-middle btn-start">Кто выносит мусор?</button>
         </div>

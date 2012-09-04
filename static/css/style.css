@@ -220,3 +220,36 @@ a {
     overflow: hidden;
     text-overflow: ellipsis;
 }
+
+/* gc rooms and seats */
+
+.room{
+    position: relative;
+    border: 1px solid #dcdcdc;
+}
+.seat{
+    position: absolute;
+}
+/*   seat style use in django admin */
+.seat.long{
+    width: 40px;
+    height: 25px;
+    background: #339bb9;
+    margin: -1px;
+    border: 1px solid #8a2be2;
+}
+.seat.width{
+    width: 40px;
+    height: 25px;
+    background: #339bb9;
+    margin: -1px;
+    border: 1px solid #8a2be2;
+}
+.seat.circle{
+    width: 20px;
+    height: 20px;
+    background: #339bb9;
+    margin: -1px;
+    border: 1px solid #8a2be2;
+    border-radius: 20px;
+}
