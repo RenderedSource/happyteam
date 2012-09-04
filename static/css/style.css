@@ -226,6 +226,8 @@ a {
 .room{
     position: relative;
     border: 1px solid #dcdcdc;
+    margin: 5px;
+    float: left;
 }
 .seat{
     position: absolute;

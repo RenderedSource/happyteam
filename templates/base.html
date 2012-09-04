@@ -26,7 +26,12 @@
     <!--[if lt IE 9]>
     <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
+    <script src="/static/js/jquery-1.7.2.min.js"></script>
+    <script src="/static/bootstrap/js/bootstrap.min.js"></script>
+    <script src="/static/jqueryui/js/jquery-ui-1.8.22.custom.min.js"></script>
+    {% block script %}
 
+    {% endblock %}
 </head>
 <body>
 
@@ -65,15 +70,5 @@
     </footer>
 
 </div> <!-- /container -->
-
-<!-- Le javascript
-================================================== -->
-<!-- Placed at the end of the document so the pages load faster -->
-<script src="/static/js/jquery-1.7.2.min.js"></script>
-<script src="/static/bootstrap/js/bootstrap.min.js"></script>
-<script src="/static/jqueryui/js/jquery-ui-1.8.22.custom.min.js"></script>
-{% block script %}
-    
-{% endblock %}
 </body>
 </html>

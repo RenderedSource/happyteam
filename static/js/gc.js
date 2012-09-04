@@ -11,7 +11,7 @@ $(function() {
         } else if (onlineUsers.length == 1) {
             message = 'Без альтернатив :)'
         } else {
-            message = 'Да свершится предначертанное!'
+            message = 'Да свершится предначертанное!';
             gambling = true;
         }
 
@@ -63,6 +63,7 @@ $(function() {
             type: 'post',
             dataType: 'json',
             data:{
+                'csrfmiddlewaretoken':'{{ csrf_token }}',
                 'user':user_id
             },
             success: function(data){
@@ -90,7 +91,7 @@ $(function() {
             for (var i = 0; i < looser; i++) {
                 onlineUsers.push(onlineUsers.shift());
             }
-            console.log(looser)
+            console.log(looser);
             var delta = 360 / userCount;
             for (var i in onlineUsers) {
                 var user = onlineUsers[i];
@@ -101,29 +102,4 @@ $(function() {
 
         }
     });
-    // drang and drop save seat position
-    $( ".seat" ).draggable({
-        containment: 'parent',
-        snapMode: "outer",
-        cursor:'move'
-    });
-
-    $('#save_seat').click(function(){
-        var seat_list = {};
-        $('.seat').each(function(i, data){
-           var seat = $(data);
-            seat_list = seat_list + ({'id':seat.data('id'), 'x_pos':seat.css('left'), 'y_pos':seat.css('top')})
-        });
-        $.ajax({
-            url: '/gc/save_seat/',
-            type:'post',
-            data:{
-                'seat_list':seat_list
-            },
-            success: function(data){
-                alert(data);
-            }
-        })
-    });
-
 });

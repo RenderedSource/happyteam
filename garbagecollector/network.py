@@ -2,6 +2,7 @@ from xml.etree import ElementTree
 import urllib
 from website.settings import NMAP_XML_URL
 
+#todo cache 1-5 minuts
 def get_online_mac_addesses():
     response = urllib.urlopen(NMAP_XML_URL)
     xml = response.read()
@@ -9,7 +10,7 @@ def get_online_mac_addesses():
 
     mac_addresses = []
 
-    for host in tree.iter('host'):
+    for host in tree.findall('host'):
         state = host.find('status').attrib.get('state')
         if state == 'up':
             for address in host.findall('address'):

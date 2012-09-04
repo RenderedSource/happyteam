@@ -9,8 +9,7 @@ from garbagecollector.models import Seat
 import network
 
 def index(request):
-    seat_list = Seat.objects.all().order_by('room')
-    return render_to_response('garbagecollector/index.html',{'seat_list':seat_list},
+    return render_to_response('garbagecollector/index.html',{},
         context_instance=RequestContext(request))
 
 def get_online(request):
@@ -42,8 +41,12 @@ def add_looser(request):
 @csrf_exempt
 def save_seat(request):
     if request.method == 'POST':
-        for seat in request.POST:
-            print seat
-        return HttpResponse('pk')
+        for seat in request.POST.getlist('seat[]'):
+            seat_array = seat.split('|')
+            temp = Seat.objects.get(id = seat_array[0])
+            temp.x_pos = seat_array[1][:-2]
+            temp.y_pos = seat_array[2][:-2]
+            temp.save()
+        return HttpResponse('All items save')
     else:
         return HttpResponse('No post')
