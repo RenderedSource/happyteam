@@ -4,6 +4,7 @@ LABEL_CLASS_WARNING = 'label-warning'
 LABEL_CLASS_ERROR = 'label-important'
 LABEL_CLASS_INVERSE = 'label-inverse'
 
+ROW_CLASS_DEFAULT = ''
 ROW_CLASS_SUCCESS = 'success'
 ROW_CLASS_ERROR = 'error'
 ROW_CLASS_INFO = 'info'
@@ -184,7 +185,7 @@ class ActionRequestMerge(Action):
         return 'request_merge'
 
     def row_css_class(self):
-        return ROW_CLASS_INFO
+        return ROW_CLASS_DEFAULT
 
     def button_css_class(self):
         return ''
@@ -226,7 +227,7 @@ class ActionStartCodeReview(Action):
         return 'start_cr'
 
     def row_css_class(self):
-        return ROW_CLASS_INFO
+        return ROW_CLASS_DEFAULT
 
     def button_css_class(self):
         return ''
@@ -269,7 +270,7 @@ class ActionStartQa(Action):
         return 'start_qa'
 
     def row_css_class(self):
-        return ROW_CLASS_INFO
+        return ROW_CLASS_DEFAULT
 
     def button_css_class(self):
         return ''

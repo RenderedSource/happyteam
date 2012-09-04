@@ -155,6 +155,10 @@ a {
     margin-right: auto;
 }
 
+#merge .table-actions {
+    margin-bottom: 40px;
+}
+
 /*merge master request*/
 
 #chat {
