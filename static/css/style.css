@@ -236,8 +236,8 @@ a {
 .seat{
     position: absolute;
     text-align: center;
-    background: #0875b7;
-    border: 1px solid #8a2be2;
+  /*  background: #0875b7;
+    border: 1px solid #8a2be2;*/
 }
 /*   seat style use in django admin */
 .seat.long{
