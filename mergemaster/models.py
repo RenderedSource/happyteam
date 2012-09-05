@@ -99,15 +99,21 @@ class MergeRequestAction(models.Model):
         else:
             transaction.commit()
 
+    def __unicode__(self):
+        return "%s - %s - %s" % (self.merge_request.branch, str(self.action()), self.user)
 
-#class MergeComment(models.Model):
-#    merge_request = models.ForeignKey(MergeRequest)
-#    user = models.ForeignKey(User)
-#    message = models.TextField()
-#    date = models.DateTimeField(auto_now_add = True)
+class MergeActionComment(models.Model):
+    merge_action = models.ForeignKey(MergeRequestAction)
+    user = models.ForeignKey(User)
+    date = models.DateTimeField(auto_now_add = True)
+    content = models.TextField()
 
-#    def __unicode__(self):
-#        return self.user.username
+    def __unicode__(self):
+        return self.user.username
+
+
+
+
 
 MERGE_NOTIFICATION_TYPE = (
     ('error', 'alert-error'),
@@ -124,15 +130,6 @@ class MergeNotification(models.Model):
 
     def __unicode__(self):
         return self.message
-
-
-#class MergeStats(models.Model):
-#    merge_master = models.ForeignKey(MergeMaster)
-#    action = models.CharField(max_length=60, choices = MERGE_REQUEST_STATUS)
-#    date = models.DateTimeField(auto_now_add=True)
-#
-#    def __unicode__(self):
-#        return '%s %s' % (self.merge_master.user.username, self.action)
 
 
 class JabberMessage(models.Model):

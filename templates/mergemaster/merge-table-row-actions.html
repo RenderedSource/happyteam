@@ -6,10 +6,24 @@
     {% for action in merge.mergerequestaction_set.all|dictsortreversed:"date" %}
     <tr class="{{ action.row_css_class }}">
         <td class="span1">{{ forloop.revcounter }}</td>
-        <td class="span1"> {% gravatar_img_for_user action.user 20 %}</td>
-        <td class="span3">{{ action.user }}</td>
+        <td class="span3">
+            {% gravatar_img_for_user action.user 20 %}
+            {{ action.user }}
+        </td>
         <td class="span5">{{ action.past_form_name }}{% if action.reason %}: {{ action.reason }}{% endif %}</td>
         <td class="span2">{{ action.date|date:"M d, h:i A" }}</td>
+        <td class="span1">
+            <span class="btn btn-link badge" data-toggle="collapse" data-target="#action-comments-{{ action.id }}">
+                {{ action.mergeactioncomment_set.count }} comment{{ action.mergeactioncomment_set.count|pluralize:",s" }}
+            </span>
+        </td>
+    </tr>
+    <tr>
+        <td class="action-comment-list" colspan="5">
+            <div id="action-comments-{{ action.id }}" class="collapse">
+                {% include 'mergemaster/action-comments.html' %}
+            </div>
+        </td>
     </tr>
     {% empty %}
     <tr class="info">

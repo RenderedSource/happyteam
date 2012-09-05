@@ -10,7 +10,7 @@
             <div class="span6 well">
                 {% if request_form %}
                     <legend>Add new merge request</legend>
-                    <form action="add_merge_request/" method="post" class="form-horizontal">
+                    <form action="add-merge-request/" method="post" class="form-horizontal">
                         {% load bootstrap %}
                         {{ request_form|bootstrap }}
                         {% csrf_token %}
