@@ -245,8 +245,8 @@ a {
     border: 1px solid #8a2be2;
 }
 .seat.width{
-    width: 40px;
-    height: 25px;
+    width: 25px;
+    height: 40px;
     background: #339bb9;
     margin: -1px;
     border: 1px solid #8a2be2;
