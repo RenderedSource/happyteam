@@ -15,9 +15,9 @@ class MergeRequestActionAdmin(admin.ModelAdmin):
     pass
 admin.site.register(MergeRequestAction, MergeRequestActionAdmin)
 
-#class MergeCommentAdmin(admin.ModelAdmin):
-#  pass
-#admin.site.register(MergeComment, MergeCommentAdmin)
+class MergeActionCommentAdmin(admin.ModelAdmin):
+  pass
+admin.site.register(MergeActionComment, MergeActionCommentAdmin)
 
 class MergeNotificationAdmin(admin.ModelAdmin):
   list_display = ['message','user']

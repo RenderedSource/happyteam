@@ -4,13 +4,13 @@
     {% include 'mergemaster/merge-table-row-head.html' %}
 </tr>
 <tr>
-    <td class="action-list" colspan="7">
+    <td class="action-list" colspan="6">
         <div id="merge-actions-{{ merge.id }}" class="collapse">
-            <div class="well pull-right">
-                <p>To merge this branch, run next line in console:</p>
-                <code>ant -Dbranch=origin/{{ merge.branch }} merge</code>
-            </div>
             <div class="well well-small add-action">
+                <div class="well pull-right">
+                    <p>To merge this branch, run next line in console:</p>
+                    <code>ant -Dbranch=origin/{{ merge.branch }} merge</code>
+                </div>
                 <form class="add-action-form" method="post" action="add_merge_action/">
                     <div id="action-buttons-{{ merge.id }}" class="btn-group">
                         {% include 'mergemaster/merge-table-row-buttons.html' %}

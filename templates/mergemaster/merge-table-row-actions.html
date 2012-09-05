@@ -10,8 +10,20 @@
             {% gravatar_img_for_user action.user 20 %}
             {{ action.user }}
         </td>
-        <td class="span6">{{ action.past_form_name }}{% if action.reason %}: {{ action.reason }}{% endif %}</td>
+        <td class="span5">{{ action.past_form_name }}{% if action.reason %}: {{ action.reason }}{% endif %}</td>
+        <td class="span1">
+            <span class="btn btn-link badge" data-toggle="collapse" data-target="#merge-{{ merge.id }}-action-{{ action.id }}-comments">
+                {{ action.mergeactioncomment_set.count }} comment{{ action.mergeactioncomment_set.count|pluralize:",s" }}
+            </span>
+        </td>
         <td class="span2">{{ action.date|date:"M d, h:i A" }}</td>
+    </tr>
+    <tr>
+        <td class="action-comment-list" colspan="5">
+            <div id="merge-{{ merge.id }}-action-{{ action.id }}-comments" class="collapse action-comments">
+                {% include 'mergemaster/action-comments.html' %}
+            </div>
+        </td>
     </tr>
     {% empty %}
     <tr class="info">

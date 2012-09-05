@@ -1,0 +1,23 @@
+{% if action %}
+    {% load gravatar %}
+    {% load markup %}
+    {% for comment in action.mergeactioncomment_set.all|dictsortreversed:"date" %}
+    <div class="comment clearfix">
+        <div class="comment-gravatar">
+            {% gravatar_img_for_user comment.user 40 %}
+        </div>
+        <div class="comment-container">
+            <div class="comment-content">
+                {{ comment.content|markdown }}
+            </div>
+            <div class="comment-info">
+
+                {{ comment.user }},
+                {{ comment.date|date:"M d, h:i A" }}
+            </div>
+        </div>
+    </div>
+    {%  empty %}
+    <div class="no-comments">No comments</div>
+    {%  endfor %}
+{%  endif %}

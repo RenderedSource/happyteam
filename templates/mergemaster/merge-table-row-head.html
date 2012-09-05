@@ -19,10 +19,15 @@
     {{ merge.developer }}
 </td>
 <td class="span2">{{ merge.branch }}</td>
-<td class="span1"><a href="https://www.pivotaltracker.com/story/show/{{ merge.task_id }}">{{ merge.task_id }}</a></td>
-<td class="span1"><span class="badge">{{ merge.mergerequestaction_set.count }}</span></td>
-<td class="span1">
-    <a data-toggle="collapse" data-target="#merge-actions-{{ merge.id }}">Expand/Collapse</a>
+<td class="span2">
+    {% if merge.task_id %}
+    <a target="_blank" href="https://www.pivotaltracker.com/story/show/{{ merge.task_id }}">{{ merge.task_id }}</a>
+    {% endif %}
+</td>
+<td class="span1" style="text-align: center;">
+    <button class="btn btn-link badge" data-toggle="collapse" data-target="#merge-actions-{{ merge.id }}">
+        {{ merge.mergerequestaction_set.count }} action{{ merge.mergerequestaction_set.count|pluralize:",s" }}
+    </button>
 </td>
 
 {% endif %}

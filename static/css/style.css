@@ -151,12 +151,47 @@ a {
 }
 
 #merge .add-action {
+    width: 95%;
     margin-left: auto;
     margin-right: auto;
 }
 
 #merge .table-actions {
+    width: 95%;
+    margin-left: auto;
+    margin-right: auto;
     margin-bottom: 40px;
+}
+
+#merge td.action-comment-list {
+    padding: 0;
+    border-top: none;
+}
+
+#merge .action-comments {
+    width: 95%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#merge .comment {
+    padding-top: 5px;
+    padding-bottom: 5px;
+    border-top: solid 1px #ddd;
+}
+
+#merge .comment-gravatar {
+    float: left;
+    margin-right: 20px;
+}
+
+#merge .comment-container {
+    float: left;
+}
+
+#merge .comment-info {
+    font-size: .8em;
+    color: #888;
 }
 
 /*merge master request*/

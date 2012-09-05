@@ -1,3 +1,4 @@
+django
 django-markdown
 django-bootstrap-form
 south
