@@ -3,7 +3,9 @@ from django.shortcuts import render_to_response
 from django.http import HttpResponse
 import json
 from django.template.context import RequestContext
+from django.views.decorators.csrf import csrf_exempt
 from garbagecollector.forms import LooserForm
+from garbagecollector.models import Seat
 import network
 
 def index(request):
@@ -35,3 +37,16 @@ def add_looser(request):
     else:
         data = {'status':1, 'error':'No POST'}
     return HttpResponse(data,'application/javascript')
+
+@csrf_exempt
+def save_seat(request):
+    if request.method == 'POST':
+        for seat in request.POST.getlist('seat[]'):
+            seat_array = seat.split('|')
+            temp = Seat.objects.get(id = seat_array[0])
+            temp.x_pos = seat_array[1][:-2]
+            temp.y_pos = seat_array[2][:-2]
+            temp.save()
+        return HttpResponse('All items save')
+    else:
+        return HttpResponse('No post')

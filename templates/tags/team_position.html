@@ -1,0 +1,71 @@
+<h3>Who in office (drag and drop seat )</h3>
+
+<div class="clearfix">
+    <div class="span8">
+        <div class="rooms">
+            {% regroup seat_list by room as sorted_list %}
+            {% for seat in sorted_list %}
+{#                <h4>{{ seat.grouper }}</h4>#}
+                <div class="room {{ seat.grouper.css_class }} clearfix" style="width: {{ seat.grouper.width }}px; height: {{ seat.grouper.height }}px;" data-id="{{ seat.grouper.id }}">
+                    {% for s in seat.list %}
+                        <div data-id="{{ s.id }}" class="seat {{ s.css_class }}" style="top: {{ s.y_pos }}px; left: {{ s.x_pos }}px;">
+                            {% if s.user %}
+                                <a href="#chat_with" rel="tooltip" id="user-in-office-{{ s.user.id }}" title="{{ s.user.first_name }} {{ s.user.last_name }}"><i class="icon-user icon-white"></i></a>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+    <div class="span4">
+        <ul class="unstyled">
+            {% if online_users %}
+                {% for user in online_users %}
+                    <li><a class="user-in-office" href="#" data-id="{{ user.id }}"><i class="icon-user"></i> {{ user.first_name }} {{ user.last_name }}</a></li>
+                {% empty %}
+                    <li>Office empty  :(</li>
+                {% endfor %}
+                {% else %}
+                <li>Sorry try again later</li>
+            {% endif %}
+
+        </ul>
+    </div>
+    <div class="clearfix">
+        <input type="button" class="btn btn-primary btn-small" value="Save seat position" id="save_seat">
+    </div>
+</div>
+
+    <script type="text/javascript">
+        $().ready(function(){
+            // drang and drop save seat position
+            $( ".seat" ).draggable({
+                containment: 'parent',
+                snapMode: "outer",
+                cursor:'move'
+            });
+
+            $('#save_seat').click(function(){
+                var seat_list = new Array();
+                $('.seat').each(function(i, data){
+                    var seat = $(data);
+                    seat_list.push(seat.data('id')+'|'+seat.css('left')+'|'+seat.css('top'));
+                });
+                $.ajax({
+                    url: '/gc/save_seat/',
+                    type:'post',
+                    data:{
+                        seat:seat_list
+                    },
+                    success: function(data){
+                        alert(data);
+                    }
+                })
+            });
+            $('.user-in-office').click(function(){
+                $('#user-in-office-'+$(this).data('id')).tooltip('show');
+                return false;
+            });
+        })
+    </script>
