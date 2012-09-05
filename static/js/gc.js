@@ -11,7 +11,7 @@ $(function() {
         } else if (onlineUsers.length == 1) {
             message = 'Без альтернатив :)'
         } else {
-            message = 'Да свершится предначертанное!'
+            message = 'Да свершится предначертанное!';
             gambling = true;
         }
 
@@ -63,6 +63,7 @@ $(function() {
             type: 'post',
             dataType: 'json',
             data:{
+                'csrfmiddlewaretoken':'{{ csrf_token }}',
                 'user':user_id
             },
             success: function(data){
@@ -70,7 +71,7 @@ $(function() {
                 console.log(data)
             }
         })
-    }
+    };
     // todo add looser id in $('#looserId').val()
     $('.btn-gambling').click(function() {
         if (!$(this).hasClass('disabled')) {
@@ -90,7 +91,7 @@ $(function() {
             for (var i = 0; i < looser; i++) {
                 onlineUsers.push(onlineUsers.shift());
             }
-            console.log(looser)
+            console.log(looser);
             var delta = 360 / userCount;
             for (var i in onlineUsers) {
                 var user = onlineUsers[i];
@@ -101,4 +102,4 @@ $(function() {
 
         }
     });
-})
+});
