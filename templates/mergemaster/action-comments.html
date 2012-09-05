@@ -1,17 +1,16 @@
+<div class="comments-container">
 {% if action %}
     {% load gravatar %}
     {% load markup %}
+
     {% for comment in action.mergeactioncomment_set.all|dictsort:"date" %}
     <div class="comment clearfix">
         <div class="comment-gravatar">
             {% gravatar_img_for_user comment.user 40 %}
         </div>
-        <div class="comment-container">
-            <div class="comment-content">
-                {{ comment.content|markdown }}
-            </div>
+        <div class="comment-content">
+            {{ comment.content|markdown }}
             <div class="comment-info">
-
                 {{ comment.user }},
                 {{ comment.date|date:"M d, h:i A" }}
             </div>
@@ -22,8 +21,8 @@
         <div class="comment-gravatar">
             {% gravatar_img_for_user user 40 %}
         </div>
-        <div class="comment-container">
-            <form method="post" action="add-action-comment/">
+        <div class="comment-content">
+            <form method="post" action="add-action-comment/" class="comment-form">
                 {% csrf_token %}
                 <textarea name="content" class="comment-area"></textarea>
                 <input type="hidden" name="merge_action" value="{{ action.id }}" />
@@ -32,3 +31,4 @@
         </div>
     </div>
 {%  endif %}
+</div>

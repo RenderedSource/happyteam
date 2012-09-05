@@ -134,6 +134,19 @@ a {
     border-top: none;
 }
 
+#merge .actions-container {
+    padding: 10px;
+    margin: 10px auto 50px;
+    width: 96%;
+    box-shadow: 0 0 15px #888;
+    border-radius: 3px;
+    border: 1px solid #E3E3E3;
+}
+
+#merge .table-actions {
+    margin: 0;
+}
+
 #merge form ul {
     margin: 0;
 }
@@ -150,34 +163,24 @@ a {
     margin: 0;
 }
 
-#merge .add-action {
-    width: 95%;
-    margin-left: auto;
-    margin-right: auto;
-}
-
-#merge .table-actions {
-    width: 95%;
-    margin-left: auto;
-    margin-right: auto;
-    margin-bottom: 40px;
-}
-
 #merge td.action-comment-list {
     padding: 0;
     border-top: none;
 }
 
-#merge .action-comments {
-    width: 95%;
-    margin-left: auto;
-    margin-right: auto;
+#merge .comments-container {
+    padding-left: 20px;
+    margin: 10px 0 20px 50px;
+    border-left: 3px solid #E3E3E3;
 }
 
 #merge .comment {
     padding-top: 5px;
     padding-bottom: 5px;
-    border-top: solid 1px #ddd;
+}
+
+#merge .comment-form {
+    margin: 0;
 }
 
 #merge .comment-gravatar {
@@ -185,8 +188,9 @@ a {
     margin-right: 20px;
 }
 
-#merge .comment-container {
+#merge .comment-content {
     float: left;
+    width: 700px;
 }
 
 #merge .comment-info {

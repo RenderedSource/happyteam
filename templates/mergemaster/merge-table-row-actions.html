@@ -11,16 +11,16 @@
             {{ action.user }}
         </td>
         <td class="span5">{{ action.past_form_name }}{% if action.reason %}: {{ action.reason }}{% endif %}</td>
+        <td class="span2">{{ action.date|date:"M d, h:i A" }}</td>
         <td class="span1">
             <span class="btn btn-link badge" data-toggle="collapse" data-target="#action-comments-{{ action.id }}">
                 {{ action.mergeactioncomment_set.count }} comment{{ action.mergeactioncomment_set.count|pluralize:",s" }}
             </span>
         </td>
-        <td class="span2">{{ action.date|date:"M d, h:i A" }}</td>
     </tr>
     <tr>
         <td class="action-comment-list" colspan="5">
-            <div id="action-comments-{{ action.id }}" class="collapse action-comments">
+            <div id="action-comments-{{ action.id }}" class="collapse">
                 {% include 'mergemaster/action-comments.html' %}
             </div>
         </td>
