@@ -177,7 +177,7 @@ LOGIN_REQUIRED_URLS_EXCEPTIONS = (
     r'/merge/sendjabber/$',
 
     )
-
+GRAVATAR_DEFAULT_IMAGE = 'retro'
 ## google auth
 AUTHENTICATION_BACKENDS = (
     ('auth.GoogleBackend'),

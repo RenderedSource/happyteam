@@ -1,7 +1,5 @@
 {% load gravatar %}
 
-<h3>Who in office (drag and drop seat )</h3>
-
 <div class="clearfix">
     <div class="span8">
         <div class="rooms">
@@ -21,17 +19,13 @@
         </div>
     </div>
     <div class="span4">
+        <h3>Who in office</h3>
         <ul class="unstyled">
-            {% if online_users %}
-                {% for user in online_users %}
-                    <li><a class="user-in-office" href="#" data-id="{{ user.id }}">{% gravatar_img_for_user user 25 %} {{ user.first_name }} {{ user.last_name }}</a></li>
-                {% empty %}
-                    <li>Office empty  :(</li>
-                {% endfor %}
-                {% else %}
-                <li>Sorry try again later</li>
-            {% endif %}
-
+            {% for user in online_users %}
+                <li><a class="user-in-office" href="#" data-id="{{ user.id }}">{% gravatar_img_for_user user 25 %} {{ user.first_name }} {{ user.last_name }}</a></li>
+            {% empty %}
+                <li>Office empty  :(</li>
+            {% endfor %}
         </ul>
     </div>
     <div class="clearfix">
