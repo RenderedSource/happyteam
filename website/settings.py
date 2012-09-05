@@ -133,7 +133,8 @@ INSTALLED_APPS = (
     'scrum',
     'importantnews',
     'django_markdown',
-    'south'
+    'south',
+    'gravatar'
 )
 AUTH_PROFILE_MODULE = 'profileuser.UserProfile'
 MARKDOWN_EDITOR_SKIN = 'simple'

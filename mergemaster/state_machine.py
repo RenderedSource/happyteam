@@ -4,6 +4,7 @@ LABEL_CLASS_WARNING = 'label-warning'
 LABEL_CLASS_ERROR = 'label-important'
 LABEL_CLASS_INVERSE = 'label-inverse'
 
+ROW_CLASS_DEFAULT = ''
 ROW_CLASS_SUCCESS = 'success'
 ROW_CLASS_ERROR = 'error'
 ROW_CLASS_INFO = 'info'
@@ -44,15 +45,15 @@ class StatusPending(Status):
 
     def next_actions(self):
         return (
-            ActionStartCodeReview(),
+            ActionStartCr(),
             ActionStartQa(),
-            ActionCancel(),
+            ActionSuspend(),
         )
 
     def __str__(self):
         return 'Pending'
 
-class StatusCodeReviewInProgress(Status):
+class StatusCrInProgress(Status):
     def code(self):
         return 'cr_in_progress'
 
@@ -61,12 +62,12 @@ class StatusCodeReviewInProgress(Status):
 
     def next_actions(self):
         return (
-            ActionApproveCodeReview(),
+            ActionApproveCr(),
             ActionReject(),
         )
 
     def __str__(self):
-        return 'Code review in progress'
+        return 'CR in progress'
 
 class StatusQaInProgress(Status):
     def code(self):
@@ -94,7 +95,7 @@ class StatusRejected(Status):
     def next_actions(self):
         return (
             ActionRequestMerge(),
-            ActionCancel(),
+            ActionSuspend(),
         )
 
     def __str__(self):
@@ -111,7 +112,7 @@ class StatusApproved(Status):
         return (
             ActionMerge(),
             ActionReject(),
-            ActionCancel(),
+            ActionSuspend(),
         )
 
     def __str__(self):
@@ -128,7 +129,7 @@ class StatusMerged(Status):
         return (
             ActionRequestMerge(),
             ActionReject(),
-            ActionCancel(),
+            ActionSuspend(),
         )
 
     def __str__(self):
@@ -147,11 +148,11 @@ class StatusCanceled(Status):
         )
 
     def __str__(self):
-        return 'Canceled'
+        return 'Suspended'
 
 STATUSES = (
     StatusPending(),
-    StatusCodeReviewInProgress(),
+    StatusCrInProgress(),
     StatusQaInProgress(),
     StatusRejected(),
     StatusApproved(),
@@ -184,7 +185,7 @@ class ActionRequestMerge(Action):
         return 'request_merge'
 
     def row_css_class(self):
-        return ROW_CLASS_INFO
+        return ROW_CLASS_DEFAULT
 
     def button_css_class(self):
         return ''
@@ -221,27 +222,27 @@ class ActionReject(Action):
     def __str__(self):
         return 'Reject'
 
-class ActionStartCodeReview(Action):
+class ActionStartCr(Action):
     def code(self):
         return 'start_cr'
 
     def row_css_class(self):
-        return ROW_CLASS_INFO
+        return ROW_CLASS_DEFAULT
 
     def button_css_class(self):
         return ''
 
     def past_form_name(self):
-        return 'Code review started'
+        return 'CR started'
 
     def update_merge_request(self, merge_request):
-        merge_request.status_code = StatusCodeReviewInProgress().code()
+        merge_request.status_code = StatusCrInProgress().code()
         merge_request.cr_required = False
 
     def __str__(self):
-        return 'Start code review'
+        return 'Start CR'
 
-class ActionApproveCodeReview(Action):
+class ActionApproveCr(Action):
     def code(self):
         return 'approve_cr'
 
@@ -252,7 +253,7 @@ class ActionApproveCodeReview(Action):
         return BUTTON_CLASS_SUCCESS
 
     def past_form_name(self):
-        return 'Code review approved'
+        return 'CR approved'
 
     def update_merge_request(self, merge_request):
         merge_request.cr_required = False
@@ -262,14 +263,14 @@ class ActionApproveCodeReview(Action):
             merge_request.status_code = StatusApproved().code()
 
     def __str__(self):
-        return 'Approve code review'
+        return 'Approve CR'
 
 class ActionStartQa(Action):
     def code(self):
         return 'start_qa'
 
     def row_css_class(self):
-        return ROW_CLASS_INFO
+        return ROW_CLASS_DEFAULT
 
     def button_css_class(self):
         return ''
@@ -328,7 +329,7 @@ class ActionMerge(Action):
     def __str__(self):
         return 'Merge'
 
-class ActionCancel(Action):
+class ActionSuspend(Action):
     def code(self):
         return 'cancel'
 
@@ -339,7 +340,7 @@ class ActionCancel(Action):
         return BUTTON_CLASS_INVERSE
 
     def past_form_name(self):
-        return 'Canceled'
+        return 'Suspended'
 
     def update_merge_request(self, merge_request):
         merge_request.status_code = StatusCanceled().code()
@@ -347,17 +348,17 @@ class ActionCancel(Action):
         merge_request.qa_required = False
 
     def __str__(self):
-        return 'Cancel'
+        return 'Suspend'
 
 ACTIONS = (
     ActionRequestMerge(),
     ActionReject(),
-    ActionStartCodeReview(),
-    ActionApproveCodeReview(),
+    ActionStartCr(),
+    ActionApproveCr(),
     ActionStartQa(),
     ActionApproveQa(),
     ActionMerge(),
-    ActionCancel(),
+    ActionSuspend(),
 )
 
 DEFAULT_ACTION = ActionRequestMerge()

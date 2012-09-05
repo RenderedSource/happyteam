@@ -4,21 +4,27 @@
     {% include 'mergemaster/merge-table-row-head.html' %}
 </tr>
 <tr>
-    <td class="action-list" colspan="7">
+    <td class="action-list" colspan="6">
         <div id="merge-actions-{{ merge.id }}" class="collapse">
-            <div class="well well-small add-action">
-                <form class="add-action-form" method="post" action="add_merge_action/">
-                    <div id="action-buttons-{{ merge.id }}" class="btn-group">
-                        {% include 'mergemaster/merge-table-row-buttons.html' %}
+            <div class="actions-container">
+                <div class="well well-small add-action">
+                    <div class="well pull-right">
+                        <p>To merge this branch, run next line in console:</p>
+                        <code>ant -Dbranch=origin/{{ merge.branch }} merge</code>
                     </div>
-                    {{ action_form.as_p }}
-                    {% csrf_token %}
-                    <input type="hidden" name="merge_request" value="{{ merge.id }}" />
-                </form>
+                    <form class="add-action-form" method="post" action="add-merge-action/">
+                        <div id="action-buttons-{{ merge.id }}" class="btn-group">
+                            {% include 'mergemaster/merge-table-row-buttons.html' %}
+                        </div>
+                        {{ action_form.as_p }}
+                        {% csrf_token %}
+                        <input type="hidden" name="merge_request" value="{{ merge.id }}" />
+                    </form>
+                </div>
+                <table id="action-list-{{ merge.id }}" class="table table-condensed table-actions">
+                    {% include 'mergemaster/merge-table-row-actions.html' %}
+                </table>
             </div>
-            <table id="action-list-{{ merge.id }}" class="table table-striped table-condensed">
-                {% include 'mergemaster/merge-table-row-actions.html' %}
-            </table>
         </div>
     </td>
 </tr>

@@ -134,6 +134,19 @@ a {
     border-top: none;
 }
 
+#merge .actions-container {
+    padding: 10px;
+    margin: 10px auto 50px;
+    width: 96%;
+    box-shadow: 0 0 15px #888;
+    border-radius: 3px;
+    border: 1px solid #E3E3E3;
+}
+
+#merge .table-actions {
+    margin: 0;
+}
+
 #merge form ul {
     margin: 0;
 }
@@ -150,9 +163,45 @@ a {
     margin: 0;
 }
 
-#merge .add-action {
-    margin-left: auto;
-    margin-right: auto;
+#merge td.action-comment-list {
+    padding: 0;
+    border-top: none;
+}
+
+#merge .comments-container {
+    padding-left: 20px;
+    margin: 10px 0 20px 50px;
+    border-left: 3px solid #E3E3E3;
+}
+
+#merge .comment {
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+#merge .comment-form {
+    margin: 0;
+}
+
+#merge .comment-gravatar {
+    float: left;
+    margin-right: 20px;
+}
+
+#merge .comment-content {
+    float: left;
+    width: 700px;
+}
+
+#merge .comment-info {
+    font-size: .8em;
+    color: #888;
+}
+
+#merge .comment-area {
+    width: 700px;
+    height: 100px;
+    display: block;
 }
 
 /*merge master request*/
@@ -231,27 +280,24 @@ a {
 }
 .seat{
     position: absolute;
+    text-align: center;
+  /*  background: #0875b7;
+    border: 1px solid #8a2be2;*/
 }
 /*   seat style use in django admin */
 .seat.long{
     width: 40px;
     height: 25px;
-    background: #339bb9;
     margin: -1px;
-    border: 1px solid #8a2be2;
 }
 .seat.width{
-    width: 40px;
-    height: 25px;
-    background: #339bb9;
+    width: 25px;
+    height: 40px;
     margin: -1px;
-    border: 1px solid #8a2be2;
 }
 .seat.circle{
     width: 20px;
     height: 20px;
-    background: #339bb9;
     margin: -1px;
-    border: 1px solid #8a2be2;
     border-radius: 20px;
 }
