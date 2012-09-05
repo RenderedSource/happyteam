@@ -1,3 +1,5 @@
+{% load gravatar %}
+
 <h3>Who in office (drag and drop seat )</h3>
 
 <div class="clearfix">
@@ -10,7 +12,7 @@
                     {% for s in seat.list %}
                         <div data-id="{{ s.id }}" class="seat {{ s.css_class }}" style="top: {{ s.y_pos }}px; left: {{ s.x_pos }}px;">
                             {% if s.user %}
-                                <a href="#chat_with" rel="tooltip" id="user-in-office-{{ s.user.id }}" title="{{ s.user.first_name }} {{ s.user.last_name }}"><i class="icon-user icon-white"></i></a>
+                                <a href="#chat_with" rel="tooltip" id="user-in-office-{{ s.user.id }}" title="{{ s.user.first_name }} {{ s.user.last_name }}">{% gravatar_img_for_user s.user 20 %}</a>
                             {% endif %}
                         </div>
                     {% endfor %}
@@ -22,7 +24,7 @@
         <ul class="unstyled">
             {% if online_users %}
                 {% for user in online_users %}
-                    <li><a class="user-in-office" href="#" data-id="{{ user.id }}"><i class="icon-user"></i> {{ user.first_name }} {{ user.last_name }}</a></li>
+                    <li><a class="user-in-office" href="#" data-id="{{ user.id }}">{% gravatar_img_for_user user 20 %} {{ user.first_name }} {{ user.last_name }}</a></li>
                 {% empty %}
                     <li>Office empty  :(</li>
                 {% endfor %}
