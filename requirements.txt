@@ -1,2 +1,6 @@
+django
+simplejson
 django-markdown
 django-bootstrap-form
+south
+django-gravatar

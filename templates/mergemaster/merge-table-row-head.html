@@ -1,0 +1,33 @@
+{% if merge %}
+
+{% load gravatar %}
+
+<td class="span1">{{ merge.id }}</td>
+<td class="span3 merge-status">
+    {% if merge.status_code %}
+    <span class="label {{ merge.label_css_class }}">{{ merge.status }}</span>
+    {% endif %}
+    {% if merge.qa_required %}
+    <span class="label label-warning">QA Required</span>
+    {% endif %}
+    {% if merge.cr_required %}
+    <span class="label label-warning">CR Required</span>
+    {% endif %}
+</td>
+<td class="span3">
+    {% gravatar_img_for_user merge.developer 20 %}
+    {{ merge.developer }}
+</td>
+<td class="span2">{{ merge.branch }}</td>
+<td class="span2">
+    {% if merge.task_id %}
+    <a target="_blank" href="https://www.pivotaltracker.com/story/show/{{ merge.task_id }}">{{ merge.task_id }}</a>
+    {% endif %}
+</td>
+<td class="span1" style="text-align: center;">
+    <button class="btn btn-link badge" data-toggle="collapse" data-target="#merge-actions-{{ merge.id }}">
+        {{ merge.mergerequestaction_set.count }} action{{ merge.mergerequestaction_set.count|pluralize:",s" }}
+    </button>
+</td>
+
+{% endif %}

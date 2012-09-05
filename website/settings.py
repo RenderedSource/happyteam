@@ -24,7 +24,7 @@ MANAGERS = ADMINS
 # timezone as the operating system.
 # If running in a Windows environment this must be set to the same as your
 # system time zone.
-TIME_ZONE = 'America/Chicago'
+TIME_ZONE = 'Asia/Omsk'
 
 # Language code for this installation. All choices can be found here:
 # http://www.i18nguy.com/unicode/language-identifiers.html
@@ -133,6 +133,8 @@ INSTALLED_APPS = (
     'scrum',
     'importantnews',
     'django_markdown',
+    'south',
+    'gravatar',
     'django_socketio',
     'teamchat'
 )
@@ -178,7 +180,7 @@ LOGIN_REQUIRED_URLS_EXCEPTIONS = (
     r'/merge/sendjabber/$',
 
     )
-
+GRAVATAR_DEFAULT_IMAGE = 'retro'
 ## google auth
 AUTHENTICATION_BACKENDS = (
     ('auth.GoogleBackend'),
