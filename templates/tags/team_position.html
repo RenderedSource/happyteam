@@ -20,7 +20,7 @@
     </div>
     <div class="span4">
         <ul class="unstyled">
-            {% if online_users != false %}
+            {% if online_users  %}
                 {% for user in online_users %}
                     <li><a class="user-in-office" href="#" data-id="{{ user.id }}"><i class="icon-user"></i> {{ user.first_name }} {{ user.last_name }}</a></li>
                 {% empty %}
