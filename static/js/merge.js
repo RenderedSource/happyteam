@@ -45,6 +45,25 @@
                 alert('Error');
             });
         });
+
+        $('.btn-post-comment').live('click', function(event) {
+            event.preventDefault();
+
+            var $button = $(this);
+            var $form = $(this).parents('form:first');
+            var data = $form.serialize();
+            var url = $form.attr('action');
+
+            $.post(url, data, function(response) {
+                if (response.success) {
+                    $('#action-comments-' + response.action_id).html(response.comments_html);
+                } else {
+                    console.log(response);
+                }
+            }, 'json').fail(function() {
+                alert('Error');
+            });
+        });
     });
 })(jQuery);
 

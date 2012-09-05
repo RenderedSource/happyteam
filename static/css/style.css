@@ -194,6 +194,12 @@ a {
     color: #888;
 }
 
+#merge .comment-area {
+    width: 700px;
+    height: 100px;
+    display: block;
+}
+
 /*merge master request*/
 
 #chat {

@@ -12,7 +12,7 @@
         </td>
         <td class="span5">{{ action.past_form_name }}{% if action.reason %}: {{ action.reason }}{% endif %}</td>
         <td class="span1">
-            <span class="btn btn-link badge" data-toggle="collapse" data-target="#merge-{{ merge.id }}-action-{{ action.id }}-comments">
+            <span class="btn btn-link badge" data-toggle="collapse" data-target="#action-comments-{{ action.id }}">
                 {{ action.mergeactioncomment_set.count }} comment{{ action.mergeactioncomment_set.count|pluralize:",s" }}
             </span>
         </td>
@@ -20,7 +20,7 @@
     </tr>
     <tr>
         <td class="action-comment-list" colspan="5">
-            <div id="merge-{{ merge.id }}-action-{{ action.id }}-comments" class="collapse action-comments">
+            <div id="action-comments-{{ action.id }}" class="collapse action-comments">
                 {% include 'mergemaster/action-comments.html' %}
             </div>
         </td>
