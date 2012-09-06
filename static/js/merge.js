@@ -57,6 +57,7 @@
             $.post(url, data, function(response) {
                 if (response.success) {
                     $('#action-comments-' + response.action_id).html(response.comments_html);
+                    $('#action-comment-count-' + response.action_id).html(response.comment_count_html);
                 } else {
                     console.log(response);
                 }
