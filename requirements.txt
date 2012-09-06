@@ -1,5 +1,7 @@
 django
 simplejson
+python-openid
+xmpppy
 django-markdown
 django-bootstrap-form
 south

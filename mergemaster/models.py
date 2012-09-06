@@ -110,31 +110,3 @@ class MergeActionComment(models.Model):
 
     def __unicode__(self):
         return self.user.username
-
-
-
-
-
-MERGE_NOTIFICATION_TYPE = (
-    ('error', 'alert-error'),
-    ('success', 'alert-success'),
-    ('info', ' alert-info')
-    )
-
-class MergeNotification(models.Model):
-    message = models.TextField()
-    date = models.DateTimeField(auto_now=True)
-    user = models.ForeignKey(User)
-    request = models.IntegerField(blank=True, null=True)
-    type = models.CharField(max_length=60, choices=MERGE_NOTIFICATION_TYPE)
-
-    def __unicode__(self):
-        return self.message
-
-
-class JabberMessage(models.Model):
-    jabber = models.CharField(max_length=60)
-    text = models.TextField()
-    date = models.DateTimeField(auto_now_add=True)
-
-    def __unicode__(self): return self.jabber
