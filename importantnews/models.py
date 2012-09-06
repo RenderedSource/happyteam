@@ -14,22 +14,28 @@ class News(models.Model):
 
     def __unicode__(self):
         return self.title
-    def get_absolute_url(self):
-        return '/news/%d/'%(self.id)
-    def get_edit_url(self):
-        return '/news/edit/%s/'%self.id
-    def get_read_user(self):
-        return UserRead.objects.filter(news = self)
 
-#    send required new news
+    def get_absolute_url(self):
+        return '/news/%d/' % (self.id)
+
+    def get_edit_url(self):
+        return '/news/edit/%s/' % self.id
+
+    def get_read_user(self):
+        return UserRead.objects.filter(news=self)
+
+    #    send required new news
     def save(self):
         if self.required:
             try:
-                News.objects.get(id = self.id)
+                News.objects.get(id=self.id)
             except News.DoesNotExist:
-                send_html_mail(self.title,render_to_string('importantnews/mail.html',{'news':self}) ,render_to_string('importantnews/mail.html',{'news':self}), settings.EMAIL_HOST_USER,
-                    User.objects.all().values_list('email', flat = True))
+                for email in User.objects.all().values_list('email', flat=True):
+                    send_html_mail(self.title, render_to_string('importantnews/mail.html', {'news': self}),
+                        render_to_string('importantnews/mail.html', {'news': self}), settings.EMAIL_HOST_USER,
+                        [email])
         super(News, self).save()
+
 
 class UserRead(models.Model):
     news = models.ForeignKey(News)

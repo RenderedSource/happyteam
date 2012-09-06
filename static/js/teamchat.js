@@ -7,8 +7,7 @@ var connected = function () {
         'action':'start',
         'room':''
     });
-
-}
+};
 var messaged = function (data) {
         switch (data.action) {
             case 'started':
@@ -29,7 +28,7 @@ var messaged = function (data) {
                 console.log(data);
                 break;
         }
-}
+};
 
 var disconnected = function () {
     setTimeout(start, 1000);
@@ -48,7 +47,7 @@ var removeUser = function (data) {
 
 var addMessage = function(data){
     $('#group-chat').append(data.message);
-}
+};
 
 var start = function () {
     socket = new io.Socket();

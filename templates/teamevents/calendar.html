@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Team Calendar
+{% endblock %}
+{% block content %}
+    <div id="calendar"></div>
+{% endblock %}
+{% block head %}
+    <link rel='stylesheet' type='text/css' href='/static/fullcalendar/fullcalendar.css'/>
+{% endblock %}
+{% block script %}
+    <script type='text/javascript' src='/static/fullcalendar/fullcalendar.js'></script>
+    <script type="text/javascript">
+        $().ready(function () {
+            $('#calendar').fullCalendar({
+                height: 650,
+                header: {
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: 'month,basicWeek'
+                },
+                firstDay: 1,
+                eventSources:[
+                    {
+                        url:'{% url calendar_data %}',
+                        type:'POST'
+                    }
+                ]
+            })
+        })
+    </script>
+{% endblock %}

@@ -4,8 +4,11 @@ from django.contrib import admin
 admin.autodiscover()
 
 urlpatterns = patterns('',
+    url(r'^admin/', include(admin.site.urls)),
+
     url("", include('django_socketio.urls')),
     url(r'^$', 'website.views.Index'),
+    url('^events/', include( 'teamevents.urls')),
     url('^markdown/', include( 'django_markdown.urls')),
     url('^news/', include( 'importantnews.urls')),
     url('^chat/', include( 'teamchat.urls')),
@@ -21,5 +24,4 @@ urlpatterns = patterns('',
     url(r'^merge/', include('mergemaster.urls')),
     url(r'^gc/', include('garbagecollector.urls')),
 
-    url(r'^admin/', include(admin.site.urls)),
 )

@@ -136,7 +136,8 @@ INSTALLED_APPS = (
     'south',
     'gravatar',
     'django_socketio',
-    'teamchat'
+    'teamchat',
+    'teamevents'
 )
 AUTH_PROFILE_MODULE = 'profileuser.UserProfile'
 MARKDOWN_EDITOR_SKIN = 'simple'
