@@ -7,6 +7,10 @@ class MergeMasterAdmin(admin.ModelAdmin):
   list_display = ['user','enabled']
 admin.site.register(MergeMaster, MergeMasterAdmin)
 
+class MergeGroupAdmin(admin.ModelAdmin):
+    pass
+admin.site.register(MergeGroup, MergeGroupAdmin)
+
 class MergeRequestAdmin(admin.ModelAdmin):
   list_display = ['branch','date_created']
 admin.site.register(MergeRequest, MergeRequestAdmin)
