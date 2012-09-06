@@ -34,7 +34,7 @@ def readNews(request, pid):
                 UserRead.objects.get(news=news, user=request.user)
             except UserRead.DoesNotExist:
                 form.save()
-            return HttpResponseRedirect(reverse('unread_news'))
+            return HttpResponseRedirect(reverse('read_news', args=[pid]))
     else:
         form = ReadNewsForm(initial={'user': request.user, 'news': news})
     if not news.required:
