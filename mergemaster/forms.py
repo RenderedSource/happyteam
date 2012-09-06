@@ -14,7 +14,7 @@ class MergeRequestFormApi(forms.ModelForm):
 class MergeRequestForm(forms.ModelForm):
     class Meta:
         model = MergeRequest
-        fields = ['branch', 'task_id']
+        fields = ['branch', 'task_id', 'merge_group']
 
 class MergeRequestActionForm(forms.ModelForm):
     class Meta:

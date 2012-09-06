@@ -109,6 +109,12 @@ def add_action_comment(request):
             },
             context_instance=RequestContext(request)
         )
+        response_data['comment_count_html'] = render_to_string(
+            'mergemaster/action-comment-count.html', {
+                'action': comment.merge_action
+            },
+            context_instance=RequestContext(request)
+        )
     else:
         response_data['success'] = False
     return HttpResponse(simplejson.dumps(response_data), mimetype='application/javascript')

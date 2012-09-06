@@ -7,6 +7,10 @@ class MergeMasterAdmin(admin.ModelAdmin):
   list_display = ['user','enabled']
 admin.site.register(MergeMaster, MergeMasterAdmin)
 
+class MergeGroupAdmin(admin.ModelAdmin):
+    pass
+admin.site.register(MergeGroup, MergeGroupAdmin)
+
 class MergeRequestAdmin(admin.ModelAdmin):
   list_display = ['branch','date_created']
 admin.site.register(MergeRequest, MergeRequestAdmin)
@@ -18,15 +22,3 @@ admin.site.register(MergeRequestAction, MergeRequestActionAdmin)
 class MergeActionCommentAdmin(admin.ModelAdmin):
   pass
 admin.site.register(MergeActionComment, MergeActionCommentAdmin)
-
-class MergeNotificationAdmin(admin.ModelAdmin):
-  list_display = ['message','user']
-admin.site.register(MergeNotification, MergeNotificationAdmin)
-
-#class MergeStatsAdmin(admin.ModelAdmin):
-#  pass
-#admin.site.register(MergeStats, MergeStatsAdmin)
-
-class JabberMessageAdmin(admin.ModelAdmin):
-  pass
-admin.site.register(JabberMessage, JabberMessageAdmin)

@@ -4,11 +4,17 @@ from state_machine import STATUSES, ACTIONS, DEFAULT_STATUS, DEFAULT_ACTION
 
 class MergeMaster(models.Model):
     user = models.ForeignKey(User)
-    enabled = models.BooleanField(default=True)
+    enabled = models.BooleanField(default = True)
     jabber = models.CharField(blank = True, max_length = 60)
 
     def __unicode__(self):
         return self.user.username
+
+class MergeGroup(models.Model):
+    main_branch = models.CharField(max_length = 60, blank = False)
+
+    def __unicode__(self):
+        return self.main_branch
 
 class MergeRequest(models.Model):
     STATUS_CHOICES = [(s.code(), str(s)) for s in STATUSES]
@@ -17,6 +23,7 @@ class MergeRequest(models.Model):
     developer = models.ForeignKey(User)
     branch = models.CharField(max_length = 60)
     task_id = models.IntegerField()
+    merge_group = models.ForeignKey(MergeGroup)
 
     status_code = models.CharField(choices = STATUS_CHOICES, max_length = 20, default = DEFAULT_STATUS.code())
     cr_required = models.BooleanField(verbose_name = 'Code review required')
@@ -111,30 +118,3 @@ class MergeActionComment(models.Model):
     def __unicode__(self):
         return self.user.username
 
-
-
-
-
-MERGE_NOTIFICATION_TYPE = (
-    ('error', 'alert-error'),
-    ('success', 'alert-success'),
-    ('info', ' alert-info')
-    )
-
-class MergeNotification(models.Model):
-    message = models.TextField()
-    date = models.DateTimeField(auto_now=True)
-    user = models.ForeignKey(User)
-    request = models.IntegerField(blank=True, null=True)
-    type = models.CharField(max_length=60, choices=MERGE_NOTIFICATION_TYPE)
-
-    def __unicode__(self):
-        return self.message
-
-
-class JabberMessage(models.Model):
-    jabber = models.CharField(max_length=60)
-    text = models.TextField()
-    date = models.DateTimeField(auto_now_add=True)
-
-    def __unicode__(self): return self.jabber
