@@ -38,18 +38,25 @@ class Sprint(models.Model):
     def getEnd(self):
         delta = datetime.datetime.now() - self.date_finish
         return '%s'%delta
+class StoryStatus(models.Model):
+    title = models.CharField(max_length=60)
+    sort = models.IntegerField()
+    def __unicode__(self):
+        return self.title
 
 class Story(models.Model):
     sprint = models.ForeignKey(Sprint)
     title = models.CharField(max_length=60)
     deadline = models.DateTimeField()
     requester = models.ForeignKey(User, related_name='requester')
-    owner = models.ForeignKey(User, blank=True, related_name='owner')
+    owner = models.ForeignKey(User, blank=True, null=True, related_name='owner')
+    status = models.ForeignKey(StoryStatus)
     desc = models.TextField()
-    points = models.IntegerField()
+    points = models.IntegerField(blank=True, null=True)
     date_add = models.DateTimeField(auto_now_add=True)
     date_start = models.DateTimeField(blank=True, null=True)
     date_finish = models.DateTimeField(blank=True, null=True)
+
     def __unicode__(self):
         return self.title
 

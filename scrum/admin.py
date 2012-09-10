@@ -1,6 +1,6 @@
 #-*- coding: utf-8 -*-
 from django.contrib import admin
-from scrum.models import Team, UserTeam, Project, TeamProject, Sprint, Story, Task
+from scrum.models import Team, UserTeam, Project, TeamProject, Sprint, Story, Task, StoryStatus
 
 
 __author__ = 'lehabaev'
@@ -43,3 +43,8 @@ class StoryAdmin(admin.ModelAdmin):
         TaskAdmin
     ]
 admin.site.register(Story, StoryAdmin)
+
+
+class StoryStatusAdmin(admin.ModelAdmin):
+    pass
+admin.site.register(StoryStatus, StoryStatusAdmin)

@@ -1,0 +1,106 @@
+.story-desc h2, p {
+    font-size: 100%;
+    font-weight: normal;
+}
+
+.story-desc ul, li {
+    list-style: none;
+}
+
+.story-desc ul {
+    padding: 0;
+    margin: 0;
+}
+
+.story-desc ul li a {
+    text-decoration: none;
+    color: #000;
+    background: #ffc;
+    display: block;
+    overflow: hidden;
+    height: 8em;
+    width: 8em;
+    padding: 1em;
+    -moz-box-shadow: 5px 5px 7px rgba(33, 33, 33, 1);
+    -webkit-box-shadow: 5px 5px 7px rgba(33, 33, 33, .7);
+    box-shadow: 5px 5px 7px rgba(33, 33, 33, .7);
+    -moz-transition: -moz-transform .15s linear;
+    -o-transition: -o-transform .15s linear;
+    -webkit-transition: -webkit-transform .15s linear;
+}
+
+.story-desc ul li {
+    margin: 1em;
+    float: left;
+}
+
+.story-desc ul li a {
+    -webkit-transform: rotate(-6deg);
+    -o-transform: rotate(-6deg);
+    -moz-transform: rotate(-6deg);
+}
+
+/*.story-desc ul li:nth-child(even) a {*/
+    /*-o-transform: rotate(4deg);*/
+    /*-webkit-transform: rotate(4deg);*/
+    /*-moz-transform: rotate(4deg);*/
+    /*position: relative;*/
+    /*top: 5px;*/
+    /*background: #cfc;*/
+/*}*/
+
+.story-desc .status-1 a {
+    -o-transform: rotate(-3deg);
+    -webkit-transform: rotate(-3deg);
+    -moz-transform: rotate(-3deg);
+    position: relative;
+    top: -5px;
+    background: #ccf;
+}
+.story-desc .status-3 a {
+    -o-transform: rotate(-3deg);
+    -webkit-transform: rotate(-3deg);
+    -moz-transform: rotate(-3deg);
+    position: relative;
+    top: -5px;
+    background: #ff1a96;
+}
+.story-desc .status-4 a {
+    -o-transform: rotate(-3deg);
+    -webkit-transform: rotate(-3deg);
+    -moz-transform: rotate(-3deg);
+    position: relative;
+    top: -5px;
+    background: #baff82;
+}
+.story-desc ul li:nth-child(5n) a {
+    -o-transform: rotate(5deg);
+    -webkit-transform: rotate(5deg);
+    -moz-transform: rotate(5deg);
+    position: relative;
+    top: -10px;
+}
+
+/*.story-desc ul li a:hover, ul li a:focus {*/
+    /*box-shadow: 10px 10px 7px rgba(0, 0, 0, .7);*/
+    /*-moz-box-shadow: 10px 10px 7px rgba(0, 0, 0, .7);*/
+    /*-webkit-box-shadow: 10px 10px 7px rgba(0, 0, 0, .7);*/
+    /*-webkit-transform: scale(1.25);*/
+    /*-moz-transform: scale(1.25);*/
+    /*-o-transform: scale(1.25);*/
+    /*position: relative;*/
+    /*z-index: 5;*/
+/*}*/
+
+.story-desc ol {
+    text-align: center;
+}
+
+.story-desc ol li {
+    display: inline;
+    padding-right: 1em;
+}
+
+.story-desc ol li a {
+    color: #fff;
+}

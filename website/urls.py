@@ -7,6 +7,7 @@ urlpatterns = patterns('',
     url(r'^$', 'website.views.Index'),
     url('^markdown/', include( 'django_markdown.urls')),
     url('^news/', include( 'importantnews.urls')),
+    url('^scrum/', include( 'scrum.urls')),
 
     url(r'^login/$', 'website.views.login', name='login'),
     url(r'^login-begin/$', 'django_openid_auth.views.login_begin', name='openid-login'),

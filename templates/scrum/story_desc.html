@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% block title %}
+
+{% endblock %}
+{% block content %}
+    <div class="row-fluid story-desc">
+        {% for status in status_list %}
+            <div class="well span3 status-{{ status.id }} status-column">
+                <h3>{{ status.title }}</h3>
+                <hr>
+                <ul>
+                {% for story in story_list %}
+                    {% if story.status == status %}
+                        <li>
+                            <a href="#" class="draggable" data-id="{{ story.id }}">
+                                <h5>{{ story }}</h5>
+                                <p>{{ story.desc|truncatechars:50 }}</p>
+                            </a>
+                        </li>
+                    {% endif %}
+                {% endfor %}
+                </ul>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}
+{% block head %}
+    <link href="/static/css/story_desc.css" rel="stylesheet">
+{% endblock %}
+{% block script %}
+    <script type="text/javascript">
+    $().ready(function(){
+        $(".draggable").draggable({
+//            containment:'.status-column',
+            snapMode:"outer",
+            cursor:'move'
+        });
+
+    });
+    </script>
+{% endblock %}
