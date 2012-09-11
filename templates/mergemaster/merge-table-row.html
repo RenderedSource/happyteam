@@ -10,7 +10,7 @@
                 <div class="well well-small add-action">
                     <div class="well pull-right">
                         <p>To merge this branch, run next line in console:</p>
-                        <code>ant -Dbranch=origin/{{ merge.branch }} merge</code>
+                        <code>ant -Dfrom={{ merge.branch }} -Dto={{ merge.merge_group.main_branch }} merge</code>
                     </div>
                     <form class="add-action-form" method="post" action="add-merge-action/">
                         <div id="action-buttons-{{ merge.id }}" class="btn-group">
