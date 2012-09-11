@@ -4,6 +4,7 @@ from django.template.context import RequestContext
 from scrum.models import Story, StoryStatus
 
 def story_desc(request):
+#    todo add filters: iteration, projects, user
     story_list = Story.objects.all()
     status_list = StoryStatus.objects.all().order_by('sort')
     return render_to_response('scrum/story_desc.html',

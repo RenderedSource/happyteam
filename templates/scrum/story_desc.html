@@ -15,7 +15,6 @@
                         <li>
                             <a href="#" class="draggable" data-id="{{ story.id }}">
                                 <h5>{{ story }}</h5>
-                                <p>{{ story.desc|truncatechars:50 }}</p>
                             </a>
                         </li>
                     {% endif %}
@@ -35,6 +34,14 @@
 //            containment:'.status-column',
             snapMode:"outer",
             cursor:'move'
+        });
+        $( ".status-column" ).droppable({
+            drop: function( event, ui ) {
+                $( this )
+                        .addClass( "ui-state-highlight" )
+                        .find( "p" )
+                        .html( "Dropped!" );
+            }
         });
 
     });
