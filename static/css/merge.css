@@ -79,3 +79,34 @@
     height: 21px;
     background:url(../img/nyancat.gif) no-repeat center center;
 }
+
+#diff table.code {
+    font: 12px 'Courier';
+    width: 100%;
+}
+
+#diff table.code th {
+    -moz-user-select: -moz-none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    color: #777;
+    padding-right: 5px;
+    text-align: right;
+    width: 30px;
+}
+
+#diff table.code td {
+    white-space: pre;
+    border-left: solid 1px #ccc;
+    padding-left: 5px;
+}
+
+#diff table.code .added {
+    background: #afa;
+}
+
+#diff table.code .removed {
+    background: #ffd0d0;
+}

@@ -10,6 +10,8 @@ from mergemaster.models import MergeRequest, MergeRequestAction
 from django.db import transaction
 from django.db.models import Count
 import models
+from git import *
+from diff import Visualizer
 
 def merge_list(request):
     include = [int(i) for i in request.GET.getlist('include', [])]
@@ -173,3 +175,20 @@ def add_action_comment(request):
     else:
         response_data['success'] = False
     return HttpResponse(simplejson.dumps(response_data), mimetype='application/javascript')
+
+def diff(request):
+    repo = Repo("/Users/ilya/Work/cs/dev")
+    origin = repo.remotes.origin
+    develop = origin.refs['develop']
+    another_branch = origin.refs['fix/recipients_search_uppercase']
+    diffs = another_branch.commit.diff(develop.commit, create_patch=True, w=True)
+    visualizer = Visualizer()
+    template_data = []
+    for diff in diffs:
+        template_data.append(visualizer.parse(diff.diff))
+
+    return render_to_response(
+        'mergemaster/diff.html', {
+            'diffs': template_data
+        },
+        context_instance=RequestContext(request))

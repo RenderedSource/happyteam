@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Merge list
+{% endblock %}
+
+{% block content %}
+    <div id="diff" class="container-fluid">
+        <div class="row-fluid">
+            {% for diff in diffs %}
+            <table class="code">
+            {% for line in diff.lines %}
+                <tr class="{{ line.css_class }}">
+                    <th>123</th>
+                    <td>{{ line.text }}</td>
+                </tr>
+            {% endfor %}
+            </table>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}
+
+{% block head %}
+    <link href="/static/css/merge.css" rel="stylesheet">
+{% endblock %}
+
+{% block script %}
+    <script src="/static/js/merge.js"></script>
+{% endblock %}

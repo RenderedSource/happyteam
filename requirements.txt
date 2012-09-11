@@ -6,3 +6,4 @@ django-markdown
 django-bootstrap-form
 south
 django-gravatar
+GitPython
