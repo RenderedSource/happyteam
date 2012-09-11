@@ -10,7 +10,7 @@ import network
 
 def index(request):
     return render_to_response('garbagecollector/index.html',{},
-        context_instance=RequestContext(request))
+        context_instance = RequestContext(request))
 
 def get_online(request):
     mac_addresses = network.get_online_mac_addesses()

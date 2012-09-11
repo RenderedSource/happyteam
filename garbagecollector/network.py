@@ -4,7 +4,10 @@ from website.settings import NMAP_XML_URL
 
 #todo cache 1-5 minuts
 def get_online_mac_addesses():
-    response = urllib.urlopen(NMAP_XML_URL)
+    try:
+        response = urllib.urlopen(NMAP_XML_URL)
+    except :
+        response =[]
     xml = response.read()
     tree = ElementTree.fromstring(xml)
 
@@ -17,5 +20,4 @@ def get_online_mac_addesses():
                 if address.attrib.get('addrtype') == 'mac':
                     mac = address.attrib.get('addr')
                     mac_addresses.append(mac)
-
     return mac_addresses

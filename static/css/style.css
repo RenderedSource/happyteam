@@ -18,7 +18,9 @@ a {
 }
 
 /* Garbage Collector */
-
+.gc-control{
+    text-align: center;
+}
 .step {
     height: 100%;
     display: none;
@@ -70,12 +72,10 @@ a {
     color: #AAA;
 }
 
-.step.step-online-list .btn-gambling {
+.step.step-online-list .btn {
     margin-top: 30px;
     margin-left: auto;
     margin-right: auto;
-    display: block;
-    width: 500px;
     height: 100px;
     font-size: 30px;
 }
