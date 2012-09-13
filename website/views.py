@@ -5,7 +5,6 @@ from django.template.context import RequestContext
 from django.template import Context, loader
 from django.http import HttpResponse
 from mailer import send_html_mail
-from scrum.models import Sprint
 from website import settings
 
 __author__ = 'lehabaev'

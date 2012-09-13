@@ -42,7 +42,7 @@ def readNews(request, pid):
             UserRead.objects.get(news=news, user=request.user)
         except UserRead.DoesNotExist:
             UserRead.objects.create(news=news, user=request.user).save()
-    return render_to_response('importantnews/read-news.html', {'news': news, 'form': form}, RequestContext(request))
+    return render_to_response('importantnews/read-news.html', {'news': news, 'form': form}, context_instance = RequestContext(request))
 
 
 def addNews(request):
@@ -58,7 +58,7 @@ def addNews(request):
             form = AddNewsForm(request.POST, request.user)
     else:
         form = AddNewsForm(initial={'author':request.user})
-    return render_to_response('importantnews/add-edit-news.html', {'form': form}, RequestContext(request))
+    return render_to_response('importantnews/add-edit-news.html', {'form': form}, context_instance = RequestContext(request))
 
 
 def editNews(request, pid):
@@ -76,4 +76,4 @@ def editNews(request, pid):
             return HttpResponseRedirect(reverse('read_news', args=[temp_news.id]))
     else:
         form = AddNewsForm(instance=news)
-    return render_to_response('importantnews/add-edit-news.html', {'form': form}, RequestContext(request))
+    return render_to_response('importantnews/add-edit-news.html', {'form': form}, context_instance = RequestContext(request))
