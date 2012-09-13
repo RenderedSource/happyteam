@@ -10,6 +10,10 @@ RenderedSource HappyTeam
             {% latest_news 5 %}
         </div>
         <div class="span6 well">
+            {% load newstags %}
+            {% last_comments 5 %}
+        </div>
+        <div class="span6 well">
             {% load usertags %}
             {% online_users 5 %}
         </div>

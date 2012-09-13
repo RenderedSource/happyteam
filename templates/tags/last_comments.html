@@ -1,0 +1,15 @@
+{% load gravatar %}
+{% load comments %}
+
+<h3>Last comments:</h3>
+<div class="comment-list"></div>
+{% for comment in comment_list %}
+    <div class="comment">
+            <img src="{% gravatar_for_user comment.user 25 %}" class="img-rounded">
+            <strong>{{ comment.user.first_name }} {{ comment.user.last_name }}</strong>
+        <a href="{% get_comment_permalink comment %}">
+            {{ comment.comment|truncatechars:100 }}
+        </a>
+    </div>
+{% endfor %}
+{% load gravatar %}
