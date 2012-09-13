@@ -134,7 +134,8 @@ INSTALLED_APPS = (
     'importantnews',
     'django_markdown',
     'south',
-    'gravatar'
+    'gravatar',
+    'django.contrib.comments'
 )
 AUTH_PROFILE_MODULE = 'profileuser.UserProfile'
 MARKDOWN_EDITOR_SKIN = 'simple'

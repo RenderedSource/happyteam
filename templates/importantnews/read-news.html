@@ -1,9 +1,13 @@
 {% extends 'base.html' %}
 {% load markup %}
+{% load comments %}
+{% load gravatar %}
+
 {% block title %}
     {{ news.title }}
 {% endblock %}
 {% block content %}
+    {{ request }}
     <ul class="breadcrumb">
         <li><a href="/">Home</a> <span class="divider">/</span></li>
         <li><a href="{% url unread_news %}">Unread News</a> <span class="divider">/</span></li>
@@ -53,5 +57,42 @@
 
         </div>
     </blockquote>
+    <hr>
+    <div class="comments-list">
+        {% get_comment_count for importantnews.news news.id as comment_count %}
+        {% get_comment_list for importantnews.news news.id as comment_list %}
+        {% for comment in comment_list %}
+            <div class="comment well-small">
+                <div class="row well">
+                    <div class="span3">
+                        <img src="{% gravatar_for_user comment.user 25 %}" class="img-rounded"> <strong>{{ comment.user.email }}</strong>
+                    </div>
+                    <div class="span8 ">
+                        {{ comment.comment }}
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+    <hr>
+    <div class="row">
+    {% get_comment_form for importantnews.news news.id as form %}
 
+        <form action="{% comment_form_target %}" method="post" class="span12">
+            <textarea id="id_comment" rows="5" name="comment" style="
+    width: 100%;
+"></textarea>
+            <br>
+             <input type="submit" name="submit" value="Post new comment" class="btn btn-large btn-primary">
+
+            {% csrf_token %}
+
+            {{ form.object_pk }}
+            {{ form.timestamp }}
+            {{ form.security_hash }}
+            {{ form.content_type }}
+            <input type="hidden" name="next" value="/news/{{ news.id }}/" />
+
+        </form>
+    </div>
 {% endblock %}
