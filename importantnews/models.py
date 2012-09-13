@@ -1,9 +1,7 @@
-from audioop import reverse
 from django.contrib.auth.models import User
 from django.db import models
 from django.template.loader import render_to_string
-from mailer import send_mail, send_html_mail
-from website import settings
+from website.views import SendAllUser
 
 class News(models.Model):
     author = models.ForeignKey(User)
@@ -27,9 +25,9 @@ class News(models.Model):
             try:
                 News.objects.get(id = self.id)
             except News.DoesNotExist:
-                for user in User.objects.all().values_list('email', flat = True):
-                    send_html_mail(self.title,render_to_string('importantnews/mail.html',{'news':self}) ,render_to_string('importantnews/mail.html',{'news':self}), settings.EMAIL_HOST_USER,
-                    [user])
+                message = render_to_string('importantnews/mail.html',{'news':self})
+                subject = self.title
+                SendAllUser(subject, message)
         super(News, self).save()
 
 class UserRead(models.Model):
