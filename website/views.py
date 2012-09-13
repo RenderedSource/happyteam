@@ -22,6 +22,6 @@ def SendAllUser(subject, message):
     send html email for all users
     """
     for user in User.objects.all().values_list('email', flat = True):
-        send_html_mail(subject,message ,message, settings.EMAIL_HOST_USER,
+        send_html_mail('[CS] ' + subject,message ,message, settings.EMAIL_HOST_USER,
         [user])
 
