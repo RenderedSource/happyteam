@@ -1,18 +1,12 @@
 # coding: utf-8
-from django.core.urlresolvers import reverse
-import xmpp
-import datetime
 from django.views.decorators.http import require_http_methods
-from django.contrib.auth.models import User
-from django.db.models import Q
-from django.http import HttpResponse, Http404, HttpResponseRedirect
+from django.http import HttpResponse
 from django.shortcuts import render_to_response
 from django.template.context import RequestContext
 from django.template.loader import render_to_string
-from django.views.decorators.csrf import csrf_exempt
 import simplejson
 from mergemaster.forms import MergeRequestForm, MergeRequestActionForm, MergeActionCommentForm, FilterListForm
-from mergemaster.models import MergeRequest, MergeRequestAction, MergeActionComment
+from mergemaster.models import MergeRequest, MergeRequestAction
 
 def merge_list(request):
     merge_list = MergeRequest.objects.all().order_by('-id')
@@ -23,8 +17,19 @@ def merge_list(request):
             'request_form': MergeRequestForm(),
             'action_form': MergeRequestActionForm(),
             'comment_form': MergeActionCommentForm(),
-            'filter_form': FilterListForm(),
-            'merge_action_list': MergeRequestAction.ACTION_CHOICES
+            'filter_form': FilterListForm()
+        },
+        context_instance=RequestContext(request))
+
+def merge_details(request, merge_id):
+    merge_request = MergeRequest.objects.get(id = merge_id)
+    return render_to_response(
+        'mergemaster/request-subrow.html', {
+            'merge': merge_request,
+            'request_form': MergeRequestForm(),
+            'action_form': MergeRequestActionForm(),
+            'comment_form': MergeActionCommentForm(),
+            'filter_form': FilterListForm()
         },
         context_instance=RequestContext(request))
 
@@ -39,11 +44,10 @@ def add_merge_request(request):
 
         response_data['success'] = True
         response_data['html'] = render_to_string(
-            'mergemaster/merge-table-row.html', {
+            'mergemaster/request-row.html', {
                 'merge': merge_request,
                 'action_form': MergeRequestActionForm(),
-                'comment_form': MergeActionCommentForm(),
-                'merge_action_list': MergeRequestAction.ACTION_CHOICES
+                'comment_form': MergeActionCommentForm()
             },
             context_instance=RequestContext(request)
         )
@@ -69,7 +73,7 @@ def add_merge_action(request):
                 'merge': action.merge_request,
                 'action_form': action_form,
                 'comment_form': MergeActionCommentForm(),
-                'merge_action_list': MergeRequestAction.ACTION_CHOICES
+                #'merge_action_list': MergeRequestAction.ACTION_CHOICES
             },
             context_instance=RequestContext(request)
         )
@@ -104,8 +108,7 @@ def add_action_comment(request):
         response_data['comments_html'] = render_to_string(
             'mergemaster/action-comments.html', {
                 'action': comment.merge_action,
-                'comment_form': MergeActionCommentForm(),
-                'merge_action_list': MergeRequestAction.ACTION_CHOICES
+                'comment_form': MergeActionCommentForm()
             },
             context_instance=RequestContext(request)
         )

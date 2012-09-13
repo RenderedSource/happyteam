@@ -4,14 +4,10 @@
 
 <td class="span1">{{ merge.id }}</td>
 <td class="span3 merge-status">
-    {% if merge.status_code %}
-    <span class="label {{ merge.label_css_class }}">{{ merge.status }}</span>
-    {% endif %}
-    {% if merge.qa_required %}
-    <span class="label label-warning">QA Required</span>
-    {% endif %}
-    {% if merge.cr_required %}
-    <span class="label label-warning">CR Required</span>
+    <span class="label {{ merge.merge_status_label_class }}">{{ merge.merge_status_value }}</span>
+    {% if merge.show_cr_qa_labels %}
+    <span class="label {{ merge.qa_status_label_class }}">QA {{ merge.qa_status_value }}</span>
+    <span class="label {{ merge.cr_status_label_class }}">CR {{ merge.cr_status_value }}</span>
     {% endif %}
 </td>
 <td class="span2">
@@ -29,7 +25,7 @@
     {% endif %}
 </td>
 <td class="span1" style="text-align: center;">
-    <button class="btn btn-link badge" data-toggle="collapse" data-target="#merge-actions-{{ merge.id }}">
+    <button class="btn btn-link btn-toggle-actions badge" data-merge-id="{{ merge.id }}">
         {{ merge.mergerequestaction_set.count }} action{{ merge.mergerequestaction_set.count|pluralize:",s" }}
     </button>
 </td>

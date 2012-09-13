@@ -1,6 +1,8 @@
 #-*- coding: utf-8 -*-
 from django import forms
-from mergemaster.models import MergeRequest, MergeRequestAction, MergeActionComment
+import widgets
+from mergemaster.models import MergeRequest,\
+    MergeRequestAction, MergeActionComment, REQUEST_STATUS_CHOICES, STATUS_CHOICES
 
 class MergeRequestFormApi(forms.ModelForm):
     class Meta:
@@ -21,7 +23,9 @@ class MergeRequestActionForm(forms.ModelForm):
         model = MergeRequestAction
         widgets = {
             'merge_request': forms.HiddenInput(),
-            'action_code': forms.HiddenInput(),
+            'new_merge_status': widgets.ButtonGroup(choices = REQUEST_STATUS_CHOICES),
+            'new_cr_status': widgets.ButtonGroup(choices = STATUS_CHOICES),
+            'new_qa_status': widgets.ButtonGroup(choices = STATUS_CHOICES)
         }
         exclude = ['user',]
 
@@ -36,7 +40,7 @@ class MergeActionCommentForm(forms.ModelForm):
 class FilterListForm(forms.Form):
     filters = forms.MultipleChoiceField(
         label = "",
-        choices = MergeRequest.STATUS_CHOICES,
+        #choices = MergeRequest.STATUS_CHOICES,
         widget = forms.CheckboxSelectMultiple
     )
 

@@ -1,6 +1,5 @@
 from django.contrib.auth.models import User
 from django.db import models, transaction
-from state_machine import STATUSES, ACTIONS, DEFAULT_STATUS, DEFAULT_ACTION
 
 class MergeMaster(models.Model):
     user = models.ForeignKey(User)
@@ -16,47 +15,94 @@ class MergeGroup(models.Model):
     def __unicode__(self):
         return self.main_branch
 
-class MergeRequest(models.Model):
-    STATUS_CHOICES = [(s.code(), str(s)) for s in STATUSES]
-    STATUS_DICT = dict((s.code(), s) for s in STATUSES)
+REQUEST_PENDING = 0
+REQUEST_REJECTED = 1
+REQUEST_MERGED = 2
+REQUEST_SUSPENDED = 3
+REQUEST_STATUS_CHOICES = (
+    (REQUEST_PENDING, 'Pending'),
+    (REQUEST_REJECTED, 'Rejected'),
+    (REQUEST_MERGED, 'Merged'),
+    (REQUEST_SUSPENDED, 'Suspended'),
+)
 
+REQUEST_STATUS_LABEL_COLORS = {
+    REQUEST_PENDING: 'label-warning',
+    REQUEST_REJECTED: ' label-important',
+    REQUEST_MERGED: 'label-success',
+    REQUEST_SUSPENDED: 'label-inverse'
+}
+
+REQUIRED = 0
+IN_PROGRESS = 1
+REJECTED = 2
+APPROVED = 3
+IDLE = 4
+STATUS_CHOICES = (
+    (REQUIRED, 'Required'),
+    (IN_PROGRESS, 'In progress'),
+    (REJECTED, 'Rejected'),
+    (APPROVED, 'Approved'),
+    (IDLE, 'Idle')
+)
+
+STATUS_LABEL_COLORS = {
+    REQUIRED: 'label-warning',
+    IN_PROGRESS: 'label-info',
+    REJECTED: ' label-important',
+    APPROVED: 'label-success',
+    IDLE: ''
+}
+
+class MergeRequest(models.Model):
     developer = models.ForeignKey(User)
     branch = models.CharField(max_length = 60)
     task_id = models.IntegerField()
     merge_group = models.ForeignKey(MergeGroup)
 
-    status_code = models.CharField(choices = STATUS_CHOICES, max_length = 20, default = DEFAULT_STATUS.code())
-    cr_required = models.BooleanField(verbose_name = 'Code review required')
-    qa_required = models.BooleanField(verbose_name = 'QA required')
+    merge_status = models.SmallIntegerField(choices = REQUEST_STATUS_CHOICES, default = REQUEST_PENDING)
+    cr_status = models.SmallIntegerField(choices = STATUS_CHOICES, default = REQUIRED)
+    qa_status = models.SmallIntegerField(choices = STATUS_CHOICES, default = REQUIRED)
+
     date_created = models.DateTimeField(auto_now = True, verbose_name = 'Date Created')
     date_modified = models.DateTimeField(auto_now = True, verbose_name = 'Date Modified')
 
-    def label_css_class(self):
-        status = self.status()
-        return status.label_css_class() if status else ''
+    def merge_status_value(self):
+        return next(name for value, name in REQUEST_STATUS_CHOICES if value == self.merge_status)
 
-    def next_actions(self):
-        status = self.status()
-        return status.next_actions() if status else ()
+    def merge_status_label_class(self):
+        return REQUEST_STATUS_LABEL_COLORS.get(self.merge_status, '')
 
-    def status(self):
-        return self.STATUS_DICT.get(self.status_code, None)
+    def show_cr_qa_labels(self):
+        return self.merge_status == REQUEST_PENDING or self.merge_status == REQUEST_REJECTED
+
+    def cr_status_value(self):
+        return next(name for value, name in STATUS_CHOICES if value == self.cr_status)
+
+    def cr_status_label_class(self):
+        return STATUS_LABEL_COLORS.get(self.cr_status, '')
+
+    def qa_status_value(self):
+        return next(name for value, name in STATUS_CHOICES if value == self.qa_status)
+
+    def qa_status_label_class(self):
+        return STATUS_LABEL_COLORS.get(self.qa_status, '')
 
     @transaction.commit_manually
     def save(self, *args, **kwargs):
         try:
-            is_new = True if self.id is None else False
-            if is_new:
-                DEFAULT_ACTION.update_merge_request(self)
+            #is_new = True if self.id is None else False
+            #if is_new:
+            #    DEFAULT_ACTION.update_merge_request(self)
 
             super(self.__class__, self).save(*args, **kwargs)
 
-            if is_new:
-                merge_action = MergeRequestAction()
-                merge_action.merge_request = self
-                merge_action.user = self.developer
-                merge_action.action_code = DEFAULT_ACTION.code()
-                merge_action.save(update_merge_request=False)
+            #if is_new:
+            #    merge_action = MergeRequestAction()
+            #    merge_action.merge_request = self
+            #    merge_action.user = self.developer
+            #    merge_action.action_code = DEFAULT_ACTION.code()
+            #    merge_action.save(update_merge_request=False)
         except:
             transaction.rollback()
             raise
@@ -67,37 +113,39 @@ class MergeRequest(models.Model):
         return '%s - %s' % (self.developer, self.branch)
 
 class MergeRequestAction(models.Model):
-    ACTION_CHOICES = [(a.code(), str(a)) for a in ACTIONS]
-    ACTION_DICT = dict((a.code(), a) for a in ACTIONS)
-
     merge_request = models.ForeignKey(MergeRequest)
     user = models.ForeignKey(User)
-    action_code = models.CharField(choices = ACTION_CHOICES, max_length = 20)
+    new_merge_status = models.SmallIntegerField(choices = STATUS_CHOICES, null = True, blank = True)
+    new_cr_status = models.SmallIntegerField(choices = STATUS_CHOICES, null = True, blank = True)
+    new_qa_status = models.SmallIntegerField(choices = STATUS_CHOICES, null = True, blank = True)
     reason = models.CharField(blank = True, max_length = 100)
     date = models.DateTimeField(auto_now = True)
 
-    def row_css_class(self):
-        action = self.action()
-        return action.row_css_class() if action else ''
+    def new_merge_status_value(self):
+        if self.new_merge_status is None:
+            return ''
+        else:
+            return next(name for value, name in REQUEST_STATUS_CHOICES if value == self.new_merge_status)
 
-    def button_css_class(self):
-        action = self.action()
-        return action.button_css_class() if action else ''
+    def new_cr_status_value(self):
+        if self.new_cr_status is None:
+            return ''
+        else:
+            return next(name for value, name in STATUS_CHOICES if value == self.new_cr_status)
 
-    def past_form_name(self):
-        action = self.action()
-        return str(action.past_form_name()) if action else ''
-
-    def action(self):
-        return self.ACTION_DICT.get(self.action_code, None)
+    def new_qa_status_value(self):
+        if self.new_qa_status is None:
+            return ''
+        else:
+            return next(name for value, name in STATUS_CHOICES if value == self.new_qa_status)
 
     @transaction.commit_manually
     def save(self, update_merge_request=True, *args, **kwargs):
         try:
-            if self.id is None and update_merge_request:
+            #if self.id is None and update_merge_request:
                 # update merge request if action is new
-                self.action().update_merge_request(self.merge_request)
-                self.merge_request.save()
+             #   self.action().update_merge_request(self.merge_request)
+             #   self.merge_request.save()
 
             super(self.__class__, self).save(*args, **kwargs)
         except:

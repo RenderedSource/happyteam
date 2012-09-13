@@ -1,5 +1,22 @@
 (function($) {
     $(function() {
+
+        $('.btn-toggle-actions').live('click', function(event) {
+            var mergeId = parseInt($(this).data('merge-id'));
+            var $subrow = $('#merge-actions-' + mergeId);
+            if ($subrow.children().length == 0) {
+                $.get('merge-details/' + mergeId, function(response) {
+                    $subrow.html(response);
+                    $subrow.collapse('toggle');
+                })
+                .fail(function() {
+                    alert('Error');
+                });
+            } else {
+                $subrow.collapse('toggle');
+            }
+        });
+
         $('.btn-merge-request').live('click', function(event) {
             event.preventDefault();
 

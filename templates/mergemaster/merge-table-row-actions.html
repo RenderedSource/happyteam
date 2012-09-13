@@ -10,7 +10,37 @@
             {% gravatar_img_for_user action.user 20 %}
             {{ action.user }}
         </td>
-        <td class="span5">{{ action.past_form_name }}{% if action.reason %}: {{ action.reason }}{% endif %}</td>
+        <td class="span5">
+            {% if action.new_merge_status %}
+            <div>
+                <span class="action-type">
+                    <i class="icon-refresh"></i>
+                    Merge status set to
+                </span>
+                <span class="label label-success">{{ action.new_merge_status_value }}</span>
+            </div>
+            {% endif %}
+
+            {% if action.new_qa_status %}
+            <div>
+                <span class="action-type">
+                    <i class="icon-refresh"></i>
+                    QA status set to
+                </span>
+                <span class="label">{{ action.new_qa_status_value }}</span>
+            </div>
+            {% endif %}
+
+            {% if action.new_cr_status %}
+            <div>
+                <span class="action-type">
+                    <i class="icon-refresh"></i>
+                    CR status set to
+                </span>
+                <span class="label">{{ action.new_cr_status_value }}</span>
+            </div>
+            {% endif %}
+        </td>
         <td class="span2">{{ action.date|date:"M d, h:i A" }}</td>
         <td class="span1" id="action-comment-count-{{ action.id }}">
             {% include 'mergemaster/action-comment-count.html' %}
