@@ -5,7 +5,7 @@ import json
 from django.template.context import RequestContext
 from django.views.decorators.csrf import csrf_exempt
 from garbagecollector.forms import LooserForm
-from garbagecollector.models import Seat
+from garbagecollector.models import Seat, GcLoosers
 import network
 
 def index(request):
@@ -14,9 +14,13 @@ def index(request):
 
 def get_online(request):
     mac_addresses = network.get_online_mac_addesses()
-    online_users = User.objects.filter(macaddress__address__in = mac_addresses).distinct()
+    online_users = User.objects.filter(macaddress__address__in = mac_addresses).exclude(
+        id = GcLoosers.objects.all().order_by('-date')[0].id
+    ).distinct()
     online_ids = online_users.values_list('id', flat=True)
-    offline_users = User.objects.exclude(id__in = online_ids)
+    offline_users = User.objects.exclude(id__in = online_ids).exclude(
+        id = GcLoosers.objects.all().order_by('-date')[0].id
+    ).distinct()
 
     data = map(lambda x: {'id': x.id, 'first_name': x.first_name, 'last_name': x.last_name, 'online': True}, online_users)
     data = data + map(lambda x: {'id': x.id, 'first_name': x.first_name, 'last_name': x.last_name, 'online': False}, offline_users)
