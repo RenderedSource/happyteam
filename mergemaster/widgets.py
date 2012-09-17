@@ -22,28 +22,13 @@ class ButtonGroup(Select):
             output.append(options)
         output.append(u'</div>')
 
-        print output
-
         return mark_safe(u'\n'.join(output))
-
-#    def render_option(self, selected_choices, option_value, option_label):
-#        option_value = force_unicode(option_value)
-#        if option_value in selected_choices:
-#            selected_html = u' selected="selected"'
-#            if not self.allow_multiple_selected:
-#                # Only allow for a single selection.
-#                selected_choices.remove(option_value)
-#        else:
-#            selected_html = ''
-#        return u'<option value="%s"%s>%s</option>' % (
-#            escape(option_value), selected_html,
-#            conditional_escape(force_unicode(option_label)))
 
     def render_options(self, choices, selected_choices):
         # Normalize to strings.
         selected_choices = set(force_unicode(v) for v in selected_choices)
         output = []
         for option_value, option_label in chain(self.choices, choices):
-            css_class = 'btn active' if option_value in selected_choices else 'btn'
-            output.append(u'<button class="%s">%s</button>' % (css_class, escape(option_label)))
+            css_class = 'btn btn-primary active' if option_value in selected_choices else 'btn btn-primary'
+            output.append(u'<button type="button" data-toggle="button" class="%s">%s</button>' % (css_class, escape(option_label)))
         return u'\n'.join(output)

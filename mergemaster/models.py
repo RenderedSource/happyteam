@@ -115,7 +115,7 @@ class MergeRequest(models.Model):
 class MergeRequestAction(models.Model):
     merge_request = models.ForeignKey(MergeRequest)
     user = models.ForeignKey(User)
-    new_merge_status = models.SmallIntegerField(choices = STATUS_CHOICES, null = True, blank = True)
+    new_merge_status = models.SmallIntegerField(choices = REQUEST_STATUS_CHOICES, null = True, blank = True)
     new_cr_status = models.SmallIntegerField(choices = STATUS_CHOICES, null = True, blank = True)
     new_qa_status = models.SmallIntegerField(choices = STATUS_CHOICES, null = True, blank = True)
     reason = models.CharField(blank = True, max_length = 100)
@@ -138,21 +138,6 @@ class MergeRequestAction(models.Model):
             return ''
         else:
             return next(name for value, name in STATUS_CHOICES if value == self.new_qa_status)
-
-    @transaction.commit_manually
-    def save(self, update_merge_request=True, *args, **kwargs):
-        try:
-            #if self.id is None and update_merge_request:
-                # update merge request if action is new
-             #   self.action().update_merge_request(self.merge_request)
-             #   self.merge_request.save()
-
-            super(self.__class__, self).save(*args, **kwargs)
-        except:
-            transaction.rollback()
-            raise
-        else:
-            transaction.commit()
 
     def __unicode__(self):
         return "%s - %s - %s" % (self.merge_request.branch, str(self.action()), self.user)

@@ -20,14 +20,15 @@ class MergeRequestForm(forms.ModelForm):
 
 class MergeRequestActionForm(forms.ModelForm):
     class Meta:
-        model = MergeRequestAction
+        model = MergeRequest
+        fields = ['merge_status', 'cr_status', 'qa_status']
         widgets = {
             'merge_request': forms.HiddenInput(),
-            'new_merge_status': widgets.ButtonGroup(choices = REQUEST_STATUS_CHOICES),
-            'new_cr_status': widgets.ButtonGroup(choices = STATUS_CHOICES),
-            'new_qa_status': widgets.ButtonGroup(choices = STATUS_CHOICES)
+#            'merge_status': widgets.ButtonGroup(),
+#            'cr_status': widgets.ButtonGroup(),
+#            'qa_status': widgets.ButtonGroup()
         }
-        exclude = ['user',]
+        exclude = ['developer', 'branch']
 
 class MergeActionCommentForm(forms.ModelForm):
     class Meta:

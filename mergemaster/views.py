@@ -1,12 +1,13 @@
 # coding: utf-8
 from django.views.decorators.http import require_http_methods
-from django.http import HttpResponse
+from django.http import HttpResponse, Http404
 from django.shortcuts import render_to_response
 from django.template.context import RequestContext
 from django.template.loader import render_to_string
 import simplejson
 from mergemaster.forms import MergeRequestForm, MergeRequestActionForm, MergeActionCommentForm, FilterListForm
 from mergemaster.models import MergeRequest, MergeRequestAction
+from django.db import transaction
 
 def merge_list(request):
     merge_list = MergeRequest.objects.all().order_by('-id')
@@ -56,11 +57,30 @@ def add_merge_request(request):
     return HttpResponse(simplejson.dumps(response_data), mimetype='application/javascript')
 
 @require_http_methods(["POST"])
-def add_merge_action(request):
-    action_form = MergeRequestActionForm(request.POST)
+@transaction.commit_on_success
+def update_merge_request(request, merge_id):
+
+    print merge_id
+
+    try:
+        merge_request = MergeRequest.objects.get(id = merge_id)
+    except MergeRequest.DoesNotExist:
+        raise Http404
+
+    old_merge_status = merge_request.merge_status
+    old_cr_status = merge_request.cr_status
+    old_qa_status = merge_request.qa_status
+
+    action_form = MergeRequestActionForm(request.POST, instance=merge_request)
     response_data = {}
     if action_form.is_valid():
-        action = action_form.save(commit=False)
+        action_form.save()
+
+        action = MergeRequestAction()
+        action.merge_request = merge_request
+        action.new_merge_status = merge_request.merge_status if merge_request.merge_status != old_merge_status else None
+        action.new_cr_status = merge_request.cr_status if merge_request.cr_status != old_cr_status else None
+        action.new_qa_status = merge_request.qa_status if merge_request.qa_status != old_qa_status else None
         action.user = request.user
         action.save()
 
@@ -69,7 +89,7 @@ def add_merge_action(request):
         response_data['success'] = True
         response_data['merge_id'] = action.merge_request.id
         response_data['actions_html'] = render_to_string(
-            'mergemaster/merge-table-row-actions.html', {
+            'mergemaster/request-actions.html', {
                 'merge': action.merge_request,
                 'action_form': action_form,
                 'comment_form': MergeActionCommentForm(),
@@ -78,15 +98,8 @@ def add_merge_action(request):
             context_instance=RequestContext(request)
         )
         response_data['head_html'] = render_to_string(
-            'mergemaster/merge-table-row-head.html', {
+            'mergemaster/request-head.html', {
                 'merge': action.merge_request
-            },
-            context_instance=RequestContext(request)
-        )
-        response_data['buttons_html'] = render_to_string(
-            'mergemaster/merge-table-row-buttons.html', {
-                'merge': action.merge_request,
-                'action_form': action_form,
             },
             context_instance=RequestContext(request)
         )

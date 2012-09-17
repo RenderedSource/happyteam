@@ -7,6 +7,7 @@
             if ($subrow.children().length == 0) {
                 $.get('merge-details/' + mergeId, function(response) {
                     $subrow.html(response);
+                    $subrow.find('.btn').button();
                     $subrow.collapse('toggle');
                 })
                 .fail(function() {
@@ -39,7 +40,7 @@
             });
         });
 
-        $('.btn-merge-action').live('click', function(event) {
+        $('.btn-update-merge').live('click', function(event) {
             event.preventDefault();
 
             var $button = $(this);
@@ -47,8 +48,6 @@
             var data = $form.serialize();
             var url = $form.attr('action');
             var action = $button.data('action');
-
-            data += '&action_code=' + action;
 
             $.post(url, data, function(response) {
                 if (response.success) {
