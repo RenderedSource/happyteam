@@ -26,7 +26,7 @@
 </td>
 <td class="span1" style="text-align: center;">
     <button class="btn btn-link btn-toggle-actions badge" data-merge-id="{{ merge.id }}">
-        {{ merge.mergerequestaction_set.count }} action{{ merge.mergerequestaction_set.count|pluralize:",s" }}
+        {{ merge.mergerequestaction__count }} action{{ merge.mergerequestaction__count|pluralize:",s" }}
     </button>
 </td>
 

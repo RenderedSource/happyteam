@@ -91,18 +91,17 @@ class MergeRequest(models.Model):
     @transaction.commit_manually
     def save(self, *args, **kwargs):
         try:
-            #is_new = True if self.id is None else False
-            #if is_new:
-            #    DEFAULT_ACTION.update_merge_request(self)
-
+            is_new = True if self.id is None else False
             super(self.__class__, self).save(*args, **kwargs)
 
-            #if is_new:
-            #    merge_action = MergeRequestAction()
-            #    merge_action.merge_request = self
-            #    merge_action.user = self.developer
-            #    merge_action.action_code = DEFAULT_ACTION.code()
-            #    merge_action.save(update_merge_request=False)
+            if is_new:
+                merge_action = MergeRequestAction()
+                merge_action.merge_request = self
+                merge_action.user = self.developer
+                merge_action.new_merge_status = REQUEST_PENDING
+                merge_action.new_cr_status = REQUIRED
+                merge_action.new_qa_status = REQUIRED
+                merge_action.save()
         except:
             transaction.rollback()
             raise
@@ -127,11 +126,17 @@ class MergeRequestAction(models.Model):
         else:
             return next(name for value, name in REQUEST_STATUS_CHOICES if value == self.new_merge_status)
 
+    def merge_status_label_class(self):
+        return REQUEST_STATUS_LABEL_COLORS.get(self.new_merge_status, '')
+
     def new_cr_status_value(self):
         if self.new_cr_status is None:
             return ''
         else:
             return next(name for value, name in STATUS_CHOICES if value == self.new_cr_status)
+
+    def cr_status_label_class(self):
+        return STATUS_LABEL_COLORS.get(self.new_cr_status, '')
 
     def new_qa_status_value(self):
         if self.new_qa_status is None:
@@ -139,8 +144,11 @@ class MergeRequestAction(models.Model):
         else:
             return next(name for value, name in STATUS_CHOICES if value == self.new_qa_status)
 
+    def qa_status_label_class(self):
+        return STATUS_LABEL_COLORS.get(self.new_qa_status, '')
+
     def __unicode__(self):
-        return "%s - %s - %s" % (self.merge_request.branch, str(self.action()), self.user)
+        return "%s - %s" % (self.merge_request.branch, self.user)
 
 class MergeActionComment(models.Model):
     merge_action = models.ForeignKey(MergeRequestAction)

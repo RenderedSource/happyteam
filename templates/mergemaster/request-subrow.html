@@ -9,7 +9,6 @@
         <form class="add-action-form" method="post" action="{% url update-merge-request merge_id=merge.id %}">
             {{ action_form.as_p }}
             {% csrf_token %}
-            <input type="hidden" name="merge_request" value="{{ merge.id }}" />
             <input type="submit" value="Submit" class="btn btn-primary btn-update-merge" />
         </form>
     </div>
