@@ -2,9 +2,12 @@
     $(function() {
 
         $('.btn-toggle-actions').live('click', function(event) {
-            var mergeId = parseInt($(this).data('merge-id'));
+            var $link = $(this);
+            var mergeId = parseInt($link.data('merge-id'));
             var $subrow = $('#merge-actions-' + mergeId);
             if ($subrow.children().length == 0) {
+                $link.hide();
+                $link.after('<div class="ajax-loader"></div>');
                 $.get('merge-details/' + mergeId, function(response) {
                     $subrow.html(response);
                     $subrow.find('.btn').button();
@@ -12,6 +15,10 @@
                 })
                 .fail(function() {
                     alert('Error');
+                })
+                .complete(function() {
+                    $link.next('.ajax-loader').remove();
+                    $link.show();
                 });
             } else {
                 $subrow.collapse('toggle');
