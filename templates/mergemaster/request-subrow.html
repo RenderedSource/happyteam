@@ -1,0 +1,20 @@
+{% if merge %}
+
+<div class="actions-container">
+    <div class="well well-small add-action">
+        <div class="well pull-right">
+            <p>To merge this branch, run next line in console:</p>
+            <code>ant -Dfrom={{ merge.branch }} -Dto={{ merge.merge_group.main_branch }} merge</code>
+        </div>
+        <form class="add-action-form" method="post" action="{% url update-merge-request merge_id=merge.id %}">
+            {{ action_form.as_p }}
+            {% csrf_token %}
+            <input type="submit" value="Submit" class="btn btn-primary btn-update-merge" />
+        </form>
+    </div>
+    <table id="action-list-{{ merge.id }}" class="table table-condensed table-actions">
+        {% include 'mergemaster/request-actions.html' %}
+    </table>
+</div>
+
+{% endif %}

@@ -1,0 +1,63 @@
+{% spaceless %}
+{% if merge %}
+
+    {% load gravatar %}
+
+    {% for action in merge.mergerequestaction_set.all|dictsortreversed:"date" %}
+    <tr class="{{ action.row_css_class }}">
+        <td class="span1">{{ forloop.revcounter }}</td>
+        <td class="span3">
+            {% gravatar_img_for_user action.user 20 %}
+            {{ action.user.first_name }} {{ action.user.last_name }}
+        </td>
+        <td class="span5">
+            {% if action.new_merge_status != None %}
+            <div>
+                <span class="action-type">
+                    <i class="icon-chevron-right"></i>
+                    Merge status set to
+                </span>
+                <span class="label {{ action.merge_status_label_class }}">{{ action.new_merge_status_value }}</span>
+            </div>
+            {% endif %}
+
+            {% if action.new_qa_status != None %}
+            <div>
+                <span class="action-type">
+                    <i class="icon-chevron-right"></i>
+                    QA status set to
+                </span>
+                <span class="label {{ action.qa_status_label_class }}">{{ action.new_qa_status_value }}</span>
+            </div>
+            {% endif %}
+
+            {% if action.new_cr_status != None %}
+            <div>
+                <span class="action-type">
+                    <i class="icon-chevron-right"></i>
+                    CR status set to
+                </span>
+                <span class="label {{ action.cr_status_label_class }}">{{ action.new_cr_status_value }}</span>
+            </div>
+            {% endif %}
+        </td>
+        <td class="span2">{{ action.date|date:"M d, h:i A" }}</td>
+        <td class="span1" id="action-comment-count-{{ action.id }}">
+            {% include 'mergemaster/action-comment-count.html' %}
+        </td>
+    </tr>
+    <tr>
+        <td class="action-comment-list" colspan="5">
+            <div id="action-comments-{{ action.id }}" class="collapse">
+                {% include 'mergemaster/action-comments.html' %}
+            </div>
+        </td>
+    </tr>
+    {% empty %}
+    <tr class="info">
+        <td colspan="4">No actions yet</td>
+    </tr>
+    {% endfor %}
+
+{% endif %}
+{% endspaceless %}

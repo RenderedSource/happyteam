@@ -1,0 +1,12 @@
+{% if merge %}
+
+<tr id="merge-head-{{ merge.id }}" data-id="{{ merge.id }}">
+    {% include 'mergemaster/request-head.html' %}
+</tr>
+<tr>
+    <td class="action-list" colspan="6">
+        <div id="merge-actions-{{ merge.id }}" class="collapse"></div>
+    </td>
+</tr>
+
+{% endif %}

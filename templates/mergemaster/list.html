@@ -32,7 +32,7 @@
             <div class="span12">
                 <table class="table table-condensed" id="mergelist">
                     {% for merge in merge_list %}
-                        {% include 'mergemaster/merge-table-row.html' %}
+                        {% include 'mergemaster/request-row.html' %}
                     {% empty %}
                         <tr class="info row-no-data"><td>No merge requests</td></tr>
                     {% endfor %}
