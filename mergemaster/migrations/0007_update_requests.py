@@ -52,38 +52,44 @@ class Migration(DataMigration):
 
             request.save()
 
-            for action in request.mergerequestaction_set.all():
+            old_request_status = None
+            for action in request.mergerequestaction_set.all().order_by('id'):
+                new_request_status = None
                 if action.action_code == 'request_merge':
-                    action.new_merge_status = REQUEST_PENDING
+                    new_request_status = REQUEST_PENDING
                     action.new_cr_status = REQUIRED
                     action.new_qa_status = REQUIRED
                 elif action.action_code == 'reject':
-                    action.new_merge_status = REQUEST_REJECTED
+                    new_request_status = REQUEST_REJECTED
                     action.new_cr_status = REJECTED
                     action.new_qa_status = REJECTED
                 elif action.action_code == 'start_cr':
-                    action.new_merge_status = REQUEST_PENDING
+                    new_request_status = REQUEST_PENDING
                     action.new_cr_status = IN_PROGRESS
                 elif action.action_code == 'approve_cr':
-                    action.new_merge_status = REQUEST_PENDING
+                    new_request_status = REQUEST_PENDING
                     action.new_cr_status = APPROVED
                     action.new_qa_status = None
                 elif action.action_code == 'start_qa':
-                    action.new_merge_status = REQUEST_PENDING
+                    new_request_status = REQUEST_PENDING
                     action.new_cr_status = None
                     action.new_qa_status = IN_PROGRESS
                 elif action.action_code == 'approve_qa':
-                    action.new_merge_status = REQUEST_PENDING
+                    new_request_status = REQUEST_PENDING
                     action.new_cr_status = None
                     action.new_qa_status = APPROVED
                 elif action.action_code == 'merge':
-                    action.new_merge_status = REQUEST_MERGED
+                    new_request_status = REQUEST_MERGED
                     action.new_cr_status = None
                     action.new_qa_status = APPROVED
                 elif action.action_code == 'cancel':
-                    action.new_merge_status = REQUEST_SUSPENDED
+                    new_request_status = REQUEST_SUSPENDED
                     action.new_cr_status = IDLE
                     action.new_qa_status = IDLE
+
+                if new_request_status is not None and new_request_status != old_request_status:
+                    action.new_merge_status = new_request_status
+                    old_request_status = new_request_status
 
                 action.save()
 
