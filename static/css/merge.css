@@ -76,6 +76,6 @@
 }
 
 #merge .ajax-loader {
-    height: 20px;
+    height: 21px;
     background:url(../img/nyancat.gif) no-repeat center center;
 }

@@ -1,5 +1,7 @@
 (function($) {
     $(function() {
+        // preload ajax loader image
+        $('<img/>')[0].src = '/static/img/nyancat.gif';
 
         $('.btn-toggle-actions').live('click', function(event) {
             var $link = $(this);
