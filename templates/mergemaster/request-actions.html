@@ -8,7 +8,7 @@
         <td class="span1">{{ forloop.revcounter }}</td>
         <td class="span3">
             {% gravatar_img_for_user action.user 20 %}
-            {{ action.user }}
+            {{ action.user.first_name }} {{ action.user.last_name }}
         </td>
         <td class="span5">
             {% if action.new_merge_status != None %}

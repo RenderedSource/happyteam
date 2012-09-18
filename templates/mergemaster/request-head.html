@@ -12,7 +12,7 @@
 </td>
 <td class="span2">
     {% gravatar_img_for_user merge.developer 20 %}
-    {{ merge.developer }}
+    {{ merge.developer.first_name }} {{ merge.developer.last_name }}
 </td>
 <td class="span4">
     <code>{{ merge.branch }}</code>
