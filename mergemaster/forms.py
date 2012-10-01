@@ -1,8 +1,7 @@
 #-*- coding: utf-8 -*-
 from django import forms
-import widgets
-from mergemaster.models import MergeRequest,\
-    MergeRequestAction, MergeActionComment, REQUEST_STATUS_CHOICES, STATUS_CHOICES
+import models
+from mergemaster.models import MergeRequest, MergeActionComment
 
 class MergeRequestFormApi(forms.ModelForm):
     class Meta:
@@ -39,9 +38,12 @@ class MergeActionCommentForm(forms.ModelForm):
         exclude = ['user',]
 
 class FilterListForm(forms.Form):
-    filters = forms.MultipleChoiceField(
+    include = forms.MultipleChoiceField(
         label = "",
-        #choices = MergeRequest.STATUS_CHOICES,
+        choices = (
+            (models.REQUEST_MERGED, 'Show merged requests'),
+            (models.REQUEST_SUSPENDED, 'Show suspended resquests')
+        ),
         widget = forms.CheckboxSelectMultiple
     )
 

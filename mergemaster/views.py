@@ -9,20 +9,34 @@ from mergemaster.forms import MergeRequestForm, MergeRequestActionForm, MergeAct
 from mergemaster.models import MergeRequest, MergeRequestAction
 from django.db import transaction
 from django.db.models import Count
+import models
 
 def merge_list(request):
+    include = [int(i) for i in request.GET.getlist('include', [])]
     merge_list = MergeRequest.objects.all()\
         .prefetch_related('merge_group').prefetch_related('developer')\
         .annotate(Count('mergerequestaction'))\
         .order_by('-id')
 
-    return render_to_response(
-        'mergemaster/list.html', {
-            'merge_list': merge_list,
-            'request_form': MergeRequestForm(),
-            'filter_form': FilterListForm()
-        },
-        context_instance=RequestContext(request))
+    if models.REQUEST_MERGED not in include:
+        merge_list = merge_list.exclude(merge_status=models.REQUEST_MERGED)
+    if models.REQUEST_SUSPENDED not in include:
+        merge_list = merge_list.exclude(merge_status=models.REQUEST_SUSPENDED)
+
+    if request.is_ajax():
+        return render_to_response(
+            'mergemaster/list.html', {
+                'merge_list': merge_list
+            },
+            context_instance=RequestContext(request))
+    else:
+        return render_to_response(
+            'mergemaster/index.html', {
+                'merge_list': merge_list,
+                'request_form': MergeRequestForm(),
+                'filter_form': FilterListForm()
+            },
+            context_instance=RequestContext(request))
 
 def merge_details(request, merge_id):
     merge_request = MergeRequest.objects\

@@ -3,6 +3,16 @@
         // preload ajax loader image
         $('<img/>')[0].src = '/static/img/nyancat.gif';
 
+        var $form = $('#form-filter');
+        $form.find('input[type="checkbox"]').change(function() {
+            $.get('', $form.serialize(), function(response) {
+                $('#mergelist-container').html(response);
+            })
+            .fail(function() {
+                alert('Error');
+            });
+        });
+
         $('.btn-toggle-actions').live('click', function(event) {
             var $link = $(this);
             var mergeId = parseInt($link.data('merge-id'));
