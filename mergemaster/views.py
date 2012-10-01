@@ -20,8 +20,6 @@ def merge_list(request):
         'mergemaster/list.html', {
             'merge_list': merge_list,
             'request_form': MergeRequestForm(),
-            'action_form': MergeRequestActionForm(),
-            'comment_form': MergeActionCommentForm(),
             'filter_form': FilterListForm()
         },
         context_instance=RequestContext(request))
@@ -36,8 +34,11 @@ def merge_details(request, merge_id):
     return render_to_response(
         'mergemaster/request-subrow.html', {
             'merge': merge_request,
-            'request_form': MergeRequestForm(),
-            'action_form': MergeRequestActionForm(),
+            'action_form': MergeRequestActionForm(initial={
+                'merge_status': merge_request.merge_status,
+                'cr_status': merge_request.cr_status,
+                'qa_status': merge_request.qa_status
+            }),
             'comment_form': MergeActionCommentForm(),
             'filter_form': FilterListForm()
         },
