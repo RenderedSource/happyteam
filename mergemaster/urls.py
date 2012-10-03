@@ -10,5 +10,5 @@ urlpatterns = patterns('',
     url(r'add-merge-request/$', 'mergemaster.views.add_merge_request'),
     url(r'update-merge-request/(?P<merge_id>\d+)/$', 'mergemaster.views.update_merge_request', name='update-merge-request'),
     url(r'add-action-comment/$', 'mergemaster.views.add_action_comment'),
-    url(r'diff/$', 'mergemaster.views.diff'),
+    url(r'diff:(?P<from_branch>[a-zA-Z0-9_/-]+):(?P<to_branch>[a-zA-Z0-9_/-]+)$', 'mergemaster.views.diff', name='diff'),
 )

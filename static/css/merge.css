@@ -80,6 +80,28 @@
     background:url(../img/nyancat.gif) no-repeat center center;
 }
 
+#merge .btn-view-diff {
+    float: right;
+}
+
+#diff .diff-file-header {
+    position: relative;
+}
+
+#diff .diff-file-header h4 {
+    margin-top: 25px;
+}
+
+#diff .diff-file-header h4 [class^="icon-"] {
+    margin-top: 5px;
+}
+
+#diff .back-to-top {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+}
+
 #diff table.code {
     font: 12px 'Courier';
     width: 100%;
@@ -94,7 +116,7 @@
     color: #777;
     padding-right: 5px;
     text-align: right;
-    width: 30px;
+    width: 20px;
 }
 
 #diff table.code td {

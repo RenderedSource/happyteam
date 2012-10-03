@@ -176,19 +176,22 @@ def add_action_comment(request):
         response_data['success'] = False
     return HttpResponse(simplejson.dumps(response_data), mimetype='application/javascript')
 
-def diff(request):
+def diff(request, from_branch, to_branch):
     repo = Repo("/Users/ilya/Work/cs/dev")
     origin = repo.remotes.origin
-    develop = origin.refs['develop']
-    another_branch = origin.refs['fix/recipients_search_uppercase']
-    diffs = another_branch.commit.diff(develop.commit, create_patch=True, w=True)
+
+    from_branch_obj = origin.refs[from_branch]
+    to_branch_obj = origin.refs[to_branch]
+    diffs = to_branch_obj.commit.diff(from_branch_obj.commit, create_patch=True, w=True)
     visualizer = Visualizer()
     template_data = []
     for diff in diffs:
-        template_data.append(visualizer.parse(diff.diff))
+        template_data.append(visualizer.parse(diff))
 
     return render_to_response(
         'mergemaster/diff.html', {
+            'from_branch': from_branch,
+            'to_branch': to_branch,
             'diffs': template_data
         },
         context_instance=RequestContext(request))

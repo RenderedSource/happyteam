@@ -1,21 +1,42 @@
 {% extends 'base.html' %}
 
 {% block title %}
-    Merge list
+    Diff {{ from_branch }} -> {{ to_branch }}
 {% endblock %}
 
 {% block content %}
     <div id="diff" class="container-fluid">
         <div class="row-fluid">
             {% for diff in diffs %}
-            <table class="code">
-            {% for line in diff.lines %}
-                <tr class="{{ line.css_class }}">
-                    <th>123</th>
-                    <td>{{ line.text }}</td>
-                </tr>
+                <div>
+                    <i class="{{ diff.action_icon_class }}"></i>
+                    <a href="#{{ diff.new_file|urlencode }}">{{ diff.new_file }}</a>
+                </div>
             {% endfor %}
-            </table>
+        </div>
+        <div class="row-fluid">
+            {% for diff in diffs %}
+                <div class="diff-file-header">
+                    <a class="back-to-top" href="#">Back to top</a>
+
+                    <h4 class="title-filename" id="{{ diff.new_file|urlencode }}">
+                        <i class="{{ diff.action_icon_class }}"></i>
+                        {% if diff.old_file != diff.new_file %}
+                            {{ diff.old_file }}<i class="icon-arrow-right"></i>{{ diff.new_file }}
+                        {% else %}
+                            {{ diff.new_file }}
+                        {% endif %}
+                    </h4>
+                </div>
+                <table class="code">
+                    {% for line in diff.lines %}
+                        <tr class="{{ line.css_class }}">
+                            <th>{{ line.line_a }}</th>
+                            <th>{{ line.line_b }}</th>
+                            <td>{{ line.text }}</td>
+                        </tr>
+                    {% endfor %}
+                </table>
             {% endfor %}
         </div>
     </div>
