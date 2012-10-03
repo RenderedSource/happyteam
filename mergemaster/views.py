@@ -10,6 +10,7 @@ from mergemaster.models import MergeRequest, MergeRequestAction
 from django.db import transaction
 from django.db.models import Count
 import models
+from website.settings import REPO_PATH
 from git import *
 from diff import Visualizer
 
@@ -177,21 +178,16 @@ def add_action_comment(request):
     return HttpResponse(simplejson.dumps(response_data), mimetype='application/javascript')
 
 def diff(request, from_branch, to_branch):
-    repo = Repo("/Users/ilya/Work/cs/dev")
-    origin = repo.remotes.origin
+    repo = Repo(REPO_PATH)
 
-    from_branch_obj = origin.refs[from_branch]
-    to_branch_obj = origin.refs[to_branch]
-    diffs = to_branch_obj.commit.diff(from_branch_obj.commit, create_patch=True, w=True)
+    patch = repo.git.diff('origin/%s...origin/%s' % (to_branch, from_branch))
     visualizer = Visualizer()
-    template_data = []
-    for diff in diffs:
-        template_data.append(visualizer.parse(diff))
+    diffs = visualizer.parse(patch)
 
     return render_to_response(
         'mergemaster/diff.html', {
             'from_branch': from_branch,
             'to_branch': to_branch,
-            'diffs': template_data
+            'diffs': diffs
         },
         context_instance=RequestContext(request))

@@ -7,6 +7,10 @@
 {% block content %}
     <div id="diff" class="container-fluid">
         <div class="row-fluid">
+            <h2>{{ from_branch }} -> {{ to_branch }}</h2>
+        </div>
+        <div class="row-fluid">
+            <h4>Changed files:</h4>
             {% for diff in diffs %}
                 <div>
                     <i class="{{ diff.action_icon_class }}"></i>
@@ -16,10 +20,13 @@
         </div>
         <div class="row-fluid">
             {% for diff in diffs %}
+                <div class="anchor" id="{{ diff.new_file|urlencode }}"></div>
                 <div class="diff-file-header">
-                    <a class="back-to-top" href="#">Back to top</a>
-
-                    <h4 class="title-filename" id="{{ diff.new_file|urlencode }}">
+                    <a class="back-to-top" href="#">
+                        Back to top
+                        <i class="icon-arrow-up"></i>
+                    </a>
+                    <h4 class="title-filename">
                         <i class="{{ diff.action_icon_class }}"></i>
                         {% if diff.old_file != diff.new_file %}
                             {{ diff.old_file }}<i class="icon-arrow-right"></i>{{ diff.new_file }}
@@ -29,12 +36,21 @@
                     </h4>
                 </div>
                 <table class="code">
-                    {% for line in diff.lines %}
-                        <tr class="{{ line.css_class }}">
-                            <th>{{ line.line_a }}</th>
-                            <th>{{ line.line_b }}</th>
-                            <td>{{ line.text }}</td>
-                        </tr>
+                    {% for hunk in diff.hunks %}
+                        {% for line in hunk %}
+                            <tr class="{{ line.css_class }}">
+                                <th>{{ line.line_a }}</th>
+                                <th>{{ line.line_b }}</th>
+                                <td>{{ line.text }}</td>
+                            </tr>
+                        {% endfor %}
+                        {% if not forloop.last %}
+                            <tr class="end-hunk">
+                                <th></th>
+                                <th></th>
+                                <td>&nbsp;</td>
+                            </tr>
+                        {% endif %}
                     {% endfor %}
                 </table>
             {% endfor %}

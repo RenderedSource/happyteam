@@ -96,6 +96,11 @@
     margin-top: 5px;
 }
 
+#diff .anchor {
+    position: relative;
+    top: -20px;
+}
+
 #diff .back-to-top {
     position: absolute;
     right: 0;
@@ -123,6 +128,16 @@
     white-space: pre;
     border-left: solid 1px #ccc;
     padding-left: 5px;
+}
+
+#diff table.code tr.end-hunk {
+    border-top: solid 1px #ccc;
+    border-bottom: solid 1px #ccc;
+}
+
+#diff table.code tr.end-hunk td {
+    border-left: none;
+    height: 30px;
 }
 
 #diff table.code .added {
