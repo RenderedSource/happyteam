@@ -2,9 +2,15 @@
 
 <div class="actions-container">
     <div class="well well-small add-action">
-        <div class="well pull-right">
-            <p>To merge this branch, run next line in console:</p>
-            <code>ant -Dfrom={{ merge.branch }} -Dto={{ merge.merge_group.main_branch }} merge</code>
+        <div class="pull-right">
+            <div class="well">
+                <p>To merge this branch, run next line in console:</p>
+                <code>ant -Dfrom={{ merge.branch }} -Dto={{ merge.merge_group.main_branch }} merge</code>
+            </div>
+            <a href="{% url diff from_branch=merge.branch to_branch=merge.merge_group.main_branch %}"
+               class="btn btn-primary btn-large" target="_blank">
+                View diff
+            </a>
         </div>
         <form class="add-action-form" method="post" action="{% url update-merge-request merge_id=merge.id %}">
             {{ action_form.as_p }}
