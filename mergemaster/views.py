@@ -1,6 +1,6 @@
 # coding: utf-8
 from django.views.decorators.http import require_http_methods
-from django.http import HttpResponse, Http404
+from django.http import HttpResponse, Http404, HttpResponseNotFound
 from django.shortcuts import render_to_response
 from django.template.context import RequestContext
 from django.template.loader import render_to_string
@@ -178,7 +178,17 @@ def add_action_comment(request):
     return HttpResponse(simplejson.dumps(response_data), mimetype='application/javascript')
 
 def diff(request, from_branch, to_branch):
-    repo = Repo(REPO_PATH)
+    try:
+        repo = Repo(REPO_PATH)
+    except NoSuchPathError as e:
+        return HttpResponseNotFound('Git repository not found. Check REPO_PATH')
+
+    origin = repo.remotes.origin
+    if from_branch not in origin.refs:
+        return HttpResponseNotFound('Branch %s not found' % from_branch)
+    origin = repo.remotes.origin
+    if to_branch not in origin.refs:
+        return HttpResponseNotFound('Branch %s not found' % to_branch)
 
     patch = repo.git.diff('origin/%s...origin/%s' % (to_branch, from_branch))
     visualizer = Visualizer()

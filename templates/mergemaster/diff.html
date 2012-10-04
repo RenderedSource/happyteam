@@ -14,12 +14,17 @@
             {% for diff in diffs %}
                 <div>
                     <i class="{{ diff.action_icon_class }}"></i>
-                    <a href="#{{ diff.new_file|urlencode }}">{{ diff.new_file }}</a>
+                    {% if diff.binary %}
+                        {{ diff.new_file }}
+                    {% else %}
+                        <a href="#{{ diff.new_file|urlencode }}">{{ diff.new_file }}</a>
+                    {% endif %}
                 </div>
             {% endfor %}
         </div>
         <div class="row-fluid">
             {% for diff in diffs %}
+                {% if not diff.binary %}
                 <div class="anchor" id="{{ diff.new_file|urlencode }}"></div>
                 <div class="diff-file-header">
                     <a class="back-to-top" href="#">
@@ -53,6 +58,7 @@
                         {% endif %}
                     {% endfor %}
                 </table>
+                {% endif %}
             {% endfor %}
         </div>
     </div>

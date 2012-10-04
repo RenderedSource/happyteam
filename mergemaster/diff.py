@@ -30,38 +30,55 @@ class Visualizer:
 
         old_file = None
         new_file = None
+        binary = False
+        created = False
+        deleted = False
 
         hunks = []
         current_hunk = None
         line_a = 0
         line_b = 0
 
-        old_file_regex = re.compile('^--- a/(.*)$')
-        new_file_regex = re.compile('^\+\+\+ b/(.*)$')
-        start_hunk_regex = re.compile('^@@ \-([0-9]+),([0-9]+) \+([0-9]+),([0-9]+) @@')
+        start_file_regex = re.compile('^diff --git a/(.+) b/(.+)$')
+        binary_file_regex = re.compile('^Binary files a?/(.+) and b?/(.+) differ$')
+        start_hunk_regex = re.compile('^@@ \-([0-9]+)(?:,[0-9]+)? \+([0-9]+)(?:,[0-9]+)? @@')
 
-        for line in patch[1:]:
-            match = old_file_regex.match(line)
+        for line in patch:
+            match = start_file_regex.match(line)
+            if match:
+                old_file = match.group(1)
+                new_file = match.group(2)
+                if old_file == 'dev/null':
+                    created = True
+                    old_file = new_file
+                elif new_file == 'dev/null':
+                    deleted = True
+                    new_file = old_file
+                continue
+
+            match = binary_file_regex.match(line)
             if match:
                 old_file = match.group(1)
                 if old_file == 'dev/null':
-                    old_file = None
-                continue
-
-            match = new_file_regex.match(line)
-            if match:
-                new_file = match.group(1)
+                    created = True
+                    old_file = new_file
+                new_file = match.group(2)
                 if new_file == 'dev/null':
-                    new_file = None
-                continue
+                    deleted = True
+                    new_file = old_file
+                binary = True
+                break
 
             match = start_hunk_regex.match(line)
             if match:
                 line_a = int(match.group(1))
-                line_b = int(match.group(3))
+                line_b = int(match.group(2))
                 if current_hunk is not None:
                     hunks.append(current_hunk)
                 current_hunk = []
+                continue
+
+            if line == '\ No newline at end of file':
                 continue
 
             if current_hunk is None:
@@ -96,20 +113,16 @@ class Visualizer:
 
         action_icon_class = 'icon-pencil'
 
-        if old_file is None and new_file is None:
-            raise Exception()
-
-        if old_file is None and new_file is not None:
+        if created:
             action_icon_class = "icon-plus"
-            old_file = new_file
-        elif old_file is not None and new_file is None:
+        elif deleted:
             action_icon_class = "icon-remove"
-            new_file = old_file
 
         result = {
             'old_file': old_file,
             'new_file': new_file,
             'action_icon_class': action_icon_class,
+            'binary': binary,
             'hunks': hunks
         }
 
