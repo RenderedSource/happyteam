@@ -180,7 +180,7 @@ def add_action_comment(request):
 def diff(request, from_branch, to_branch):
     try:
         repo = Repo(REPO_PATH)
-    except NoSuchPathError as e:
+    except NoSuchPathError:
         return HttpResponseNotFound('Git repository not found. Check REPO_PATH')
 
     origin = repo.remotes.origin
@@ -190,7 +190,7 @@ def diff(request, from_branch, to_branch):
     if to_branch not in origin.refs:
         return HttpResponseNotFound('Branch %s not found' % to_branch)
 
-    patch = repo.git.diff('origin/%s...origin/%s' % (to_branch, from_branch))
+    patch = repo.git.diff('origin/%s...origin/%s' % (to_branch, from_branch), find_renames=True)
     visualizer = Visualizer()
     diffs = visualizer.parse(patch)
 

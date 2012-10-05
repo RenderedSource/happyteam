@@ -27,7 +27,6 @@ class Visualizer:
         return file_patches
 
     def parce_file_patch(self, patch):
-
         old_file = None
         new_file = None
         binary = False
@@ -40,6 +39,8 @@ class Visualizer:
         line_b = 0
 
         start_file_regex = re.compile('^diff --git a/(.+) b/(.+)$')
+        old_file_regex = re.compile('^--- (?:a)?/(.+)$')
+        new_file_regex = re.compile('^\+\+\+ (?:b)?/(.+)$')
         binary_file_regex = re.compile('^Binary files a?/(.+) and b?/(.+) differ$')
         start_hunk_regex = re.compile('^@@ \-([0-9]+)(?:,[0-9]+)? \+([0-9]+)(?:,[0-9]+)? @@')
 
@@ -50,10 +51,22 @@ class Visualizer:
                 new_file = match.group(2)
                 if old_file == 'dev/null':
                     created = True
-                    old_file = new_file
                 elif new_file == 'dev/null':
                     deleted = True
-                    new_file = old_file
+                continue
+
+            match = old_file_regex.match(line)
+            if match:
+                old_file = match.group(1)
+                if old_file == 'dev/null':
+                    created = True
+                continue
+
+            match = new_file_regex.match(line)
+            if match:
+                new_file = match.group(1)
+                if new_file == 'dev/null':
+                    deleted = True
                 continue
 
             match = binary_file_regex.match(line)
@@ -61,11 +74,8 @@ class Visualizer:
                 old_file = match.group(1)
                 if old_file == 'dev/null':
                     created = True
-                    old_file = new_file
                 new_file = match.group(2)
-                if new_file == 'dev/null':
-                    deleted = True
-                    new_file = old_file
+
                 binary = True
                 break
 
@@ -111,22 +121,31 @@ class Visualizer:
         if current_hunk is not None:
             hunks.append(current_hunk)
 
-        action_icon_class = 'icon-pencil'
+        old_file_name = None
+        if old_file == 'dev/null':
+            created = True
+            file_name = new_file
+        elif new_file == 'dev/null':
+            deleted = True
+            file_name = old_file
+        elif old_file != new_file:
+            file_name = new_file
+            old_file_name = old_file
+        else:
+            file_name = old_file
 
+        action_icon_class = 'icon-pencil'
         if created:
             action_icon_class = "icon-plus"
         elif deleted:
             action_icon_class = "icon-remove"
 
         result = {
-            'old_file': old_file,
-            'new_file': new_file,
+            'file_name': file_name,
+            'old_file_name': old_file_name,
             'action_icon_class': action_icon_class,
             'binary': binary,
             'hunks': hunks
         }
 
         return result
-
-
-

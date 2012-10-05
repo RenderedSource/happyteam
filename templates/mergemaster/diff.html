@@ -7,7 +7,7 @@
 {% block content %}
     <div id="diff" class="container-fluid">
         <div class="row-fluid">
-            <h2>{{ from_branch }} -> {{ to_branch }}</h2>
+            <h2>{{ from_branch }} &#x2192; {{ to_branch }}</h2>
         </div>
         <div class="row-fluid">
             <h4>Changed files:</h4>
@@ -15,9 +15,12 @@
                 <div>
                     <i class="{{ diff.action_icon_class }}"></i>
                     {% if diff.binary %}
-                        {{ diff.new_file }}
+                        {{ diff.file_name }}
                     {% else %}
-                        <a href="#{{ diff.new_file|urlencode }}">{{ diff.new_file }}</a>
+                        <a href="#{{ diff.file_name|urlencode }}">{{ diff.file_name }}</a>
+                    {% endif %}
+                    {% if diff.old_file_name %}
+                        <div class="moved">&#x21b3; Moved from {{ diff.old_file_name }}</div>
                     {% endif %}
                 </div>
             {% endfor %}
@@ -25,7 +28,7 @@
         <div class="row-fluid">
             {% for diff in diffs %}
                 {% if not diff.binary %}
-                <div class="anchor" id="{{ diff.new_file|urlencode }}"></div>
+                <div class="anchor" id="{{ diff.file_name|urlencode }}"></div>
                 <div class="diff-file-header">
                     <a class="back-to-top" href="#">
                         Back to top
@@ -33,12 +36,11 @@
                     </a>
                     <h4 class="title-filename">
                         <i class="{{ diff.action_icon_class }}"></i>
-                        {% if diff.old_file != diff.new_file %}
-                            {{ diff.old_file }}<i class="icon-arrow-right"></i>{{ diff.new_file }}
-                        {% else %}
-                            {{ diff.new_file }}
-                        {% endif %}
+                        {{ diff.file_name }}
                     </h4>
+                    {% if diff.old_file_name %}
+                        <h5 class="moved">&#x21b3; Moved from {{ diff.old_file_name }}</h5>
+                    {% endif %}
                 </div>
                 <table class="code">
                     {% for hunk in diff.hunks %}
