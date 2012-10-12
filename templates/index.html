@@ -5,25 +5,25 @@ RenderedSource HappyTeam
 {% endblock %}
 {% block content %}
     <div class="row-fluid">
-        <div class="span6 well">
-            {% load newstags %}
-            {% latest_news 5 %}
+        <div class="span6">
+            <div class="well">
+                {% load newstags %}
+                {% latest_news 5 %}
+            </div>
         </div>
-        <div class="span6 well">
-            {% load newstags %}
-            {% last_comments 5 %}
-        </div>
-        <div class="span6 well">
-            {% load usertags %}
-            {% online_users 5 %}
-        </div>
-        <div class="span6 well">
-            {% load lastloosers %}
-            {% last_loosers %}
-        </div>
-        <div class="span6 well">
-            {% load officeposition %}
-            {% who_in_office %}
+        <div class="span6">
+            <div class="well">
+                {% load newstags %}
+                {% last_comments 5 %}
+            </div>
+            <div class="well">
+                {% load lastloosers %}
+                {% last_loosers %}
+            </div>
+            <div class="well">
+                {% load officeposition %}
+                {% who_in_office %}
+            </div>
         </div>
     </div>
 {% endblock %}
