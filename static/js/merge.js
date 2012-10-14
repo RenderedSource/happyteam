@@ -1,5 +1,39 @@
 (function($) {
     $(function() {
+
+        function toggleActions($link, animated, callback) {
+            (typeof animated === 'undefined') && (animated = true);
+            var mergeId = parseInt($link.data('merge-id'));
+            var $subrow = $('#merge-actions-' + mergeId);
+            if ($subrow.children().length == 0) {
+                $link.hide();
+                $link.after('<div class="ajax-loader"></div>');
+                $.get('merge-details/' + mergeId, function(response) {
+                    $subrow.html(response);
+                    $subrow.find('.btn').button();
+                    if (animated) {
+                        $subrow.collapse('toggle');
+                    } else {
+                        $subrow.toggleClass('in');
+                    }
+                    callback && callback();
+                })
+                .fail(function() {
+                    alert('Error');
+                })
+                .complete(function() {
+                    $link.next('.ajax-loader').remove();
+                    $link.show();
+                });
+            } else {
+                if (animated) {
+                    $subrow.collapse('toggle');
+                } else {
+                    $subrow.toggleClass('in');
+                }
+            }
+        }
+
         // preload ajax loader image
         $('<img/>')[0].src = '/static/img/nyancat.gif';
 
@@ -14,27 +48,7 @@
         });
 
         $('.btn-toggle-actions').live('click', function(event) {
-            var $link = $(this);
-            var mergeId = parseInt($link.data('merge-id'));
-            var $subrow = $('#merge-actions-' + mergeId);
-            if ($subrow.children().length == 0) {
-                $link.hide();
-                $link.after('<div class="ajax-loader"></div>');
-                $.get('merge-details/' + mergeId, function(response) {
-                    $subrow.html(response);
-                    $subrow.find('.btn').button();
-                    $subrow.collapse('toggle');
-                })
-                .fail(function() {
-                    alert('Error');
-                })
-                .complete(function() {
-                    $link.next('.ajax-loader').remove();
-                    $link.show();
-                });
-            } else {
-                $subrow.collapse('toggle');
-            }
+            toggleActions($(this));
         });
 
         $('.btn-merge-request').live('click', function(event) {
@@ -100,6 +114,21 @@
                 alert('Error');
             });
         });
+
+        (function() {
+            var hash = window.location.hash;
+            if (hash && hash.length > 1) {
+                var mergeId = parseInt(hash.substr(1));
+                if (!isNaN(mergeId)) {
+                    var $row = $('#merge-head-' + mergeId);
+                    var $link = $row.find('.btn-toggle-actions');
+                    toggleActions($link, false, function() {
+                        var scroll = $row.offset().top;
+                        $(window).scrollTop(scroll - 38);
+                    });
+                }
+            }
+        })();
     });
 })(jQuery);
 
