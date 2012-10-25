@@ -94,10 +94,11 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    'website.middleware.RequireLoginMiddleware'
+    'website.middleware.RequireLoginMiddleware',
     # Uncomment the next line for simple clickjacking protection:
     # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
-)
+    'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware'
+    )
 
 ROOT_URLCONF = 'website.urls'
 
@@ -114,6 +115,7 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django_openid_auth',
     'django.contrib.sites',
+    'django.contrib.flatpages',
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.markup',
