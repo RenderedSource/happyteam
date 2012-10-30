@@ -2,12 +2,10 @@ from xml.etree import ElementTree
 import urllib
 from website.settings import NMAP_XML_URL
 
-#todo cache 1-5 minuts
+#todo cache 1-5 minuts; add timeout response
 def get_online_mac_addesses():
     try:
         response = urllib.urlopen(NMAP_XML_URL)
-
-
         xml = response.read()
         tree = ElementTree.fromstring(xml)
 

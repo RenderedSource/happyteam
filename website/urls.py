@@ -6,6 +6,7 @@ admin.autodiscover()
 urlpatterns = patterns('',
     ('^pages/', include('django.contrib.flatpages.urls')),
     url(r'^$', 'website.views.Index'),
+    url(r'^knowledge/', include('knowledge.urls')),
     url('^markdown/', include( 'django_markdown.urls')),
     url('^news/', include( 'importantnews.urls')),
     url(r'^comments/', include('django.contrib.comments.urls')),
