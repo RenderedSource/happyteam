@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from knowledge import settings
 
 from django.db import models
@@ -21,7 +22,7 @@ STATUSES_EXTENDED = STATUSES + (
 class Category(models.Model):
     added = models.DateTimeField(auto_now_add=True)
     lastchanged = models.DateTimeField(auto_now=True)
-
+    owner = models.ForeignKey(User)
     title = models.CharField(max_length=255)
     slug = models.SlugField(unique=True)
 
@@ -156,7 +157,7 @@ class Question(KnowledgeBase):
 
     locked = models.BooleanField(default=False)
 
-    categories = models.ManyToManyField('knowledge.Category', blank=True)
+    categories = models.ForeignKey('knowledge.Category')
 
     objects = QuestionManager()
 

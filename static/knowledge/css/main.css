@@ -1,6 +1,4 @@
-.dk-inner {
-  padding: 20px 0;
-  font-family: "Helvetica Neue", Arial, Helvetica, sans-serif; }
+
   .dk-inner input {
     margin: 0; }
   .dk-inner .quiet {
@@ -204,3 +202,6 @@
     background-color: #468847; }
   .dk-inner .dk-label-info {
     background-color: #3A87AD; }
+  .wrapper {
+      max-width: 960px;
+      margin: 0 auto; }

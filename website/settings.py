@@ -138,6 +138,7 @@ INSTALLED_APPS = (
     'south',
     'gravatar',
     'django.contrib.comments',
+    'django.contrib.markup',
     'knowledge'
 )
 AUTH_PROFILE_MODULE = 'profileuser.UserProfile'
