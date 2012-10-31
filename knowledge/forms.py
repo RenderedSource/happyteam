@@ -26,7 +26,7 @@ def QuestionForm(user, *args, **kwargs):
         else:
             selected_fields = ['name', 'email', 'title', 'body']
     else:
-        selected_fields = ['user', 'title', 'body', 'status']
+        selected_fields = ['user', 'title', 'body', 'status','categories']
 
     if settings.ALERTS:
         selected_fields += ['alert']
@@ -64,6 +64,7 @@ def QuestionForm(user, *args, **kwargs):
         class Meta:
             model = Question
             fields = selected_fields
+
 
     return _QuestionForm(*args, **kwargs)
 

@@ -1,5 +1,7 @@
 from knowledge.utils import get_module
 from knowledge import settings
+from mailer import send_html_mail
+from website.local_settings import EMAIL_HOST_USER
 
 
 def send_alerts(target_dict, response=None, question=None, **kwargs):
@@ -9,7 +11,6 @@ def send_alerts(target_dict, response=None, question=None, **kwargs):
     from django.contrib.auth.models import User
     from django.template.loader import render_to_string
     from django.contrib.sites.models import Site
-    from django.core.mail import EmailMultiAlternatives
 
     site = Site.objects.get_current()
 
@@ -35,11 +36,8 @@ def send_alerts(target_dict, response=None, question=None, **kwargs):
 
         message_html = render_to_string(
             'django_knowledge/emails/message.html', context)
-
-        msg = EmailMultiAlternatives(subject, message, to=[email])
-        msg.attach_alternative(message_html, 'text/html')
-        msg.send()
-
+        send_html_mail(subject,message ,message_html, EMAIL_HOST_USER,
+            [email])
 
 def knowledge_post_save(sender, instance, created, **kwargs):
     """
@@ -47,13 +45,11 @@ def knowledge_post_save(sender, instance, created, **kwargs):
     and shuttles them to the predefined module.
     """
     from knowledge.models import Question, Response
-    from django.contrib.auth.models import User
-
     func = get_module(settings.ALERTS_FUNCTION_PATH)
 
     if settings.ALERTS and created:
         # pull together the out_dict:
-        #    {'e@ma.il': ('first last', 'e@ma.il') or <User>}
+        out_dict = []
         if isinstance(instance, Response):
             instances = list(instance.question.get_responses())
             instances += [instance.question]
@@ -63,13 +59,11 @@ def knowledge_post_save(sender, instance, created, **kwargs):
                             for i in instances if i.alert])
 
         elif isinstance(instance, Question):
-            staffers = User.objects.filter(is_staff=True)
-            out_dict = dict([[user.email, user] for user in staffers
-                                if user.has_perm('change_question')])
-
+            out_dict = dict({instance.categories.owner.email:instance.categories.owner})
         # remove the creator...
         if instance.get_email() in out_dict.keys():
             del out_dict[instance.get_email()]
+
 
         func(
             target_dict=out_dict,
