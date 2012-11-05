@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Sprint {{ sprint.number }} tasks
+{% endblock %}
+{% block content %}
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th>Title</th>
+            <th>Type</th>
+            <th>Developer</th>
+            <th>Team</th>
+            <th>Start date</th>
+            <th>End date(theory)</th>
+            <th>End date(actual)</th>
+        </tr>
+        </thead>
+    {% for task in tasks_list %}
+        <tr class="{{ task.fail_status }}">
+            <td><a href="{{ task.get_absolute_url }}">{{ task.title }}</a></td>
+            <td>{{ task.type.title }}</td>
+            <td>
+                <a href="{{ task.developer.get_dev_url }}">{{ task.developer.developer }}
+                </a>
+            </td>
+            <td>{{ task.developer.team }}</td>
+            <td>{{ task.start_date }}</td>
+            <td>{{ task.end_date_theory }}</td>
+            <td>{{ task.end_date_actual }}</td>
+        </tr>
+    {% endfor %}
+    </table>
+{% endblock %}

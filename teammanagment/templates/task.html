@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block title %}
+{{ task.title }}
+{% endblock %}
+{% block content %}
+    <h3>{{ task.developer }}</h3>
+    <h1>{{ task.title }} {{ task.sprint }}</h1>
+    <blockquote>
+        {{ task.desc }}
+    </blockquote>
+
+    <h3>Task info</h3>
+    <p>Start Date: {{ task.start_date }}</p>
+    <p>End Date (theory): {{ task.end_date_theory }}</p>
+    <p>End Date: {{ task.end_date_actual }}</p>
+{% endblock %}

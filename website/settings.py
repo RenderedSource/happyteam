@@ -139,7 +139,8 @@ INSTALLED_APPS = (
     'gravatar',
     'django.contrib.comments',
     'django.contrib.markup',
-    'knowledge'
+    'knowledge',
+    'teammanagment',
 )
 AUTH_PROFILE_MODULE = 'profileuser.UserProfile'
 MARKDOWN_EDITOR_SKIN = 'simple'
