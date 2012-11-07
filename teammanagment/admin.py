@@ -1,6 +1,6 @@
 #-*- coding: utf-8 -*-
 from django.contrib import admin
-from teammanagment.models import DeveloperTeam, Team, Sprint, Task, TaskCategory
+from teammanagment.models import DeveloperTeam, Team, Sprint, Task, TaskCategory, ItemDailyTask, DailyTask
 
 
 __author__ = 'lehabaev'
@@ -31,3 +31,13 @@ admin.site.register(TaskCategory, TaskCategoryAdmin)
 class TaskAdmin(admin.ModelAdmin):
     list_display = ('title','status','start_date','end_date_actual')
 admin.site.register(Task, TaskAdmin)
+
+class ItemDailyTaskInline(admin.TabularInline):
+    model = ItemDailyTask
+
+class DailyTaskAdmin(admin.ModelAdmin):
+    inlines = [
+        ItemDailyTaskInline
+    ]
+admin.site.register(DailyTask, DailyTaskAdmin)
+

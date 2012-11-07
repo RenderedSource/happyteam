@@ -1,9 +1,11 @@
 from django.conf.urls import patterns, include, url
 from django.contrib import admin
+from django.http import HttpResponse
 
 admin.autodiscover()
 
 urlpatterns = patterns('',
+    (r'^robots\.txt$', lambda r: HttpResponse("User-agent: *\nDisallow: /", mimetype="text/plain")),
     ('^pages/', include('django.contrib.flatpages.urls')),
     url(r'^$', 'website.views.Index'),
     url(r'^knowledge/', include('knowledge.urls')),

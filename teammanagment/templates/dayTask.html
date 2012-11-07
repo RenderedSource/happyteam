@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Day task
+{% endblock %}
+{% block script %}
+    <script type="text/javascript">
+    $().ready(function(){
+        // change task status
+        $('.task-checkbox').click(function(){
+            $.ajax({
+                url:'{% url taskStatus %}',
+                dataType: 'json',
+                type:'post',
+                data: {
+                    'csrf_token': {{ csrf_token }},
+                    'task':$(this).data('id'),
+                    'val':$(this).val()
+                },
+                success: function(data){
+                    console.log(data)
+                }
+            })
+        });
+
+
+    });
+    </script>
+{% endblock %}
+{% block content %}
+
+    <div class="row-fluid">
+
+
+        <div class="row-fluid">
+            {% for day in task_list %}
+                <div class="span6 well">
+                    <h3>{{ day.day }}</h3>
+
+                    <div class="today-tasks">
+                        {% for task in day.tasks.all %}
+                            <div class="task well {% if task.status %}success{% endif %}">
+                                <label class="checkbox">
+                                    <input name="task" data-id="{{ task.id }}" type="checkbox" {% if task.status %}checked="checked" {% endif %} class="task-checkbox">{{ task }}
+                                </label>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endfor %}
+
+        </div>
+
+    </div>
+{% endblock %}

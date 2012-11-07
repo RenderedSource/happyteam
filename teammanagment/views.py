@@ -1,7 +1,8 @@
 #todo create decorator access deny
+import datetime
 from django.shortcuts import get_list_or_404, render_to_response, get_object_or_404
 from django.template.context import RequestContext
-from teammanagment.models import Sprint, Task
+from teammanagment.models import Sprint, Task, DailyTask
 
 def sprint_list(request):
     sprint_list = get_list_or_404(Sprint)
@@ -15,3 +16,8 @@ def sprint_tasks(request, pid):
 def task(request, pid):
     task = get_object_or_404(Task, id = pid)
     return render_to_response('task.html',{'task':task},RequestContext(request))
+
+def dayTask(request):
+#    todo 404
+    task_list = DailyTask.objects.filter(user = request.user, day__in = [datetime.date.today(), datetime.date.today() + datetime.timedelta(days=1) ])
+    return render_to_response('dayTask.html',{'task_list':task_list},RequestContext(request))

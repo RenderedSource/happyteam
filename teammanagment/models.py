@@ -16,6 +16,7 @@ class DeveloperTeam(models.Model):
 
     def __unicode__(self):
         return self.developer.username
+
     def get_dev_url(self):
         return ''
 
@@ -67,3 +68,20 @@ class Task(models.Model):
                 return 'success'
         else:
             return 'info'
+
+
+class DailyTask(models.Model):
+    user = models.ForeignKey(User)
+    day = models.DateField()
+
+    def __unicode__(self):
+        return self.user.username
+
+class ItemDailyTask(models.Model):
+    day = models.ForeignKey(DailyTask, related_name='tasks')
+    title = models.CharField(max_length=60)
+    task = models.ForeignKey(Task, blank=True, null=True)
+    status = models.BooleanField(default=False, help_text=u'Insert after task finished')
+
+    def __unicode__(self):
+        return self.title
