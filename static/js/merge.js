@@ -37,16 +37,17 @@
         // preload ajax loader image
         $('<img/>')[0].src = '/static/img/nyancat.gif';
 
+
+        var $form = $('#form-filter');
         // function send filter
         function sendFilter(){
             $.get('', $form.serialize(), function(response) {
                 $('#mergelist-container').html(response);
             })
-            .fail(function() {
+                .fail(function() {
                         alert('Error');
-                });
+            });
         }
-        var $form = $('#form-filter');
         // filter bu click button
         $('#send-filter').click(function(){
             sendFilter();
