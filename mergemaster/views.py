@@ -20,7 +20,8 @@ def merge_list(request):
         .prefetch_related('merge_group').prefetch_related('developer')\
         .annotate(Count('mergerequestaction'))\
         .order_by('-id')
-
+    if request.GET.getlist('user',[]):
+        merge_list = merge_list.filter(developer__in = request.GET.getlist('user',[]))
     if models.REQUEST_MERGED not in include:
         merge_list = merge_list.exclude(merge_status=models.REQUEST_MERGED)
     if models.REQUEST_SUSPENDED not in include:

@@ -1,5 +1,6 @@
 #-*- coding: utf-8 -*-
 from django import forms
+from django.contrib.auth.models import User
 import models
 from mergemaster.models import MergeRequest, MergeActionComment
 
@@ -38,11 +39,12 @@ class MergeActionCommentForm(forms.ModelForm):
         exclude = ['user',]
 
 class FilterListForm(forms.Form):
+    user = forms.ModelMultipleChoiceField(queryset=User.objects.all(),label = "")
     include = forms.MultipleChoiceField(
         label = "",
         choices = (
             (models.REQUEST_MERGED, 'Show merged requests'),
-            (models.REQUEST_SUSPENDED, 'Show suspended resquests')
+            (models.REQUEST_SUSPENDED, 'Show suspended resquests'),
         ),
         widget = forms.CheckboxSelectMultiple
     )
