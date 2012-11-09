@@ -38,8 +38,13 @@ class MergeActionCommentForm(forms.ModelForm):
             }
         exclude = ['user',]
 
+
+class UserModelChoiceField(forms.ModelMultipleChoiceField):
+    def label_from_instance(self, obj):
+        return obj.get_full_name()
+
 class FilterListForm(forms.Form):
-    user = forms.ModelMultipleChoiceField(
+    user = UserModelChoiceField(
         queryset=User.objects.all(),label = "Filter by developer",
         widget=forms.CheckboxSelectMultiple()
     )

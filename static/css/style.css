@@ -236,3 +236,7 @@ a {
 
 /* merge filters bold */
 #form-filter > label{font-weight: bold;}
+
+.add-action-form select[multiple]{
+    height: 200px;
+}
