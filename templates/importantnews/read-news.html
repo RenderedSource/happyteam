@@ -68,7 +68,7 @@
                         <img src="{% gravatar_for_user comment.user 25 %}" class="img-rounded"> <strong>{{ comment.user.email }}</strong>
                     </div>
                     <div class="span8 ">
-                        {{ comment.comment }}
+                        {{ comment.comment|markdown:"safe" }}
                     </div>
                 </div>
             </div>

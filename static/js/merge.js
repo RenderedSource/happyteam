@@ -43,16 +43,12 @@
                 $('#mergelist-container').html(response);
             })
             .fail(function() {
-                        alert('Error');
+                   alert('Error');
                 });
         }
         var $form = $('#form-filter');
-        // filter bu click button
-        $('#send-filter').click(function(){
-            sendFilter();
-            return false;
-        });
         // filter by click checkbox
+        // BUG: work on by click another checkbox
         $form.find('input[type="checkbox"]').change(function() {
             sendFilter();
         });
