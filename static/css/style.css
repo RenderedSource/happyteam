@@ -230,7 +230,7 @@ a {
 /* ul columns */
 
 #form-filter ul { margin: 0; padding: 0; list-style-type: none;  width: 100%;}
-#form-filter ul li { margin: 0 10% 0.4em 0; //margin: 0; width: 40%; //width: auto;float: left; }
+#form-filter ul li { margin: 0 0 0.4em 0; //margin: 0; width: 50%; //width: auto;float: left; }
 #form-filter label{clear: both;}
 
 
