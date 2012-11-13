@@ -45,7 +45,7 @@ class UserModelChoiceField(forms.ModelMultipleChoiceField):
 
 class FilterListForm(forms.Form):
     user = UserModelChoiceField(
-        queryset=User.objects.all(),label = "Filter by developer",
+        queryset=User.objects.all().order_by('first_name'),label = "Filter by developer",
         widget=forms.CheckboxSelectMultiple()
     )
     merge_group = forms.ModelMultipleChoiceField(

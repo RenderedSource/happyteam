@@ -157,8 +157,12 @@ def update_merge_request(request, merge_id):
             send_form = SendFrom(request.POST)
             if send_form.is_valid():
                 for user in send_form.cleaned_data['user']:
-                    message = render_to_string('mergemaster/email/message.txt',{'merge':merge_request})
+                    if merge_request.merge_status == 2:
+                        message = render_to_string('mergemaster/email/message-merged.txt',{'merge':merge_request})
+                    else:
+                        message = render_to_string('mergemaster/email/message.txt',{'merge':merge_request})
                     subject = 'Change status request #%d' % merge_request.id
+
                     send_html_mail('[RS] ' + subject,message ,message, settings.EMAIL_HOST_USER,
                         [user.email])
     else:
