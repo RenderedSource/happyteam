@@ -38,10 +38,22 @@ class MergeActionCommentForm(forms.ModelForm):
             }
         exclude = ['user',]
 
+
+class UserModelChoiceField(forms.ModelMultipleChoiceField):
+    def label_from_instance(self, obj):
+        return obj.get_full_name()
+
 class FilterListForm(forms.Form):
-    user = forms.ModelMultipleChoiceField(queryset=User.objects.all(),label = "")
+    user = UserModelChoiceField(
+        queryset=User.objects.all(),label = "Filter by developer",
+        widget=forms.CheckboxSelectMultiple()
+    )
+    merge_group = forms.ModelMultipleChoiceField(
+        queryset=models.MergeGroup.objects.all(),label = "Filter by merge group",
+        widget=forms.CheckboxSelectMultiple()
+    )
     include = forms.MultipleChoiceField(
-        label = "",
+        label = "Filter by status",
         choices = (
             (models.REQUEST_MERGED, 'Show merged requests'),
             (models.REQUEST_SUSPENDED, 'Show suspended resquests'),
@@ -49,3 +61,7 @@ class FilterListForm(forms.Form):
         widget = forms.CheckboxSelectMultiple
     )
 
+class SendFrom(forms.Form):
+    user = forms.ModelMultipleChoiceField(
+        queryset=User.objects.all(),label = "Select subscribe"
+    )

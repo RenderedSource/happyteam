@@ -5,11 +5,13 @@ from django.shortcuts import render_to_response
 from django.template.context import RequestContext
 from django.template.loader import render_to_string
 import simplejson
-from mergemaster.forms import MergeRequestForm, MergeRequestActionForm, MergeActionCommentForm, FilterListForm
+from mailer import send_html_mail
+from mergemaster.forms import MergeRequestForm, MergeRequestActionForm, MergeActionCommentForm, FilterListForm, SendFrom
 from mergemaster.models import MergeRequest, MergeRequestAction
 from django.db import transaction
 from django.db.models import Count
 import models
+from website import settings
 from website.settings import REPO_PATH
 from git import *
 from diff import Visualizer
@@ -22,6 +24,8 @@ def merge_list(request):
         .order_by('-id')
     if request.GET.getlist('user',[]):
         merge_list = merge_list.filter(developer__in = request.GET.getlist('user',[]))
+    if request.GET.getlist('merge_group',[]):
+        merge_list = merge_list.filter(merge_group__in = request.GET.getlist('merge_group',[]))
     if models.REQUEST_MERGED not in include:
         merge_list = merge_list.exclude(merge_status=models.REQUEST_MERGED)
     if models.REQUEST_SUSPENDED not in include:
@@ -52,6 +56,7 @@ def merge_details(request, merge_id):
     return render_to_response(
         'mergemaster/request-subrow.html', {
             'merge': merge_request,
+            'send_form':SendFrom(),
             'action_form': MergeRequestActionForm(initial={
                 'merge_status': merge_request.merge_status,
                 'cr_status': merge_request.cr_status,
@@ -66,6 +71,7 @@ def merge_details(request, merge_id):
 def add_merge_request(request):
     request_form = MergeRequestForm(request.POST)
     response_data = {}
+#    todo send message team lead
     if request_form.is_valid():
         merge_request = request_form.save(commit=False)
         merge_request.developer = request.user
@@ -146,6 +152,15 @@ def update_merge_request(request, merge_id):
             },
             context_instance=RequestContext(request)
         )
+        #    send notification
+        if request.POST.getlist('user',[]):
+            send_form = SendFrom(request.POST)
+            if send_form.is_valid():
+                for user in send_form.cleaned_data['user']:
+                    message = render_to_string('mergemaster/email/message.txt',{'merge':merge_request})
+                    subject = 'Change status request #%d' % merge_request.id
+                    send_html_mail('[RS] ' + subject,message ,message, settings.EMAIL_HOST_USER,
+                        [user.email])
     else:
         response_data['success'] = False
     return HttpResponse(simplejson.dumps(response_data), mimetype='application/javascript')

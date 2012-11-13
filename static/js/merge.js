@@ -38,22 +38,19 @@
         $('<img/>')[0].src = '/static/img/nyancat.gif';
 
 
-        var $form = $('#form-filter');
+      
         // function send filter
         function sendFilter(){
             $.get('', $form.serialize(), function(response) {
                 $('#mergelist-container').html(response);
             })
-                .fail(function() {
-                        alert('Error');
-            });
+            .fail(function() {
+                   alert('Error');
+                });
         }
-        // filter bu click button
-        $('#send-filter').click(function(){
-            sendFilter();
-            return false;
-        });
+        var $form = $('#form-filter');
         // filter by click checkbox
+        // BUG: work on by click another checkbox
         $form.find('input[type="checkbox"]').change(function() {
             sendFilter();
         });
