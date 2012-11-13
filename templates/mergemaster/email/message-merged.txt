@@ -1,0 +1,2 @@
+<h1>Congratulations</h1>
+Branch {{ merge_request.branch }} merged to {{ merge_request.merge_group }}
