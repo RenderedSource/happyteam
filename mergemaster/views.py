@@ -92,6 +92,15 @@ def add_merge_request(request):
             },
             context_instance=RequestContext(request)
         )
+        # todo in progress change user to owner
+        if request.POST.getlist('user_send',[]):
+            send_form = SendFrom(request.POST)
+            if send_form.is_valid():
+                for user in send_form.cleaned_data['user_send']:
+                    message = render_to_string('mergemaster/email/message-need-merge.txt',{'merge':merge_request})
+                    subject = 'Need merge branch #%d' % merge_request.id
+                    send_html_mail('[RS] ' + subject,message ,message, settings.EMAIL_HOST_USER,
+                        [user.email])
     else:
         response_data['success'] = False
     return HttpResponse(simplejson.dumps(response_data), mimetype='application/javascript')
@@ -153,10 +162,10 @@ def update_merge_request(request, merge_id):
             context_instance=RequestContext(request)
         )
         #    send notification
-        if request.POST.getlist('user',[]):
+        if request.POST.getlist('user_send',[]):
             send_form = SendFrom(request.POST)
             if send_form.is_valid():
-                for user in send_form.cleaned_data['user']:
+                for user in send_form.cleaned_data['user_send']:
                     if merge_request.merge_status == 2:
                         message = render_to_string('mergemaster/email/message-merged.txt',{'merge':merge_request})
                     else:
