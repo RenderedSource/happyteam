@@ -62,6 +62,7 @@ class FilterListForm(forms.Form):
     )
 
 class SendFrom(forms.Form):
-    user = forms.ModelMultipleChoiceField(
-        queryset=User.objects.all().order_by('first_name'),label = "Select subscribe"
+    user_send = UserModelChoiceField(
+        widget=forms.CheckboxSelectMultiple(),
+    queryset=User.objects.all().order_by('first_name'),label = "Select subscribe"
     )

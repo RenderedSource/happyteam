@@ -11,7 +11,7 @@ class MergeMaster(models.Model):
 
 class MergeGroup(models.Model):
     main_branch = models.CharField(max_length = 60, blank = False)
-
+    owner = models.ForeignKey(User)
     def __unicode__(self):
         return self.main_branch
 
