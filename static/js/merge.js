@@ -37,6 +37,8 @@
         // preload ajax loader image
         $('<img/>')[0].src = '/static/img/nyancat.gif';
 
+
+      
         // function send filter
         function sendFilter(){
             $.get('', $form.serialize(), function(response) {

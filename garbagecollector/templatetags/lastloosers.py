@@ -6,7 +6,7 @@ register = template.Library()
 
 @register.inclusion_tag('tags/gc_last_looser.html')
 def last_loosers():
-    latest_looser_list = GcLoosers.objects.all().order_by('-date')
+    latest_looser_list = GcLoosers.objects.all().order_by('-date')[:10]
     return {
         'latest_looser_list':latest_looser_list
     }
