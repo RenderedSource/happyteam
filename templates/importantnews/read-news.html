@@ -37,7 +37,8 @@
             </form>
         {% endif %}
     </div>
-    <blockquote class="pull-right">
+    <div>
+    <blockquote>
         <div class="readuser">
             {% for user in news.get_read_user %}
                 {% if forloop.first %}
@@ -57,6 +58,7 @@
 
         </div>
     </blockquote>
+    </div>
     <hr>
     <div class="comments-list">
         {% get_comment_count for importantnews.news news.id as comment_count %}
