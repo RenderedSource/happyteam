@@ -1,0 +1,10 @@
+{% if news_count > 0 %}
+    <div class="alert alert-block alert-error fade in">
+        <button type="button" class="close" data-dismiss="alert">×</button>
+        <h4 class="alert-heading">You have unread news</h4>
+        <p>Please read all news</p>
+        <p>
+            <a class="btn btn-danger" href="{% url unread_news %}">Unread news</a>
+        </p>
+    </div>
+{% endif %}
