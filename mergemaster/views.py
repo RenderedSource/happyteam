@@ -53,10 +53,13 @@ def merge_details(request, merge_id):
             'mergerequestaction__mergeactioncomment__user',
             'mergerequestaction__user'
         ).get(id = merge_id)
+    user_list = MergeRequestAction.objects.filter(merge_request = merge_request).distinct()
+    user_list = user_list.values_list('user__id', flat=True)
+
     return render_to_response(
         'mergemaster/request-subrow.html', {
             'merge': merge_request,
-            'send_form':SendFrom(),
+            'send_form':SendFrom(initial={'user_send':user_list}),
             'action_form': MergeRequestActionForm(initial={
                 'merge_status': merge_request.merge_status,
                 'cr_status': merge_request.cr_status,
