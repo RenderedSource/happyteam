@@ -59,7 +59,7 @@
 
 <div class="container">
 {% load newstags %}
-{% unread_news 1 %}
+{% unread_news user.id %}
     {% block content %}
 
     {% endblock %}
