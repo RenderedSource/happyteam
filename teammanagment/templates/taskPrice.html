@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block title %}
+  Create task
+{% endblock %}
+{% block content %}
+    <h3>Create task</h3>
+    <form method="post" id="add-task-form">
+        {{ task_form.as_p }}
+        <input type="submit" value="Add task">
+    {% csrf_token %}
+    </form>
+{% endblock %}
+
+Feature list:
+<ul>
+    <li>Алерт что вы уверены что все так, это нельзя изменить</li>
+    <li>Красивая драг анд дроп таскалка в 3 колонки. Не назначенно, сегодня, завтра</li>
+    <li>Процент всей итерации.</li>
+</ul>

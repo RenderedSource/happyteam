@@ -2,6 +2,7 @@
 import datetime
 from django.shortcuts import get_list_or_404, render_to_response, get_object_or_404
 from django.template.context import RequestContext
+from teammanagment.forms import TaskForm, ItemDailyTaskForm
 from teammanagment.models import Sprint, Task, DailyTask
 
 def sprint_list(request):
@@ -21,3 +22,11 @@ def dayTask(request):
 #    todo 404
     task_list = DailyTask.objects.filter(user = request.user, day__in = [datetime.date.today(), datetime.date.today() + datetime.timedelta(days=1) ])
     return render_to_response('dayTask.html',{'task_list':task_list},RequestContext(request))
+
+def taskPrice(request):
+    if request.method == 'POST':
+        task_form = TaskForm(request.POST)
+    else:
+        task_form = TaskForm()
+
+    return render_to_response('taskPrice.html',{'task_form':task_form},RequestContext(request))

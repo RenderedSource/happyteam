@@ -8,4 +8,5 @@ urlpatterns = patterns('',
     url(r'^sprint/(?P<pid>(\d+))/$', 'teammanagment.views.sprint_tasks', name='sprint_list'),
     url(r'^task/(?P<pid>(\d+))/$', 'teammanagment.views.task', name='task'),
     url(r'^day/$', 'teammanagment.views.dayTask', name='dayTask'),
+    url(r'^task/$', 'teammanagment.views.taskPrice', name='taskPrice'),
 )

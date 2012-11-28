@@ -78,10 +78,14 @@ class DailyTask(models.Model):
         return self.user.username
 
 class ItemDailyTask(models.Model):
-    day = models.ForeignKey(DailyTask, related_name='tasks')
+    day = models.ForeignKey(DailyTask, related_name='tasks', blank=True, null=True)
+    price = models.IntegerField(max_length=1)
     title = models.CharField(max_length=60)
     task = models.ForeignKey(Task, blank=True, null=True)
     status = models.BooleanField(default=False, help_text=u'Insert after task finished')
 
     def __unicode__(self):
         return self.title
+
+
+
