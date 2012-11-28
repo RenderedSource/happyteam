@@ -1,0 +1,1 @@
+Merge request changed status to <a href="http://team.renderedsource.com/merge/#{{ merge.id }}">View branch</a>

@@ -8,7 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
     <meta name="author" content="">
-
+    <link href="/static/favicon.ico" rel="icon" type="image/x-icon" />
     <!-- Le styles -->
     <link href="/static/bootstrap/css/bootstrap.css" rel="stylesheet">
     <style type="text/css">
@@ -38,15 +38,9 @@
 <div class="navbar navbar-fixed-top">
     <div class="navbar-inner">
         <div class="container">
-            <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </a>
-            <a class="brand" href="/">RenderedSource</a>
-            <div class="nav-collapse">
+            <a class="brand visible-desktop" href="/">RenderedSource</a>
                 <ul class="nav pull-left">
-                    <li><a href="/merge/"> <i class="icon-random"></i> Merge Master Tools</a></li>
+                    <li><a href="/merge/"> <i class="icon-random"></i> Merge Tools</a></li>
                     <li><a href="/gc/"> <i class="icon-trash"></i> Garbage Collector</a></li>
                     <li><a href="/news/"> <i class="icon-list-alt"></i> News</a></li>
                     <li><a href="/sprints/"> <i class="icon-calendar"></i> Sprints</a></li>
@@ -58,12 +52,14 @@
                     {% endblock %}
                     <li><a href="/logout/"><i class="icon-off"></i> Logout</a></li>
                 </ul>
-            </div><!--/.nav-collapse -->
+
         </div>
     </div>
 </div>
 
 <div class="container">
+{% load newstags %}
+{% unread_news user.id %}
     {% block content %}
 
     {% endblock %}

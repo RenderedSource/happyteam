@@ -1,5 +1,6 @@
 #-*- coding: utf-8 -*-
 from django import forms
+from django.contrib.auth.models import User
 import models
 from mergemaster.models import MergeRequest, MergeActionComment
 
@@ -37,13 +38,31 @@ class MergeActionCommentForm(forms.ModelForm):
             }
         exclude = ['user',]
 
+
+class UserModelChoiceField(forms.ModelMultipleChoiceField):
+    def label_from_instance(self, obj):
+        return obj.get_full_name()
+
 class FilterListForm(forms.Form):
+    user = UserModelChoiceField(
+        queryset=User.objects.all().order_by('first_name'),label = "Filter by developer",
+        widget=forms.CheckboxSelectMultiple()
+    )
+    merge_group = forms.ModelMultipleChoiceField(
+        queryset=models.MergeGroup.objects.all(),label = "Filter by merge group",
+        widget=forms.CheckboxSelectMultiple()
+    )
     include = forms.MultipleChoiceField(
-        label = "",
+        label = "Filter by status",
         choices = (
             (models.REQUEST_MERGED, 'Show merged requests'),
-            (models.REQUEST_SUSPENDED, 'Show suspended resquests')
+            (models.REQUEST_SUSPENDED, 'Show suspended resquests'),
         ),
         widget = forms.CheckboxSelectMultiple
     )
 
+class SendFrom(forms.Form):
+    user_send = UserModelChoiceField(
+        widget=forms.CheckboxSelectMultiple(),
+    queryset=User.objects.all().order_by('first_name'),label = "Select subscribe"
+    )

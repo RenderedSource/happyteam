@@ -155,3 +155,9 @@
 #diff table.code .removed {
     background: #ffd0d0;
 }
+
+.row-ul ul li{
+    display: block;
+    float: left;
+    width: 50%;
+  }

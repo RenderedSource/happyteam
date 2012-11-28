@@ -8,7 +8,7 @@ class MergeMasterAdmin(admin.ModelAdmin):
 admin.site.register(MergeMaster, MergeMasterAdmin)
 
 class MergeGroupAdmin(admin.ModelAdmin):
-    pass
+    list_display = ['main_branch', 'owner']
 admin.site.register(MergeGroup, MergeGroupAdmin)
 
 class MergeRequestAdmin(admin.ModelAdmin):

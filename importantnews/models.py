@@ -21,14 +21,15 @@ class News(models.Model):
 
 #    send required new news
     def save(self):
-        if self.required:
-            try:
-                News.objects.get(id = self.id)
-            except News.DoesNotExist:
-                message = render_to_string('importantnews/mail.html',{'news':self})
-                subject = self.title
-                SendAllUser(subject, message)
-        super(News, self).save()
+        try:
+            News.objects.get(id = self.id)
+            super(News, self).save()
+
+        except News.DoesNotExist:
+            super(News, self).save()
+            message = render_to_string('importantnews/mail.html',{'news':self})
+            subject = self.title
+            SendAllUser(subject, message)
 
 class UserRead(models.Model):
     news = models.ForeignKey(News)

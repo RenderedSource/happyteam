@@ -1,26 +1,37 @@
 {% if merge %}
 
-<div class="actions-container">
-    <div class="well well-small add-action">
-        <div class="pull-right">
-            <div class="well">
-                <p>To merge this branch, run next line in console:</p>
-                <code>ant -Dfrom={{ merge.branch }} -Dto={{ merge.merge_group.main_branch }} merge</code>
-            </div>
-            <a href="{% url diff from_branch=merge.branch to_branch=merge.merge_group.main_branch %}"
-               class="btn btn-primary btn-large" target="_blank">
-                View diff
-            </a>
+    <div class="actions-container">
+        <div class="well well-small add-action">
+            <form class="add-action-form" method="post" action="{% url update-merge-request merge_id=merge.id %}">
+                <div class="row-fluid">
+                    <div class="span4">
+                        <div>
+                            {{ action_form.as_p }}
+                            {% csrf_token %}
+                            <input type="submit" value="Submit" class="btn btn-primary btn-update-merge"/>
+                        </div>
+                    </div>
+                    <div class="span4">
+                        <div class="row-ul">
+                            {{ send_form.as_p }}
+                        </div>
+                    </div>
+                    <div class="span4">
+                        <div class="well">
+                            <p>To merge this branch, run next line in console:</p>
+                            <code>ant -Dfrom={{ merge.branch }} -Dto={{ merge.merge_group.main_branch }} merge</code>
+                        </div>
+                        <a href="{% url diff from_branch=merge.branch to_branch=merge.merge_group.main_branch %}"
+                           class="btn btn-primary btn-large" target="_blank">
+                            View diff
+                        </a>
+                    </div>
+                </div>
+            </form>
         </div>
-        <form class="add-action-form" method="post" action="{% url update-merge-request merge_id=merge.id %}">
-            {{ action_form.as_p }}
-            {% csrf_token %}
-            <input type="submit" value="Submit" class="btn btn-primary btn-update-merge" />
-        </form>
+        <table id="action-list-{{ merge.id }}" class="table table-condensed table-actions">
+            {% include 'mergemaster/request-actions.html' %}
+        </table>
     </div>
-    <table id="action-list-{{ merge.id }}" class="table table-condensed table-actions">
-        {% include 'mergemaster/request-actions.html' %}
-    </table>
-</div>
 
 {% endif %}

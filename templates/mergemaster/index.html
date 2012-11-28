@@ -15,15 +15,53 @@
                         {{ request_form|bootstrap }}
                         {% csrf_token %}
                         <button class="btn btn-primary btn-merge-request">Add</button>
+                        form
                     </form>
                 {% else %}
                     <h2>Success add new branch</h2>
                 {% endif %}
             </div>
             <div class="span6 well">
-                <legend>Filters</legend>
                 <form action="" id="form-filter">
-                    {{ filter_form }}
+                    <div class="accordion" id="accordion3">
+
+                        <div class="accordion-group">
+                            <div class="accordion-heading">
+                                <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion3" href="#collapseOne">
+                                    <strong>Filter by merge group</strong>
+                                </a>
+                            </div>
+                            <div id="collapseOne" class="accordion-body collapse in">
+                                <div class="accordion-inner">
+                                    {{ filter_form.merge_group }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-group">
+                            <div class="accordion-heading">
+                                <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion3" href="#collapseTwo">
+                                    <strong>Filter by users:</strong>
+                                </a>
+                            </div>
+                            <div id="collapseTwo" class="accordion-body collapse">
+                                <div class="accordion-inner">
+                                    {{ filter_form.user }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-group">
+                            <div class="accordion-heading">
+                                <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion3" href="#collapseThree">
+                                    <strong>Filter by merge status</strong>
+                                </a>
+                            </div>
+                            <div id="collapseThree" class="accordion-body collapse">
+                                <div class="accordion-inner">
+                                    {{ filter_form.include }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </form>
             </div>
         </div>

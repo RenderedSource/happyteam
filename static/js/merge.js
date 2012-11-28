@@ -37,14 +37,22 @@
         // preload ajax loader image
         $('<img/>')[0].src = '/static/img/nyancat.gif';
 
-        var $form = $('#form-filter');
-        $form.find('input[type="checkbox"]').change(function() {
+
+      
+        // function send filter
+        function sendFilter(){
             $.get('', $form.serialize(), function(response) {
                 $('#mergelist-container').html(response);
             })
             .fail(function() {
-                alert('Error');
-            });
+                   alert('Error');
+                });
+        }
+        var $form = $('#form-filter');
+        // filter by click checkbox
+        // BUG: work on by click another checkbox
+        $form.find('input[type="checkbox"]').change(function() {
+            sendFilter();
         });
 
         $('.btn-toggle-actions').live('click', function(event) {
