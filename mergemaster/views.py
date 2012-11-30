@@ -175,7 +175,12 @@ def update_merge_request(request, merge_id):
                         message = render_to_string('mergemaster/email/message-reject.txt',
                                 {'branch':merge_request.branch,'merge_group':merge_request.merge_group,'url':merge_request.id})
                     else:
-                        message = render_to_string('mergemaster/email/message.txt',{'merge':merge_request})
+                        message = render_to_string('mergemaster/email/message.txt',
+                                {
+                                'merge':merge_request,
+                                'branch':merge_request.branch,
+                                'user':request.user.get_full_name
+                            })
 
                     subject = 'Change status request #%d' % merge_request.id
 

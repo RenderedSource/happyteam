@@ -1,2 +1,1 @@
-<h1>Wow,</h1>
-<h3>the branch {{ branch }} has been merged successfully into {{ merge_group }}</h3>
+<h3>Wow, the branch {{ branch }} has been merged successfully into {{ merge_group }}</h3>
