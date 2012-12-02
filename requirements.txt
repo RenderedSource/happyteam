@@ -7,3 +7,6 @@ django-bootstrap-form
 south
 django-gravatar
 GitPython
+psycopg2
+raven
+PIL
