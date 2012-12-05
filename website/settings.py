@@ -193,6 +193,9 @@ LOGIN_URL = '/login/'
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_URL = '/logout/'
 OPENID_SSO_SERVER_URL = 'https://www.google.com/accounts/o8/id'
+REPO_PATH=''
+EMAIL_DOMAIN  = 'example.com'
+EMAIL_VALIDATE  = True
 
 try:
     from local_settings import *
