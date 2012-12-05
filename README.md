@@ -9,7 +9,7 @@
     git clone https://github.com/RenderedSource/happyteam.git
     cd happyteam
     sudo pip install -r requirements.txt
-    cp website/local_settings.py.example website/local_settings.py
+    cp website/local_settings.example.py website/local_settings.py
     edit website/local_settings.py
     python manage.py syncdb
     python manage.py migrate
