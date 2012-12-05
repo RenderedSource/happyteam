@@ -170,10 +170,19 @@ def update_merge_request(request, merge_id):
                 for user in send_form.cleaned_data['user_send']:
                     if merge_request.merge_status == 2:
                         message = render_to_string('mergemaster/email/message-merged.txt',
-                                {'branch':merge_request.branch,'merge_group':merge_request.merge_group})
+                                {
+                                'branch':merge_request.branch,
+                                'merge_group':merge_request.merge_group,
+                                'user':request.user.get_full_name
+                            })
                     elif merge_request.cr_status == 2 or merge_request.qa_status == 2:
                         message = render_to_string('mergemaster/email/message-reject.txt',
-                                {'branch':merge_request.branch,'merge_group':merge_request.merge_group,'url':merge_request.id})
+                                {
+                                'branch':merge_request.branch,
+                                'merge_group':merge_request.merge_group,
+                                'url':merge_request.id,
+                                'user':request.user.get_full_name
+                            })
                     else:
                         message = render_to_string('mergemaster/email/message.txt',
                                 {

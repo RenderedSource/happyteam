@@ -1,3 +1,2 @@
-
-<h3>Ohhh,the branch {{ branch }} has been rejected by code review or qa</h3>
+<h3>Ohhh, {{ user }} has been rejected the branch <span style="color: red;">{{ branch }}</span> by code review or qa</h3>
 <p><a href="http://team.renderedsource.com/merge/#{{ url }}">View comment</a></p>
