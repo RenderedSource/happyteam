@@ -4,16 +4,16 @@
 
 ## Install instruction
 
-    1. sudo apt-get install python-setuptools
-    2. sudo easy_install pip
-    3. git clone https://github.com/RenderedSource/happyteam.git
-    4. cd happyteam
-    5. sudo pip install -r requirements.txt
-    6. cp website/local_settings.py.example website/local_settings.py
-    7. edit website/local_settings.py
-    8. python manage.py syncdb
-    9. python manage.py migrate
-    10. python manage.py runserver
+    sudo apt-get install python-setuptools
+    sudo easy_install pip
+    git clone https://github.com/RenderedSource/happyteam.git
+    cd happyteam
+    sudo pip install -r requirements.txt
+    cp website/local_settings.py.example website/local_settings.py
+    edit website/local_settings.py
+    python manage.py syncdb
+    python manage.py migrate
+    python manage.py runserver
 
 
 *GarbageCollector* - тулза для определения, кому выпадет жребий выбрасывать мусор в офисе :)
