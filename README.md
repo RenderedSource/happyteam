@@ -1,8 +1,20 @@
 # GarbageCollector
 
-##Need install
-easy_install xmpppy
-easy_install dnspython
+
+
+## Install instruction
+
+    sudo apt-get install python-setuptools
+    sudo easy_install pip
+    git clone https://github.com/RenderedSource/happyteam.git
+    cd happyteam
+    sudo pip install -r requirements.txt
+    cp website/local_settings.example.py website/local_settings.py
+    edit website/local_settings.py
+    python manage.py syncdb
+    python manage.py migrate
+    python manage.py runserver
+
 
 *GarbageCollector* - тулза для определения, кому выпадет жребий выбрасывать мусор в офисе :)
 
