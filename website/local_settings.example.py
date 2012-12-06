@@ -21,3 +21,5 @@ JABBER_PASSWORD = 'password'
 NMAP_XML_URL = 'http://example.com/nmap.xml'
 
 REPO_PATH = '/path/to/git/repo'
+
+EMAIL_HOST_USER = ''

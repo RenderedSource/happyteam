@@ -84,6 +84,12 @@
     float: right;
 }
 
+#merge .merge-commands .code {
+    font-size: .7em;
+    color: #d14;
+    background-color: #F7F7F9;
+}
+
 #diff div.moved {
     font-size: .8em;
     margin-left: 18px;

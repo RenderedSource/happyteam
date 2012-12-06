@@ -17,9 +17,11 @@
                         </div>
                     </div>
                     <div class="span4">
-                        <div class="well">
-                            <p>To merge this branch, run next line in console:</p>
-                            <code>ant -Dfrom={{ merge.branch }} -Dto={{ merge.merge_group.main_branch }} merge</code>
+                        <div class="well merge-commands">
+                            <p>Test:</p>
+                            <pre class="code">php cli.php merge:test {{ merge.branch }} {{ merge.merge_group.main_branch }}</pre>
+                            <p>Merge:</p>
+                            <pre class="code">php cli.php merge {{ merge.branch }} {{ merge.merge_group.main_branch }}</pre>
                         </div>
                         <a href="{% url diff from_branch=merge.branch to_branch=merge.merge_group.main_branch %}"
                            class="btn btn-primary btn-large" target="_blank">
