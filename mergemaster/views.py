@@ -16,7 +16,7 @@ from website.settings import REPO_PATH
 from git import *
 from diff import Visualizer
 
-def merge_list(request):
+def merge_list(request, selectedMergeId):
     include = [int(i) for i in request.GET.getlist('include', [])]
     merge_list = MergeRequest.objects.all()\
         .prefetch_related('merge_group').prefetch_related('developer')\
@@ -31,16 +31,20 @@ def merge_list(request):
     if models.REQUEST_SUSPENDED not in include:
         merge_list = merge_list.exclude(merge_status=models.REQUEST_SUSPENDED)
 
+    selectedMergeId = int(selectedMergeId) if selectedMergeId is not None else 0
+
     if request.is_ajax():
         return render_to_response(
             'mergemaster/list.html', {
-                'merge_list': merge_list
+                'merge_list': merge_list,
+                'selected_merge_id': selectedMergeId
             },
             context_instance=RequestContext(request))
     else:
         return render_to_response(
             'mergemaster/index.html', {
                 'merge_list': merge_list,
+                'selected_merge_id': selectedMergeId,
                 'request_form': MergeRequestForm(),
                 'filter_form': FilterListForm()
             },

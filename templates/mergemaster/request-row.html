@@ -5,7 +5,11 @@
 </tr>
 <tr>
     <td class="action-list" colspan="6">
-        <div id="merge-actions-{{ merge.id }}" class="collapse"></div>
+        <div id="merge-actions-{{ merge.id }}" class="collapse merge-actions{% if merge.id == selected_merge_id  %} in{% endif %}">
+            {% if merge.id == selected_merge_id  %}
+                {% include 'mergemaster/request-subrow.html' %}
+            {% endif %}
+        </div>
     </td>
 </tr>
 
