@@ -16,7 +16,7 @@ from website.settings import REPO_PATH
 from git import *
 from diff import Visualizer
 
-def merge_list(request, selectedMergeId):
+def merge_list(request, selected_merge_id):
     include = [int(i) for i in request.GET.getlist('include', [])]
     merge_list = MergeRequest.objects.all()\
         .prefetch_related('merge_group').prefetch_related('developer')\
@@ -31,23 +31,36 @@ def merge_list(request, selectedMergeId):
     if models.REQUEST_SUSPENDED not in include:
         merge_list = merge_list.exclude(merge_status=models.REQUEST_SUSPENDED)
 
-    selectedMergeId = int(selectedMergeId) if selectedMergeId is not None else 0
+    selected_merge_id = int(selected_merge_id) if selected_merge_id is not None else None
+    template_data = {
+        'merge_list': merge_list,
+        'selected_merge_id': selected_merge_id
+    }
+
+    if selected_merge_id is not None:
+        try:
+            merge_request = MergeRequest.objects.get(id = selected_merge_id)
+            template_data['action_form'] = MergeRequestActionForm(initial={
+                'merge_status': merge_request.merge_status,
+                'cr_status': merge_request.cr_status,
+                'qa_status': merge_request.qa_status
+            })
+        except MergeRequest.DoesNotExist:
+            pass
 
     if request.is_ajax():
         return render_to_response(
-            'mergemaster/list.html', {
-                'merge_list': merge_list,
-                'selected_merge_id': selectedMergeId
-            },
+            'mergemaster/list.html',
+            template_data,
             context_instance=RequestContext(request))
     else:
+        template_data.update({
+            'request_form': MergeRequestForm(),
+            'filter_form': FilterListForm()
+        })
         return render_to_response(
-            'mergemaster/index.html', {
-                'merge_list': merge_list,
-                'selected_merge_id': selectedMergeId,
-                'request_form': MergeRequestForm(),
-                'filter_form': FilterListForm()
-            },
+            'mergemaster/index.html',
+            template_data,
             context_instance=RequestContext(request))
 
 def merge_details(request, merge_id):
