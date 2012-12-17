@@ -1,21 +1,29 @@
-(function($) {
+(function($, undefined) {
     $(function() {
+        function toggleCollapse(mergeId, animated) {
+            var $subrow = $('#merge-actions-' + mergeId);
+            if (!$subrow.hasClass('in')) {
+                animated ? $('.merge-actions.in').collapse('hide') : $('.merge-actions.in').removeClass('in');
+            }
+            animated ? $subrow.collapse('toggle') : $subrow.toggleClass('in');
+        }
 
         function toggleActions($link, animated, callback) {
-            (typeof animated === 'undefined') && (animated = true);
+            (animated === undefined) && (animated = true);
             var mergeId = parseInt($link.data('merge-id'));
             var $subrow = $('#merge-actions-' + mergeId);
+            if ($subrow.hasClass('in')) {
+                history.pushState({}, '', '/merge/');
+            } else {
+                history.pushState({mergeRequestId: mergeId}, '', '/merge/' + mergeId);
+            }
             if ($subrow.children().length == 0) {
                 $link.hide();
                 $link.after('<div class="ajax-loader"></div>');
                 $.get('merge-details/' + mergeId, function(response) {
                     $subrow.html(response);
                     $subrow.find('.btn').button();
-                    if (animated) {
-                        $subrow.collapse('toggle');
-                    } else {
-                        $subrow.toggleClass('in');
-                    }
+                    toggleCollapse(mergeId, animated);
                     callback && callback();
                 })
                 .fail(function() {
@@ -26,18 +34,20 @@
                     $link.show();
                 });
             } else {
-                if (animated) {
-                    $subrow.collapse('toggle');
-                } else {
-                    $subrow.toggleClass('in');
-                }
+                toggleCollapse(mergeId, animated);
             }
         }
 
+        window.addEventListener('popstate', function(e) {
+            if (e.state) {
+                e.state.mergeRequestId
+                    ? toggleCollapse(e.state.mergeRequestId, true)
+                    : $('.merge-actions.in').collapse('hide');
+            }
+        }, false);
+
         // preload ajax loader image
         $('<img/>')[0].src = '/static/img/nyancat.gif';
-
-
       
         // function send filter
         function sendFilter(){
@@ -45,8 +55,8 @@
                 $('#mergelist-container').html(response);
             })
             .fail(function() {
-                   alert('Error');
-                });
+               alert('Error');
+            });
         }
         var $form = $('#form-filter');
         // filter by click checkbox
