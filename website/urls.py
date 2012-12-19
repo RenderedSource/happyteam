@@ -22,4 +22,5 @@ urlpatterns = patterns('',
     url(r'^merge/', include('mergemaster.urls')),
     url(r'^gc/', include('garbagecollector.urls')),
     url(r'^admin/', include(admin.site.urls)),
+    url(r'^buglist/', include('teambuglist.urls')),
 )
