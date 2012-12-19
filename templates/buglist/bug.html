@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% block title %}
+{{ bug.id }} - {{ bug.url }}
+{% endblock %}
+{% block content %}
+   <p>
+    {% if bug.status %}
+        <span class="label label-success">Bug closed</span>
+        {% else %}
+        <span class="label label-important">Bug open please fix</span>
+    {% endif %}
+   </p>
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            <th>Bug url</th>
+            <th>owner</th>
+            <th>requester</th>
+            <th>opened</th>
+            <th>changed</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td><a href="{{ bug.url }}" target="_blank">{{ bug.url }}</a></td>
+            <td><strong>{{ bug.owner.get_full_name }}</strong></td>
+            <td><strong>{{ bug.requester.get_full_name }}</strong></td>
+            <td><strong>{{ bug.date_add|date:'d.m.Y H:s' }}</strong></td>
+            <td><strong>{{ bug.date_change|date:'d.m.Y H:s' }}</strong></td>
+        </tr>
+        </tbody>
+    </table>
+
+    <blockquote>
+        {{ bug.desc }}
+    </blockquote>
+
+
+    {% load thumbnail %}
+    <a href="/{{ bug.image }}"><img src="/{% thumbnail bug.image 800x600 crop %}" class="img-polaroid"/></a>
+{% endblock %}

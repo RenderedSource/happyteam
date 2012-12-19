@@ -150,6 +150,7 @@ INSTALLED_APPS = (
     'django.contrib.markup',
     'knowledge',
     'teammanagment',
+    'teambuglist'
 )
 AUTH_PROFILE_MODULE = 'profileuser.UserProfile'
 MARKDOWN_EDITOR_SKIN = 'simple'
