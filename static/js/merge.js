@@ -7,9 +7,7 @@
             if (match) {
                 var mergeId = parseInt(match[1]);
                 var offset = $('#merge-head-' + mergeId).offset().top - 40;
-                $('html, body').animate({
-                    scrollTop: offset
-                }, 500);
+                $('html, body').scrollTop(offset);
             }
         })();
 
