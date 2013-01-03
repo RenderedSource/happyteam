@@ -1,5 +1,18 @@
 (function($, undefined) {
     $(function() {
+
+        (function() {
+            var regex = /^\/merge\/(\d+)/i;
+            var match = regex.exec(document.location.pathname);
+            if (match) {
+                var mergeId = parseInt(match[1]);
+                var offset = $('#merge-head-' + mergeId).offset().top - 40;
+                $('html, body').animate({
+                    scrollTop: offset
+                }, 500);
+            }
+        })();
+
         function toggleCollapse(mergeId, animated) {
             var $subrow = $('#merge-actions-' + mergeId);
             if (!$subrow.hasClass('in')) {
