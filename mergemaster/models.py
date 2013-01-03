@@ -1,3 +1,4 @@
+import django.core.exceptions
 from django.contrib.auth.models import User
 from django.db import models, transaction
 
@@ -107,6 +108,12 @@ class MergeRequest(models.Model):
             raise
         else:
             transaction.commit()
+
+    def get_last_action_id(self):
+        try:
+            return self.mergerequestaction_set.latest('id').id
+        except django.core.exceptions.ObjectDoesNotExist:
+            return None
 
     def __unicode__(self):
         return '%s - %s' % (self.developer, self.branch)

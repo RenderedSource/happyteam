@@ -22,13 +22,17 @@ class MergeRequestActionForm(forms.ModelForm):
     class Meta:
         model = MergeRequest
         fields = ['merge_status', 'cr_status', 'qa_status']
-        widgets = {
-            'merge_request': forms.HiddenInput(),
-#            'merge_status': widgets.ButtonGroup(),
-#            'cr_status': widgets.ButtonGroup(),
-#            'qa_status': widgets.ButtonGroup()
-        }
         exclude = ['developer', 'branch']
+
+    last_action_id = forms.IntegerField(widget=forms.HiddenInput())
+
+    def clean(self):
+        expected_last_action_id = int(self.cleaned_data['last_action_id'])
+        if expected_last_action_id is not None and self.instance is not None:
+            last_action_id = self.instance.get_last_action_id()
+            if last_action_id is not None and last_action_id != expected_last_action_id:
+                raise forms.ValidationError('Your merge request state is not up-to-date')
+        return super(MergeRequestActionForm, self).clean()
 
 class MergeActionCommentForm(forms.ModelForm):
     class Meta:
@@ -37,7 +41,6 @@ class MergeActionCommentForm(forms.ModelForm):
             'merge_action': forms.HiddenInput()
             }
         exclude = ['user',]
-
 
 class UserModelChoiceField(forms.ModelMultipleChoiceField):
     def label_from_instance(self, obj):

@@ -43,7 +43,8 @@ def merge_list(request, selected_merge_id):
             template_data['action_form'] = MergeRequestActionForm(initial={
                 'merge_status': merge_request.merge_status,
                 'cr_status': merge_request.cr_status,
-                'qa_status': merge_request.qa_status
+                'qa_status': merge_request.qa_status,
+                'last_action_id': merge_request.get_last_action_id()
             })
         except MergeRequest.DoesNotExist:
             pass
@@ -79,7 +80,8 @@ def merge_details(request, merge_id):
             'action_form': MergeRequestActionForm(initial={
                 'merge_status': merge_request.merge_status,
                 'cr_status': merge_request.cr_status,
-                'qa_status': merge_request.qa_status
+                'qa_status': merge_request.qa_status,
+                'last_action_id': merge_request.get_last_action_id()
             }),
             'comment_form': MergeActionCommentForm(),
             'filter_form': FilterListForm()
@@ -157,6 +159,7 @@ def update_merge_request(request, merge_id):
             action.merge_request = merge_request
             action.user = request.user
             action.save()
+            response_data['last_action_id'] = action.id
 
         # reload to update related objects
         merge_request = MergeRequest.objects.all()\
@@ -214,6 +217,7 @@ def update_merge_request(request, merge_id):
                         [user.email])
     else:
         response_data['success'] = False
+        response_data['message'] = simplejson.dumps(action_form.errors)
     return HttpResponse(simplejson.dumps(response_data), mimetype='application/javascript')
 
 @require_http_methods(["POST"])

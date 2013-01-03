@@ -116,8 +116,12 @@
                     $('#action-list-' + response.merge_id).html(response.actions_html);
                     $('#merge-head-' + response.merge_id).html(response.head_html);
                     $('#action-buttons-' + response.merge_id).html(response.buttons_html);
+                    if (response.last_action_id) {
+                        $('#merge-actions-' + response.merge_id + ' .add-action-form input[name="last_action_id"]')
+                            .attr('value', response.last_action_id);
+                    }
                 } else {
-                    console.log(response);
+                    alert(response.message);
                 }
             }, 'json').fail(function() {
                 alert('Error');
