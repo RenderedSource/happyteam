@@ -31,30 +31,19 @@
             if ($subrow.children().length == 0) {
                 $link.hide();
                 $link.after('<div class="ajax-loader"></div>');
-                $.ajax({
-                   url: 'merge-details/' + mergeId,
-                   success: function(response){
-                       $subrow.html(response);
-                       $subrow.find('.btn').button();
-                       toggleCollapse(mergeId, animated);
-                       callback && callback();
-                       $link.next('.ajax-loader').remove();
-                       $link.show();
-                   }
+                $.get('https://team.csid.ws/merge-details/' + mergeId, function(response) {
+                    $subrow.html(response);
+                    $subrow.find('.btn').button();
+                    toggleCollapse(mergeId, animated);
+                    callback && callback();
+                })
+                .fail(function() {
+                    alert('Error');
+                })
+                .complete(function() {
+                    $link.next('.ajax-loader').remove();
+                    $link.show();
                 });
-//                $.get('merge-details/' + mergeId, function(response) {
-//                    $subrow.html(response);
-//                    $subrow.find('.btn').button();
-//                    toggleCollapse(mergeId, animated);
-//                    callback && callback();
-//                })
-//                .fail(function() {
-//                    alert('Error');
-//                })
-//                .complete(function() {
-//                    $link.next('.ajax-loader').remove();
-//                    $link.show();
-//                });
             } else {
                 toggleCollapse(mergeId, animated);
             }
