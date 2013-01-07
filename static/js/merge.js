@@ -31,7 +31,7 @@
             if ($subrow.children().length == 0) {
                 $link.hide();
                 $link.after('<div class="ajax-loader"></div>');
-                $.get('https://team.csid.ws/merge-details/' + mergeId, function(response) {
+                $.get('https://team.csid.ws/merge/merge-details/' + mergeId, function(response) {
                     $subrow.html(response);
                     $subrow.find('.btn').button();
                     toggleCollapse(mergeId, animated);
