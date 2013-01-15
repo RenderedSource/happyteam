@@ -15,6 +15,8 @@ class MergeRequestFormApi(forms.ModelForm):
         for key in self.fields:
             self.fields[key].required = False
 
+def getBranchList():
+    return [(str(x).replace('origin/',''), str(x).replace('origin/','')) for x in Repo(REPO_PATH).remotes.origin.refs]
 
 class MergeRequestForm(forms.ModelForm):
 
@@ -23,7 +25,7 @@ class MergeRequestForm(forms.ModelForm):
         fields = ['branch', 'task_id', 'merge_group']
         widgets = {
             'branch':forms.Select(
-                choices=((str(x).replace('origin/',''), str(x).replace('origin/','')) for x in Repo(REPO_PATH).remotes.origin.refs)
+                choices=getBranchList()
             )
         }
 class MergeRequestActionForm(forms.ModelForm):
