@@ -23,11 +23,12 @@ class MergeRequestForm(forms.ModelForm):
     class Meta:
         model = MergeRequest
         fields = ['branch', 'task_id', 'merge_group']
-        widgets = {
-            'branch':forms.Select(
-                choices=getBranchList()
-            )
-        }
+
+    def __init__(self, *args, **kwargs):
+        super(MergeRequestForm, self).__init__(*args, **kwargs)
+        self.fields['branch'] = forms.ChoiceField(
+            choices=getBranchList() )
+
 class MergeRequestActionForm(forms.ModelForm):
     class Meta:
         model = MergeRequest
