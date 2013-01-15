@@ -22,7 +22,9 @@ class MergeRequestForm(forms.ModelForm):
         model = MergeRequest
         fields = ['branch', 'task_id', 'merge_group']
         widgets = {
-            'branch':forms.Select(choices=((str(x), x) for x in Repo(REPO_PATH).remotes.origin.refs))
+            'branch':forms.Select(
+                choices=((str(x).replace('origin/',''), str(x).replace('origin/','')) for x in Repo(REPO_PATH).remotes.origin.refs)
+            )
         }
 class MergeRequestActionForm(forms.ModelForm):
     class Meta:
