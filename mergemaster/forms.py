@@ -1,8 +1,10 @@
 #-*- coding: utf-8 -*-
 from django import forms
 from django.contrib.auth.models import User
+from git.repo.base import Repo
 import models
 from mergemaster.models import MergeRequest, MergeActionComment
+from website.settings import REPO_PATH
 
 class MergeRequestFormApi(forms.ModelForm):
     class Meta:
@@ -13,11 +15,15 @@ class MergeRequestFormApi(forms.ModelForm):
         for key in self.fields:
             self.fields[key].required = False
 
+
 class MergeRequestForm(forms.ModelForm):
+
     class Meta:
         model = MergeRequest
         fields = ['branch', 'task_id', 'merge_group']
-
+        widgets = {
+            'branch':forms.Select(choices=((str(x), x) for x in Repo(REPO_PATH).remotes.origin.refs))
+        }
 class MergeRequestActionForm(forms.ModelForm):
     class Meta:
         model = MergeRequest
