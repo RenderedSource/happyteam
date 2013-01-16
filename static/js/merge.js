@@ -143,6 +143,15 @@
                 alert('Error');
             });
         });
+        // refresh request list
+        $('#refresh').on('click', function(){
+            sendFilter();
+        });
+        // clear filters
+        $('#clear-filters').on('click', function(){
+            $('#form-filter input[type=checkbox]').attr('checked',null);
+            sendFilter();
+        });
 
         (function() {
             var hash = window.location.hash;
