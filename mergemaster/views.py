@@ -272,7 +272,7 @@ def diff(request, from_branch, to_branch):
 
 def getBranchList(request):
     repo = Repo(REPO_PATH)
-    repo.remotes.origin.fetch()
+#    repo.remotes.origin.fetch()
     list = []
     for x in repo.remotes.origin.refs:
         list.append((str(x).replace('origin/','')))
