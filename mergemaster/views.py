@@ -1,4 +1,5 @@
 # coding: utf-8
+from django.core.serializers import json
 from django.views.decorators.http import require_http_methods
 from django.http import HttpResponse, Http404, HttpResponseNotFound
 from django.shortcuts import render_to_response
@@ -268,3 +269,11 @@ def diff(request, from_branch, to_branch):
             'diffs': diffs
         },
         context_instance=RequestContext(request))
+
+def getBranchList(request):
+    repo = Repo(REPO_PATH)
+    repo.remotes.origin.fetch()
+    list = []
+    for x in repo.remotes.origin.refs:
+        list.append((str(x).replace('origin/','')))
+    return HttpResponse(json.simplejson.dumps(list))

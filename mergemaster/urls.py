@@ -5,6 +5,7 @@ from django.contrib import admin
 admin.autodiscover()
 
 urlpatterns = patterns('',
+    url(r'getbranch/$', 'mergemaster.views.getBranchList', name="get_branch"),
     url(r'^(?P<selected_merge_id>\d+)?$', 'mergemaster.views.merge_list'),
     url(r'merge-details/(?P<merge_id>\d+)/$', 'mergemaster.views.merge_details'),
     url(r'add-merge-request/$', 'mergemaster.views.add_merge_request'),

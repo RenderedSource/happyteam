@@ -152,6 +152,26 @@
             $('#form-filter input[type=checkbox]').attr('checked',null);
             sendFilter();
         });
+        //git fetch and refresh branch
+        var branchList = $('#id_branch');
+        var button =  $('#fetch');
+
+        var normal_text = button.html();
+        button.on('click', function(){
+            button.html('Loading...').attr('disabled','disabled');
+            branchList.find('option').remove();
+
+            $.ajax({
+                url: '/merge/getbranch/',
+                dataType: 'json',
+                success: function(data){
+                    $.each(data, function(index, value){
+                        branchList.append('<option value="' + value + '">' + value + '</option>')
+                    });
+                    button.html(normal_text).attr('disabled', false);
+                }
+            })
+        });
 
         (function() {
             var hash = window.location.hash;

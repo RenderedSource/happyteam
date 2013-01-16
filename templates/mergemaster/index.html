@@ -10,6 +10,8 @@
             <div class="span6 well">
                 {% if request_form %}
                     <legend>Add new merge request</legend>
+                    <button class="btn" id="fetch" data-loading-text="Loading..."><span class="icon-refresh"></span> Refresh Branch</button>
+
                     <form action="add-merge-request/" method="post" class="form-horizontal">
                         {% load bootstrap %}
                         {{ request_form|bootstrap }}
@@ -63,8 +65,8 @@
                     </div>
                 </form>
                 <div class="btn-group">
-                    <button class="btn" id="refresh">Refresh <span class="icon-refresh"></span></button>
-                    <button class="btn" id="clear-filters">Clear filters <span class="icon-filter"></span></button>
+                    <button class="btn" id="refresh"><span class="icon-refresh"></span> Refresh</button>
+                    <button class="btn" id="clear-filters"><span class="icon-filter"></span> Clear filters</button>
                 </div>
             </div>
         </div>
