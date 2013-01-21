@@ -9,9 +9,9 @@ Bug list
 {% endblock %}
 {% block content %}
     <div class="btn-group">
-        <button class="btn nav-buttons" id="my-work" data-toggle="button"><span class="icon-user"></span> I requester</button>
-        <button class="btn nav-buttons" id="my-bugs" data-toggle="button"><span class="icon-user"></span> I owner</button>
-        <button class="btn nav-buttons" id="resolved" data-toggle="button"><span class="icon-list-alt"></span> Show resolved bugs</button>
+        <button class="btn nav-buttons" data-user-id="{{ user.id }}" id="my-work" data-toggle="button"><span class="icon-user"></span> I requester</button>
+        <button class="btn nav-buttons" data-user-id="{{ user.id }}" id="my-bugs" data-toggle="button"><span class="icon-user"></span> I owner</button>
+        <button class="btn nav-buttons" data-user-id="{{ user.id }}" id="resolved" data-toggle="button"><span class="icon-list-alt"></span> Show resolved bugs</button>
     </div>
     <table class="table table-striped">
        <thead>
