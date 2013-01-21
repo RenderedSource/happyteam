@@ -3,7 +3,16 @@
 {% block title %}
 Bug list
 {% endblock %}
+{% block script %}
+    <script src="/static/js/buglist.js"></script>
+
+{% endblock %}
 {% block content %}
+    <div class="btn-group" id="js-data" data-user-id="{{ user.id }}">
+        <button class="btn nav-buttons btn-primary"  id="my-work" data-toggle="button"><span class="icon-user icon-white"></span> My work</button>
+        <button class="btn nav-buttons"  id="my-bugs" data-toggle="button"><span class="icon-user"></span> I owner</button>
+        <button class="btn nav-buttons"  id="resolved" data-toggle="button"><span class="icon-list-alt"></span> Show resolved bugs</button>
+    </div>
     <table class="table table-striped">
        <thead>
        <tr>
@@ -17,25 +26,8 @@ Bug list
            <th>requester</th>
        </tr>
        </thead>
-    <tbody>
-    {% for bug in bug_list %}
-        <tr>
-            <td><a href="{{ bug.get_absolute_url }}">{{ bug.id }}</a></td>
-            <td>{{ bug.date_add|date:'d.m.Y H:s' }} / {{ bug.date_change|date:'d.m.Y H:s' }}</td>
-            <td>
-            {% if bug.status %}
-                <span class="label label-success">Close</span>
-            {% else %}
-                <span class="label label-important">Open</span>
-            {% endif %}
-            </td>
-            <td>{{ bug.priority }}</td>
-            <td><a href="{{ bug.url }}" target="_blank">{{ bug.url }}</a></td>
-            <td><a href="{{ bug.get_absolute_url }}">{{ bug.desc }}</a></td>
-            <td>{{ bug.owner.get_full_name }}</td>
-            <td>{{ bug.requester.get_full_name }}</td>
-        </tr>
-    {% endfor %}
+    <tbody id="bug-table">
+        {% include 'buglist/table-content.html' %}
 
     </tbody>
     </table>
