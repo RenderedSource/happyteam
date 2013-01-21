@@ -1,5 +1,7 @@
 $().ready(function () {
-    var user_id = $('#js-data').data('user-id');
+    var jsData = $('#js-data');
+    var user_id = jsData.data('user-id');
+    var csrf = jsData.data('csrf');
     var table = $('#bug-table');
     var data = {'window':false};
 
@@ -56,4 +58,30 @@ $().ready(function () {
             }
         })
     });
+    $('#alert-message .close').on('click',function(){
+        $('#alert-message').hide();
+    });
+    $('.owner').live('change', function(){
+        var self = $(this);
+        $.ajax({
+            'type':'post',
+            'url':'/buglist/action/',
+            'data': {
+                'bug': self.data('bug-id'),
+                'user': self.val(),
+                'csrfmiddlewaretoken':csrf
+            },
+            success: function(data){
+                var alert = $('#alert-message');
+                if (data == 'success'){
+                    alert.addClass('alert-success').show();
+                    alert.find('.content').html('Save success');
+                } else {
+                    alert.addClass('alert-error').show();
+                    alert.find('.content').html(data);
+                }
+            }
+        })
+    })
+
 });

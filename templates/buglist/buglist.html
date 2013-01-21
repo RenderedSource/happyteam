@@ -8,7 +8,11 @@ Bug list
 
 {% endblock %}
 {% block content %}
-    <div class="btn-group" id="js-data" data-user-id="{{ user.id }}">
+    <div class="alert" id="alert-message" style="display: none;">
+        <button type="button" class="close">&times;</button>
+        <span class="content"></span>
+    </div>
+    <div class="btn-group" id="js-data" data-user-id="{{ user.id }}" data-csrf='{{ csrf_token }}'>
         <button class="btn nav-buttons btn-primary"  id="my-work" data-toggle="button"><span class="icon-user icon-white"></span> My work</button>
         <button class="btn nav-buttons"  id="my-bugs" data-toggle="button"><span class="icon-user"></span> I owner</button>
         <button class="btn nav-buttons"  id="resolved" data-toggle="button"><span class="icon-list-alt"></span> Show resolved bugs</button>

@@ -10,9 +10,23 @@
             {% endif %}
         </td>
         <td>{{ bug.priority }}</td>
-        <td><a href="{{ bug.url }}" target="_blank">{{ bug.url }}</a></td>
+        <td><a href="{{ bug.get_absolute_url }}" target="_blank">{{ bug.url }}</a></td>
         <td><a href="{{ bug.get_absolute_url }}">{{ bug.desc }}</a></td>
-        <td>{{ bug.owner.get_full_name }}</td>
-        <td>{{ bug.requester.get_full_name }}</td>
+        <td>
+            {% if user.id == bug.requester.id or user.is_superuser %}
+                <select class="owner" data-bug-id="{{ bug.id }}">
+                {% for user in user_list %}
+                    <option value="{{ user.id }}"
+                            {% if user.id == bug.owner.id %}selected="selected" {% endif %}
+                            >{{ user.get_full_name }}</option>
+                {% endfor %}
+                </select>
+                {% else %}
+                {{ bug.owner.get_full_name }}
+            {% endif %}
+        </td>
+        <td>
+            {{ bug.requester.get_full_name }}
+        </td>
     </tr>
 {% endfor %}
