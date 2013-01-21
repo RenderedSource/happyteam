@@ -37,8 +37,7 @@
     </blockquote>
 
     {% if bug.image %}
-        {% load thumbnail %}
-        <a href="/{{ bug.image }}"><img src="/{% thumbnail bug.image 800x600 crop %}" class="img-polaroid"/></a>
+        <a href="/media/{{ bug.image }}"><img src="/media/{{ bug.image }}" class="img-polaroid"/></a>
     {% endif %}
 
 {% endblock %}
