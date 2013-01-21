@@ -16,7 +16,13 @@ def bug_list(request):
             bug_list = bug_list.filter(status = False)
     except :
         bug_list = bug_list.filter(status = False)
-    return render_to_response('buglist/buglist.html', {'bug_list': bug_list},
+
+    try:
+        window = request.GET['window']
+        template = 'buglist/table-content.html'
+    except:
+        template = 'buglist/buglist.html'
+    return render_to_response(template, {'bug_list': bug_list},
         context_instance=RequestContext(request))
 
 def bug(request, pid):
