@@ -167,3 +167,12 @@
     float: left;
     width: 50%;
   }
+
+.leftpanel{
+    position: relative;
+}
+
+#fetch{
+    position: absolute;
+    right: 150px;
+}
