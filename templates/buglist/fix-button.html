@@ -1,21 +1,16 @@
 {% if bug.status %}
     <span class="label label-success">Close</span>
 {% else %}
-    {% if user.id == bug.owner.id %}
-        {% if bug.check %}
-            {% if user.id == bug.requester.id %}
-                <button class="btn approve btn-warning" data-bug-id="{{ bug.id }}"><i class="icon-ok"></i> Approve</button>
-            {% else %}
-                <button class="btn fixed btn-success" data-bug-id="{{ bug.id }}" disabled="disabled">In progress</button>
-            {% endif %}
+    {% if bug.check %}
+        {% if user.id == bug.requester.id %}
+            <button class="btn approve btn-warning" data-bug-id="{{ bug.id }}"><i class="icon-ok"></i> Approve</button>
         {% else %}
-            <button class="btn fixed btn-success" data-bug-id="{{ bug.id }}"> <i class="icon-check icon-white"></i> Fixed</button>
+            <button class="btn fixed btn-success" data-bug-id="{{ bug.id }}" disabled="disabled">In progress</button>
         {% endif %}
     {% else %}
-        {% if bug.status %}
-            <span class="label label-success">Close</span>
-        {% else %}
-            <span class="label label-important">Open</span>
-        {% endif %}
+        <button class="btn fixed btn-success" data-bug-id="{{ bug.id }}"><i class="icon-check icon-white"></i> Fixed
+        </button>
     {% endif %}
+{% else %}
+    <span class="label label-success">Close</span>
 {% endif %}
