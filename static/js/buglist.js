@@ -69,7 +69,8 @@ $().ready(function () {
             'data': {
                 'bug': self.data('bug-id'),
                 'user': self.val(),
-                'csrfmiddlewaretoken':csrf
+                'csrfmiddlewaretoken':csrf,
+                'action':'change-owner'
             },
             success: function(data){
                 var alert = $('#alert-message');
@@ -82,6 +83,58 @@ $().ready(function () {
                 }
             }
         })
+    });
+    $('.fixed').live('click', function(){
+        var self = $(this);
+        self.html('Wait');
+        self.attr('disabled','disabled');
+        $.ajax({
+            'type':'post',
+            'url':'/buglist/action/',
+            'data': {
+                'bug': self.data('bug-id'),
+                'csrfmiddlewaretoken':csrf,
+                'action':'fixForm'
+            },
+            success: function(data){
+                var alert = $('#alert-message');
+                if (data == 'success'){
+                    alert.addClass('alert-success').show();
+                    alert.find('.content').html('Save success');
+                    self.html('In progress');
+                } else {
+                    self.attr('disabled','');
+                    alert.addClass('alert-error').show();
+                    alert.find('.content').html(data);
+                }
+            }
+        })
+    });
+    $('.approve').live('click', function(){
+        var self = $(this);
+        self.html('Wait');
+        self.attr('disabled','disabled');
+        $.ajax({
+            'type':'post',
+            'url':'/buglist/action/',
+            'data': {
+                'bug': self.data('bug-id'),
+                'csrfmiddlewaretoken':csrf,
+                'action':'approve'
+            },
+            success: function(data){
+                var alert = $('#alert-message');
+                if (data == 'success'){
+                    alert.addClass('alert-success').show();
+                    alert.find('.content').html('Fixed');
+                    self.parent().append('<span class="label label-success">Close</span>');
+                    self.remove();
+                } else {
+                    self.attr('disabled','');
+                    alert.addClass('alert-error').show();
+                    alert.find('.content').html(data);
+                }
+            }
+        })
     })
-
 });

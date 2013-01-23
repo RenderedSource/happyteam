@@ -3,14 +3,9 @@
         <td><a href="{{ bug.get_absolute_url }}">{{ bug.id }}</a></td>
         <td>{{ bug.date_add|date:'d.m.Y H:s' }} / {{ bug.date_change|date:'d.m.Y H:s' }}</td>
         <td>
-            {% if bug.status %}
-                <span class="label label-success">Close</span>
-            {% else %}
-                <span class="label label-important">Open</span>
-            {% endif %}
+            {% include 'buglist/fix-button.html' %}
         </td>
         <td>{{ bug.priority }}</td>
-        <td><a href="{{ bug.get_absolute_url }}" target="_blank">{{ bug.url }}</a></td>
         <td><a href="{{ bug.get_absolute_url }}">{{ bug.desc }}</a></td>
         <td>
             {% if user.id == bug.requester.id or user.is_superuser %}

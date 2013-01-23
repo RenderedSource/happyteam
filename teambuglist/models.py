@@ -6,6 +6,7 @@ from easy_thumbnails.fields import ThumbnailerImageField
 class Bug(models.Model):
     url = models.CharField(max_length=60)
     status = models.BooleanField(default=False, help_text=u'Bug is fixed?')
+    check = models.BooleanField(default=False, help_text=u'Check')
     priority = models.IntegerField(default=0, help_text='0 - 5 high priority')
     desc = models.TextField()
     image = ThumbnailerImageField(upload_to='static/bugs', blank=True)

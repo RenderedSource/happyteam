@@ -3,13 +3,12 @@
 {% block title %}
 {{ bug.id }} - {{ bug.url }}
 {% endblock %}
+{% block script %}
+    <script src="/static/js/buglist.js"></script>
+{% endblock %}
 {% block content %}
    <p>
-    {% if bug.status %}
-        <span class="label label-success">Bug closed</span>
-        {% else %}
-        <span class="label label-important">Bug open please fix</span>
-    {% endif %}
+       {% include 'buglist/fix-button.html' %}
    </p>
     <table class="table table-bordered">
         <thead>

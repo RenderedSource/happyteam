@@ -8,3 +8,6 @@ __author__ = 'lehabaev'
 class actionForm(forms.Form):
     bug = forms.ModelChoiceField(queryset=Bug.objects.all())
     user = forms.ModelChoiceField(queryset=User.objects.all())
+
+class fixForm(forms.Form):
+    bug = forms.ModelChoiceField(queryset=Bug.objects.all())
