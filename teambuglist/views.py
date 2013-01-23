@@ -4,7 +4,7 @@ from django.core.urlresolvers import reverse
 from django.http import HttpResponse
 from django.shortcuts import render_to_response, get_list_or_404, get_object_or_404
 from django.template import RequestContext
-from mailer import send_mail
+from mailer import send_mail, send_html_mail
 from teambuglist.forms import actionForm, fixForm
 from teambuglist.models import Bug
 from website import settings
@@ -53,9 +53,10 @@ def bug_action(request):
                 bug = form.cleaned_data['bug']
                 bug.check = True
 #                send email to requester
-                send_mail(
-                    '[RS]Please check bug','Please check this bug because you are owner. <br/><a href="%s">Bug link</a>'
-                                           %(str(reverse('bug',args=[bug.id]))),
+                message =  '[RS]Please check bug','Please check this bug because you are owner. <br/><a href="http://team.csid.ws%s">Bug link</a>'%(str(reverse('bug',args=[bug.id])))
+                send_html_mail(
+                    message,
+                    message,
                     settings.EMAIL_HOST_USER,
                     [bug.requester.email]
                 )

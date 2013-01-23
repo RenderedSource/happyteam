@@ -4,6 +4,6 @@ from teambuglist.models import Bug
 
 class BugAdmin(admin.ModelAdmin):
     list_filter = ('owner', 'requester','status','check')
-    list_display = ('desc','date_add','owner','check','status')
+    list_display = ('url','date_add','owner','check','status')
 admin.site.register(Bug, BugAdmin)
   
