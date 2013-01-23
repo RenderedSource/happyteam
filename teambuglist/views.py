@@ -53,8 +53,9 @@ def bug_action(request):
                 bug = form.cleaned_data['bug']
                 bug.check = True
 #                send email to requester
-                message =  '[RS]Please check bug','Please check this bug because you are owner. <br/><a href="http://team.csid.ws%s">Bug link</a>'%(str(reverse('bug',args=[bug.id])))
+                message =  'Please check this bug because you are owner. <br/><a href="http://team.csid.ws%s">Bug link</a>'%(str(reverse('bug',args=[bug.id])))
                 send_html_mail(
+                    '[RS]Please check bug',
                     message,
                     message,
                     settings.EMAIL_HOST_USER,
