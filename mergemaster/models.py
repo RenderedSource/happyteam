@@ -1,4 +1,5 @@
 from django.contrib.auth.models import User
+from django.core.urlresolvers import reverse
 from django.db import models, transaction
 
 class MergeMaster(models.Model):
@@ -87,6 +88,9 @@ class MergeRequest(models.Model):
 
     def qa_status_label_class(self):
         return STATUS_LABEL_COLORS.get(self.qa_status, '')
+
+    def get_url(self):
+        return reverse('get_merge',args=[self.id])
 
     @transaction.commit_manually
     def save(self, *args, **kwargs):

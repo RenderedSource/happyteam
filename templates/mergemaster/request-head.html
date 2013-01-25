@@ -2,7 +2,7 @@
 
 {% load gravatar %}
 
-<td class="span1">{{ merge.id }}</td>
+<td class="span1"><a href="#" class="copy" rel="http://team.csid.ws{{ merge.get_url }}"><i class="icon-share"></i></a> {{ merge.id }}</td>
 <td class="span3 merge-status">
     <span class="label {{ merge.merge_status_label_class }}">{{ merge.merge_status_value }}</span>
     {% if merge.show_cr_qa_labels %}

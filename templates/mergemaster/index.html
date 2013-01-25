@@ -3,7 +3,27 @@
 {% block title %}
     Merge list
 {% endblock %}
+{% block footer %}
+    <script type="text/javascript" src="/static/zeroclipboard/ZeroClipboard.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('#copied').hide();
+            $('.copy').live('mouseover',function() {
+                var txt = $(this).attr("rel");
+                clip = new ZeroClipboard.Client();
+                ZeroClipboard.setMoviePath( '/static/zeroclipboard/ZeroClipboard10.swf' );
 
+                clip.setHandCursor(true);
+                clip.setText(txt);
+                clip.glue(this);
+                clip.addEventListener('complete', function(client, text) {
+                    $('#copied').text(text + ' copied to the clipboard!').fadeIn(2000).fadeOut(2000);
+                });
+                return false
+            });
+        });
+    </script>
+{% endblock %}
 {% block content %}
     <div id="merge" class="container-fluid" xmlns="http://www.w3.org/1999/html">
         <div class="row-fluid">
@@ -71,6 +91,8 @@
             </div>
         </div>
         <div class="row-fluid">
+            <div class="alert alert-success" id="copied">
+            </div>
             <div class="span12" id="mergelist-container">
                 {% include 'mergemaster/list.html' %}
             </div>
