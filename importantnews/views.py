@@ -10,7 +10,7 @@ def unreadNews(request):
     Return latest unread news.
     """
     read_news = UserRead.objects.filter(user=request.user).values_list('news__id', flat=True)
-    news_list = News.objects.all().exclude(id__in=read_news).order_by('-required', '-date')
+    news_list = News.objects.all().exclude(id__in=read_news).order_by('-date')
     return render_to_response('importantnews/unread-news.html', {'news_list': news_list}, RequestContext(request))
 
 
@@ -18,7 +18,7 @@ def archiveNews(request):
     """
     Return archive news.
     """
-    news_list = News.objects.all().order_by('-required', '-date')
+    news_list = News.objects.all().order_by('-date')
     return render_to_response('importantnews/unread-news.html', {'news_list': news_list}, RequestContext(request))
 
 
