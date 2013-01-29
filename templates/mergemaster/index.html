@@ -3,27 +3,10 @@
 {% block title %}
     Merge list
 {% endblock %}
-{% block footer %}
-    <script type="text/javascript" src="/static/zeroclipboard/ZeroClipboard.js"></script>
-    <script type="text/javascript">
-        $(document).ready(function() {
-            $('#copied').hide();
-            $('.copy').live('mouseover',function() {
-                var txt = $(this).attr("rel");
-                clip = new ZeroClipboard.Client();
-                ZeroClipboard.setMoviePath( '/static/zeroclipboard/ZeroClipboard10.swf' );
 
-                clip.setHandCursor(true);
-                clip.setText(txt);
-                clip.glue(this);
-                clip.addEventListener('complete', function(client, text) {
-                    $('#copied').text(text + ' copied to the clipboard!').fadeIn(2000).fadeOut(2000);
-                });
-                return false
-            });
-        });
-    </script>
-{% endblock %}
+
+
+
 {% block content %}
     <div id="merge" class="container-fluid" xmlns="http://www.w3.org/1999/html">
         <div class="row-fluid">
@@ -102,8 +85,36 @@
 
 {% block head %}
     <link href="/static/css/merge.css" rel="stylesheet">
+    <link href="/static/django_markdown/skins/simple/style.css" type="text/css" media="screen" rel="stylesheet" />
+    <link href="/static/django_markdown/markdown.css" type="text/css" media="screen" rel="stylesheet" />
 {% endblock %}
 
 {% block script %}
+    <script type="text/javascript" src="/static/django_markdown/jquery.markitup.js"></script>
+    <script type="text/javascript" src="/static/django_markdown/markdown.js"></script>
+{% endblock %}
+
+{% block footer %}
     <script src="/static/js/merge.js"></script>
+
+    <script type="text/javascript" src="/static/zeroclipboard/ZeroClipboard.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('#copied').hide();
+            $('.copy').live('mouseover',function() {
+                var txt = $(this).attr("rel");
+                clip = new ZeroClipboard.Client();
+                ZeroClipboard.setMoviePath( '/static/zeroclipboard/ZeroClipboard10.swf' );
+
+                clip.setHandCursor(true);
+                clip.setText(txt);
+                clip.glue(this);
+                clip.addEventListener('complete', function(client, text) {
+                    $('#copied').text(text + ' copied to the clipboard!').fadeIn(2000).fadeOut(2000);
+                });
+                return false
+            });
+        });
+    </script>
+
 {% endblock %}

@@ -24,11 +24,14 @@
         <div class="comment-content">
             <form method="post" action="add-action-comment/" class="comment-form">
                 {% csrf_token %}
-                <textarea name="content" class="comment-area"></textarea>
+                <textarea name="content" class="comment-area" id="id_text_{{ action.id }}"></textarea>
                 <input type="hidden" name="merge_action" value="{{ action.id }}" />
                 <input type="button" class="btn btn-primary btn-post-comment" value="Post comment" />
             </form>
         </div>
     </div>
+    <script type="text/javascript">
+        miu.init('id_text_{{ action.id }}', {"previewParserPath": "/markdown/preview/"})
+    </script>
 {%  endif %}
 </div>
