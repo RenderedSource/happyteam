@@ -176,3 +176,10 @@
     position: absolute;
     right: 150px;
 }
+
+#copied{
+    position: fixed;
+    top: 50%;
+    left: 30%;
+    z-index: 1000;
+}

@@ -100,9 +100,16 @@
     <script type="text/javascript" src="/static/zeroclipboard/ZeroClipboard.js"></script>
     <script type="text/javascript">
         $(document).ready(function() {
+
             $('#copied').hide();
             $('.copy').live('mouseover',function() {
+                var self = $(this);
+                if (self.hasClass('flash')){
+                    return false;
+                }
                 var txt = $(this).attr("rel");
+
+                self.addClass('flash');
                 clip = new ZeroClipboard.Client();
                 ZeroClipboard.setMoviePath( '/static/zeroclipboard/ZeroClipboard10.swf' );
 
@@ -110,7 +117,10 @@
                 clip.setText(txt);
                 clip.glue(this);
                 clip.addEventListener('complete', function(client, text) {
+                    self.removeClass('flash');
+
                     $('#copied').text(text + ' copied to the clipboard!').fadeIn(2000).fadeOut(2000);
+                    clip.destroy();
                 });
                 return false
             });
