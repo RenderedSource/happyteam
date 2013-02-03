@@ -46,6 +46,10 @@ def merge_list(request, selected_merge_id):
                 'cr_status': merge_request.cr_status,
                 'qa_status': merge_request.qa_status
             })
+            user_list = MergeRequestAction.objects.filter(merge_request = merge_request)\
+                .exclude(user = request.user).distinct()
+            user_list = user_list.values_list('user__id', flat=True)
+            template_data['send_form'] = SendFrom(initial={'user_send':user_list})
         except MergeRequest.DoesNotExist:
             pass
 
