@@ -2,7 +2,7 @@
 from django.core.serializers import json
 from django.views.decorators.http import require_http_methods
 from django.http import HttpResponse, Http404, HttpResponseNotFound
-from django.shortcuts import render_to_response
+from django.shortcuts import render_to_response, redirect
 from django.template.context import RequestContext
 from django.template.loader import render_to_string
 import simplejson
@@ -18,6 +18,23 @@ from git import *
 from diff import Visualizer
 
 def merge_list(request, selected_merge_id):
+    template_data = {}
+    selected_merge_id = int(selected_merge_id) if selected_merge_id is not None else None
+    if selected_merge_id is not None:
+        try:
+            merge_request = MergeRequest.objects.get(id = selected_merge_id)
+            template_data['action_form'] = MergeRequestActionForm(initial={
+                'merge_status': merge_request.merge_status,
+                'cr_status': merge_request.cr_status,
+                'qa_status': merge_request.qa_status
+            })
+            user_list = MergeRequestAction.objects.filter(merge_request = merge_request)\
+            .exclude(user = request.user).distinct()
+            user_list = user_list.values_list('user__id', flat=True)
+            template_data['send_form'] = SendFrom(initial={'user_send':user_list})
+        except MergeRequest.DoesNotExist:
+            return redirect('mergemaster.views.merge_list')
+
     include = [int(i) for i in request.GET.getlist('include', [])]
     merge_list = MergeRequest.objects.all()\
         .prefetch_related('merge_group').prefetch_related('developer')\
@@ -32,26 +49,8 @@ def merge_list(request, selected_merge_id):
     if models.REQUEST_SUSPENDED not in include:
         merge_list = merge_list.exclude(merge_status=models.REQUEST_SUSPENDED)
 
-    selected_merge_id = int(selected_merge_id) if selected_merge_id is not None else None
-    template_data = {
-        'merge_list': merge_list,
-        'selected_merge_id': selected_merge_id
-    }
-
-    if selected_merge_id is not None:
-        try:
-            merge_request = MergeRequest.objects.get(id = selected_merge_id)
-            template_data['action_form'] = MergeRequestActionForm(initial={
-                'merge_status': merge_request.merge_status,
-                'cr_status': merge_request.cr_status,
-                'qa_status': merge_request.qa_status
-            })
-            user_list = MergeRequestAction.objects.filter(merge_request = merge_request)\
-                .exclude(user = request.user).distinct()
-            user_list = user_list.values_list('user__id', flat=True)
-            template_data['send_form'] = SendFrom(initial={'user_send':user_list})
-        except MergeRequest.DoesNotExist:
-            pass
+    template_data['merge_list'] = merge_list
+    template_data['selected_merge_id'] = selected_merge_id
 
     if request.is_ajax():
         return render_to_response(
