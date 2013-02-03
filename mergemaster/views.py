@@ -10,7 +10,7 @@ from mailer import send_html_mail
 from mergemaster.forms import MergeRequestForm, MergeRequestActionForm, MergeActionCommentForm, FilterListForm, SendFrom
 from mergemaster.models import MergeRequest, MergeRequestAction
 from django.db import transaction
-from django.db.models import Count
+from django.db.models import Count, Q
 import models
 from website import settings
 from website.settings import REPO_PATH
@@ -29,7 +29,7 @@ def merge_list(request, selected_merge_id):
                 'qa_status': merge_request.qa_status
             })
             user_list = MergeRequestAction.objects.filter(merge_request = merge_request)\
-            .exclude(user = request.user).distinct()
+                .exclude(user = request.user).distinct()
             user_list = user_list.values_list('user__id', flat=True)
             template_data['send_form'] = SendFrom(initial={'user_send':user_list})
         except MergeRequest.DoesNotExist:
@@ -40,14 +40,19 @@ def merge_list(request, selected_merge_id):
         .prefetch_related('merge_group').prefetch_related('developer')\
         .annotate(Count('mergerequestaction'))\
         .order_by('-id')
+    q = Q()
     if request.GET.getlist('user',[]):
-        merge_list = merge_list.filter(developer__in = request.GET.getlist('user',[]))
+        q.add(Q(developer__in = request.GET.getlist('user',[])), Q.AND)
     if request.GET.getlist('merge_group',[]):
-        merge_list = merge_list.filter(merge_group__in = request.GET.getlist('merge_group',[]))
+        q.add(Q(merge_group__in = request.GET.getlist('merge_group',[])), Q.AND)
     if models.REQUEST_MERGED not in include:
-        merge_list = merge_list.exclude(merge_status=models.REQUEST_MERGED)
+        q.add(~Q(merge_status=models.REQUEST_MERGED), Q.AND)
     if models.REQUEST_SUSPENDED not in include:
-        merge_list = merge_list.exclude(merge_status=models.REQUEST_SUSPENDED)
+        q.add(~Q(merge_status=models.REQUEST_SUSPENDED), Q.AND)
+    if selected_merge_id is not None:
+        q = Q(q | Q(id=selected_merge_id))
+
+    merge_list = merge_list.filter(q)
 
     template_data['merge_list'] = merge_list
     template_data['selected_merge_id'] = selected_merge_id
