@@ -2,7 +2,7 @@
 from django.core.serializers import json
 from django.views.decorators.http import require_http_methods
 from django.http import HttpResponse, Http404, HttpResponseNotFound
-from django.shortcuts import render_to_response
+from django.shortcuts import render_to_response, redirect
 from django.template.context import RequestContext
 from django.template.loader import render_to_string
 import simplejson
@@ -10,7 +10,7 @@ from mailer import send_html_mail
 from mergemaster.forms import MergeRequestForm, MergeRequestActionForm, MergeActionCommentForm, FilterListForm, SendFrom
 from mergemaster.models import MergeRequest, MergeRequestAction
 from django.db import transaction
-from django.db.models import Count
+from django.db.models import Count, Q
 import models
 from website import settings
 from website.settings import REPO_PATH
@@ -18,26 +18,8 @@ from git import *
 from diff import Visualizer
 
 def merge_list(request, selected_merge_id):
-    include = [int(i) for i in request.GET.getlist('include', [])]
-    merge_list = MergeRequest.objects.all()\
-        .prefetch_related('merge_group').prefetch_related('developer')\
-        .annotate(Count('mergerequestaction'))\
-        .order_by('-id')
-    if request.GET.getlist('user',[]):
-        merge_list = merge_list.filter(developer__in = request.GET.getlist('user',[]))
-    if request.GET.getlist('merge_group',[]):
-        merge_list = merge_list.filter(merge_group__in = request.GET.getlist('merge_group',[]))
-    if models.REQUEST_MERGED not in include:
-        merge_list = merge_list.exclude(merge_status=models.REQUEST_MERGED)
-    if models.REQUEST_SUSPENDED not in include:
-        merge_list = merge_list.exclude(merge_status=models.REQUEST_SUSPENDED)
-
+    template_data = {}
     selected_merge_id = int(selected_merge_id) if selected_merge_id is not None else None
-    template_data = {
-        'merge_list': merge_list,
-        'selected_merge_id': selected_merge_id
-    }
-
     if selected_merge_id is not None:
         try:
             merge_request = MergeRequest.objects.get(id = selected_merge_id)
@@ -46,8 +28,34 @@ def merge_list(request, selected_merge_id):
                 'cr_status': merge_request.cr_status,
                 'qa_status': merge_request.qa_status
             })
+            user_list = MergeRequestAction.objects.filter(merge_request = merge_request)\
+                .exclude(user = request.user).distinct()
+            user_list = user_list.values_list('user__id', flat=True)
+            template_data['send_form'] = SendFrom(initial={'user_send':user_list})
         except MergeRequest.DoesNotExist:
-            pass
+            return redirect('mergemaster.views.merge_list')
+
+    include = [int(i) for i in request.GET.getlist('include', [])]
+    merge_list = MergeRequest.objects.all()\
+        .prefetch_related('merge_group').prefetch_related('developer')\
+        .annotate(Count('mergerequestaction'))\
+        .order_by('-id')
+    q = Q()
+    if request.GET.getlist('user',[]):
+        q.add(Q(developer__in = request.GET.getlist('user',[])), Q.AND)
+    if request.GET.getlist('merge_group',[]):
+        q.add(Q(merge_group__in = request.GET.getlist('merge_group',[])), Q.AND)
+    if models.REQUEST_MERGED not in include:
+        q.add(~Q(merge_status=models.REQUEST_MERGED), Q.AND)
+    if models.REQUEST_SUSPENDED not in include:
+        q.add(~Q(merge_status=models.REQUEST_SUSPENDED), Q.AND)
+    if selected_merge_id is not None:
+        q = Q(q | Q(id=selected_merge_id))
+
+    merge_list = merge_list.filter(q)
+
+    template_data['merge_list'] = merge_list
+    template_data['selected_merge_id'] = selected_merge_id
 
     if request.is_ajax():
         return render_to_response(
