@@ -1,6 +1,4 @@
-# GarbageCollector
-
-
+# GarbageCollector [![Build Status](https://travis-ci.org/RenderedSource/happyteam.png)](https://travis-ci.org/RenderedSource/happyteam)
 
 ## Install instruction
 
@@ -15,20 +13,9 @@
     python manage.py migrate
     python manage.py runserver
 
+## License
 
-*GarbageCollector* - тулза для определения, кому выпадет жребий выбрасывать мусор в офисе :)
-
-Работает так:
-
-1. Вначале через админку в базу вносятся данные о тех, кто работает в офисе: имя, фамилия и список MAC-адресов всех принадлежащих этому человеку сетевых устройств (ноутбуки, телефоны, планшеты и т.д.).
-
-1. При запуске тулза определяет, какие устройства сейчас доступны в сети (с помощью nmap), получает их MAC-адреса и таким образом определяет, кто сейчас присутствует в офисе.
-
-1. Далее случайным образом выбирается, кто будет выносить мусор, причем только среди тех, кто сейчас присутствует в офисе (чьи устройства активны)
-
-###Лицензия
-
-Copyright (c) 2012, Ilya Stepanov
+Copyright (c) 2012, Ilya Stepanov, Alex Baev
 
 All rights reserved.
 
