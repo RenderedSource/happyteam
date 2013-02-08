@@ -1,6 +1,6 @@
-# GarbageCollector [![Build Status](https://travis-ci.org/RenderedSource/happyteam.png)](https://travis-ci.org/RenderedSource/happyteam)
+# HappyTeam [![Build Status](https://travis-ci.org/RenderedSource/happyteam.png)](https://travis-ci.org/RenderedSource/happyteam)
 
-## Install instruction
+## Install instruction (Debian/Ubuntu)
 
     sudo apt-get install python-setuptools
     sudo easy_install pip
