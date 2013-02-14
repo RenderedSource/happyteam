@@ -9,6 +9,8 @@ install:
 before_script:
   - cp website/local_settings.travis.py website/local_settings.py
   - psql -c 'create database happyteam;' -U postgres
+  - python manage.py syncdb --noinput
+  - python manage.py migrate --noinput
 
 script:
   - true  # no tests yet
